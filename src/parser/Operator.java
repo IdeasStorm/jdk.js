@@ -1,21 +1,52 @@
 package parser;
 
-public class Operator extends JavaScriptNode {
+import lang.JavaScriptObject;
 
+public class Operator extends Expression {
+	protected Expression left;
+	protected Expression right;
+	protected OperatorType type;
+	public enum OperatorType {
+		Add,
+		Increment,
+		Subtract,
+		Decrement,
+		Equals,
+		Assignment,
+		Greater,
+		Less,
+		GreaterOrEqual,
+		LessOrEqual,
+		Multiply,
+		Division,
+		AddBy,
+		Subtracty,
+		MultiplyBy,
+		DivideBy
+	}
+	
+	public Operator(OperatorType type, Expression left, Expression right) {
+		this.type = type;
+		this.left = left;
+		this.right = right;
+	}
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		for (int i=0;i<10;i++) {
-			if (i > 5)
-				System.out.println(i);
-		}
+	}
+	
+	
+	public void evaluate(Context context) {
+		JavaScriptObject.operator(type,left,right);
 	}
 	
 	@Override
-	public void evaluate() {
-		
+	public JavaScriptObject getValue() {
+		// TODO Auto-generated method stub
+		return value;
 	}
 
 }

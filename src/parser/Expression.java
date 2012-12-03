@@ -1,19 +1,9 @@
 package parser;
 
-public class Expression extends JavaScriptNode {
+import lang.JavaScriptObject;
 
-	@Override
-	public void evaluate() {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
+public abstract class Expression extends JavaScriptStatement {
+	protected JavaScriptObject value;
+	public abstract JavaScriptObject getValue();
+	
 }

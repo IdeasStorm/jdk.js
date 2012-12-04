@@ -1,3 +1,10 @@
 build/
 dist/
 bin/
+compiler.java
+compilerConstants.java
+compilerTokenManager.java
+ParseException.java
+SimpleCharStream.java
+Token.java
+TokenMgrError.java

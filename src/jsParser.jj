@@ -1,0 +1,172 @@
+/**
+ * JavaCC file
+ */
+ 
+options {
+  JDK_VERSION = "1.5";
+}
+PARSER_BEGIN(compiler)
+
+public class compiler {
+  public static void main(String args[]) throws ParseException {
+    compiler parser = new compiler(System.in);
+    while (true) {
+      System.out.println("Reading from standard input...");
+      System.out.print("NUMBER:");
+      try {
+        switch (compiler.one_line()) {
+        case 0:
+          System.out.println("OK.");
+          break;
+        case 1:
+          System.out.println("Goodbye.");
+          break;
+        default:
+          break;
+        }
+      } catch (Exception e) {
+        System.out.println("NOK.");
+        System.out.println(e.getMessage());
+        compiler.ReInit(System.in);
+      } catch (Error e) {
+        System.out.println("Oops.");
+        System.out.println(e.getMessage());
+        break;
+      }
+    }
+  }
+}
+PARSER_END(compiler)
+
+SKIP :
+{
+ 	" "
+|	"\r"
+|	"\t"
+|	"\n"
+}
+
+TOKEN : /* OPERATORS */
+{
+	< PLUS: "+" >
+|	< MINUS: "-" >
+|	< MULTIPLY: "*" >
+|	< DIVIDE: "/" >
+|	< MOD: "%" >
+}
+
+TOKEN : /* NUMBERS */
+{
+	< NUMBER: (["0" - "9"])+ ("." (["0" - "9"])+)? >
+}
+
+TOKEN : /* SIGN COMPEARE */
+{
+	< GT: ">" >
+| 	< GTE: ">=" >
+| 	< LT: "<" >
+| 	< LTE: "<=" >
+| 	< EQ: "==" >
+}
+
+TOKEN : /* PROTOTYE */
+{
+	< TYPE: "var" >
+}
+
+TOKEN : /* LOOPS */
+{
+	< FOR: "for" >
+|	< WHILE: "while" >
+|	< DO: "do" >
+}
+
+TOKEN : /* COMPAER */
+{
+	< IF: "if" >
+|	< ELSE: "else" >
+|	< AND: "&&" >
+|	< OR: "||" >
+|	< TRUE: "true" >
+|	< FALSE: "false" >
+|	< SWITCH: "switch" >
+|	< CASE: "case" >
+|	< CONTINUE: "continue" >
+|	< BREAK: "break" >
+|	< NOT: "!" >
+}
+
+TOKEN : /* KEYWORDS */
+{	
+	< RETURN: "return" >
+|	< FUNCTION: "function" >
+|	< TRY: "try" >
+|	< CATCH: "catch" >
+|	< DELETE: "delete" >
+|	< FINALLY: "finally" >
+|	< IN: "in" >
+|	< INSTANCEOF: "instanceof" >
+|	< TYPEOF: "typeof" >
+|	< NEW: "new" >
+|	< THIS: "this" >
+|	< THROW: "throw" >
+| 	< VOID: "void" >
+|	< WITH: "with" >
+|	< NULL: "null" >
+|	< UNDEFINED: "undefined" >
+|	< SEMICOLON: ";" >
+|   < _DEFAULT: "default" >
+}
+
+TOKEN : /* Future Reserved Word */
+{
+	< ABSTRACT: "abstract" >
+|	< BOOLEAN: "boolean" >
+|	< BYTE: "byte" >
+|	< CHAR: "char" >
+|	< CLASS: "class" >
+|	< CONST: "const" >
+|	< DEBUGGER: "debugger" >
+|	< ENUM: "enum" >
+|	< EXPORT: "export" >
+|	< EXTENDS: "extends" >
+|	< FINAL : "final" >
+|	< FLOAT: "float" >
+|	< LONG: "long" >
+|	< SHORT: "short" >
+|	< INT: "int" >
+|	< DOUBLE: "double" >
+|	< GOTO: "goto" >
+|	< IMPLEMENTS: "implements" >
+|	< INTERFACE: "interface" >
+|	< NATIVE: "native" >
+|	< PACKAGE: "package" >
+|	< PRIVATE: "private" >
+|	< PUBLIC: "public" >
+|	< PROTECTED: "protected" >
+| 	< SYNCHROMIZED: "synchronized" >
+|	< STATIC: "static" >
+|	< SUPER: "super" >
+|	< THROWS: "throws" >
+|	< TRANSIENT: "transient" >
+|	< VOLATILE: "volatile" >
+|	< IMPORT: "import" >
+}
+
+TOKEN : /* VARIABLE */
+{
+	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
+|	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
+|	< #DIGIT: ["0" - "9"]>
+}
+
+int one_line() : {}
+{
+  start() ";" { return 0; }
+| ";"	    { return 1; }
+}
+
+void start() : {}
+{
+	<NUMBER>
+}

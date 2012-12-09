@@ -17,10 +17,10 @@ public abstract class JavaScriptObject {
 		if (right == null)
 			return left.getValue().operator(type);
 		else
-			return left.getValue().operator(type, right);
+			return left.getValue().operator(type, right.getValue());
 	}
 	
-	public abstract JavaScriptObject operator(parser.Operator.OperatorType type, Expression right);
+	public abstract JavaScriptObject operator(parser.Operator.OperatorType type, JavaScriptObject right);
 	
 	public abstract JavaScriptObject operator(parser.Operator.OperatorType type);
 

@@ -1,6 +1,5 @@
 package lang;
 
-import parser.Expression;
 import parser.Operator.*;
 
 public class Number extends JavaScriptObject {
@@ -19,16 +18,16 @@ public class Number extends JavaScriptObject {
 	}
 	
 	@Override
-	public JavaScriptObject operator(OperatorType type, Expression right) {
-		
+	public JavaScriptObject operator(OperatorType type, JavaScriptObject right) {
+		JavaScriptObject result = null;
 		switch (type) {
 		case Add:
-			return new Number(value + right.getValue().castTo(this.getClass()).Value());			
+			result = new Number(value + ((Number)right).value);
 			break;
-
 		default:
 			break;
 		}
+		return result;
 	}
 
 	@Override

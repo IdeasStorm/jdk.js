@@ -12,6 +12,6 @@ public abstract class JavaScriptNode {
 	}
 	
 	
-	public abstract void evaluate(Context context);
+	public abstract void execute(Context context);
 
 }

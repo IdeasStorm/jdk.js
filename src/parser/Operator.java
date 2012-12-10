@@ -39,8 +39,8 @@ public class Operator extends Expression {
 	}
 	
 	
-	public void evaluate(Context context) {
-		JavaScriptObject.operator(type,left,right);
+	public void execute(Context context) {
+		value = JavaScriptObject.operator(type,left,right);
 	}
 	
 	@Override

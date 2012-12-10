@@ -6,7 +6,7 @@ public class Number extends JavaScriptObject {
 	protected double value;
 	
 	public Number(String value) {
-		this.value = Double.parseDouble(value);
+		this.value = Double.parseDouble(value.toString());
 	}
 	
 	public Number(Double value) {
@@ -24,6 +24,33 @@ public class Number extends JavaScriptObject {
 		case Add:
 			result = new Number(value + ((Number)right).value);
 			break;
+		case Subtract:
+			result = new Number(value - ((Number)right).value);
+			break;
+		case Multiply:
+			result = new Number(value * ((Number)right).value);
+			break;
+		case Division:
+			result = new Number(value / ((Number)right).value);
+			break;
+		case MultiplyBy:
+			this.value = value * ((Number)right).value;
+			result = this;
+			break;
+		case DivideBy:
+			this.value = value / ((Number)right).value;
+			result = this;
+			break;
+		case AddBy:
+			this.value = value + ((Number)right).value;
+			result = this;
+			break;
+		case SubtractBy:
+			this.value = value - ((Number)right).value;
+			result = this;
+			break;
+			
+			
 		default:
 			break;
 		}
@@ -32,8 +59,22 @@ public class Number extends JavaScriptObject {
 
 	@Override
 	public JavaScriptObject operator(OperatorType type) {
-		// TODO Auto-generated method stub
-		return null;
+		//TODO add post and pre inc operators
+		JavaScriptObject result = null;
+		switch (type) {
+		case Increment:
+			this.value++;
+			result = this;
+			break;
+		case Decrement:
+			this.value--;
+			result = this;
+			break;
+		
+		default:
+			break;
+		}
+		return result;
 	}
 
 	/**

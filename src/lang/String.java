@@ -32,5 +32,9 @@ public class String extends JavaScriptObject {
 		// TODO Auto-generated method stub
 
 	}
-
+	@Override
+	public java.lang.String toString() {
+		// TODO Auto-generated method stub
+		return value;
+	}
 }

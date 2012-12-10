@@ -20,7 +20,7 @@ public class Operator extends Expression {
 		Multiply,
 		Division,
 		AddBy,
-		Subtracty,
+		SubtractBy,
 		MultiplyBy,
 		DivideBy
 	}

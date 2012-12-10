@@ -12,12 +12,17 @@ public abstract class JavaScriptObject {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static JavaScriptObject operator(parser.Operator.OperatorType type, Expression left,
 			Expression right) {
 		if (right == null)
 			return left.getValue().operator(type);
-		else
-			return left.getValue().operator(type, right.getValue());
+		else {
+			Class result_class = getResultClass(left.getClass(), right.getClass());
+			JavaScriptObject left_obj = box(result_class, left.getValue());
+			JavaScriptObject right_obj = box(result_class, right.getValue());
+			return left_obj.operator(type, right_obj);
+		}
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -27,6 +32,21 @@ public abstract class JavaScriptObject {
 		return class1;
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public static JavaScriptObject box(Class inst_class, JavaScriptObject obj) {
+		//TODO make this code more dynamic 
+		if (inst_class.equals(obj.getClass()))
+			return obj;
+		if (inst_class.equals(String.class)) {
+			return obj.toJsString();
+		}else
+			return obj;
+	}
+	
+	public lang.String toJsString() {
+		return new lang.String(this.toString());
+	}
+
 	public abstract JavaScriptObject operator(parser.Operator.OperatorType type, JavaScriptObject right);
 	
 	public abstract JavaScriptObject operator(parser.Operator.OperatorType type);

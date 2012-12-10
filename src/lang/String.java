@@ -4,6 +4,13 @@ import parser.Operator.OperatorType;
 import lang.JavaScriptObject;
 
 public class String extends JavaScriptObject {
+	java.lang.String value;
+	
+	
+	
+	public String(java.lang.String string) {
+		this.value = string;
+	}
 
 	@Override
 	public lang.JavaScriptObject operator(OperatorType type,

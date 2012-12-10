@@ -1,7 +1,7 @@
 package parser;
 
 
-public abstract class JavaScriptStatement {
+public abstract class JavaScriptNode {
 
 	/**
 	 * @param args

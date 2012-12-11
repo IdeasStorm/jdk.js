@@ -89,7 +89,7 @@ public class Number extends JavaScriptObject {
 		return result;
 	}
 	
-	public Number clone() {
+	public JavaScriptObject clone() {
 		return new Number(this.value);
 	}
 

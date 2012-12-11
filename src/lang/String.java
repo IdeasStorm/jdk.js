@@ -4,8 +4,7 @@ import parser.Operator.OperatorType;
 import lang.JavaScriptObject;
 
 public class String extends JavaScriptObject {
-	java.lang.String value;
-	
+	protected java.lang.String value;
 	
 	
 	public String(java.lang.String string) {
@@ -36,5 +35,9 @@ public class String extends JavaScriptObject {
 	public java.lang.String toString() {
 		// TODO Auto-generated method stub
 		return value;
+	}
+	
+	public JavaScriptObject clone() {
+		return new String(new java.lang.String(value));
 	}
 }

@@ -64,5 +64,6 @@ public abstract class JavaScriptObject {
 		return null;
 	}
 	
+	public abstract JavaScriptObject clone();
 
 }

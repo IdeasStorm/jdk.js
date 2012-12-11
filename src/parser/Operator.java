@@ -8,9 +8,11 @@ public class Operator extends Expression {
 	protected OperatorType type;
 	public enum OperatorType {
 		Add,
-		Increment,
+		PostIncrement,
 		Subtract,
-		Decrement,
+		PostDecrement,
+		PreIncrement,
+		PreDecrement,
 		Equals,
 		Assignment,
 		Greater,

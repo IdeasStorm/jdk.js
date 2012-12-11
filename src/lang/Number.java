@@ -66,19 +66,31 @@ public class Number extends JavaScriptObject {
 		//TODO add post and pre inc operators
 		JavaScriptObject result = null;
 		switch (type) {
-		case Increment:
+		case PreIncrement:
 			this.value++;
 			result = this;
 			break;
-		case Decrement:
+		case PreDecrement:
 			this.value--;
 			result = this;
+			break;
+		case PostDecrement:
+			result = this.clone();
+			this.value--;
+			break;
+		case PostIncrement:
+			result = this.clone();
+			this.value++;
 			break;
 		
 		default:
 			break;
 		}
 		return result;
+	}
+	
+	public Number clone() {
+		return new Number(this.value);
 	}
 
 	/**

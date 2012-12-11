@@ -10,26 +10,22 @@ public class ProgramContext extends Context {
 	
 	@Override
 	public void defineVariable(String name, JavaScriptObject value) {
-		// TODO Auto-generated method stub
-
+		globalObject.setProperty(name, value);
 	}
 
 	@Override
 	public void defineVariable(String name) {
-		// TODO Auto-generated method stub
-
+		globalObject.setProperty(name, JavaScriptObject.nullValue);
 	}
 
 	@Override
 	public JavaScriptObject getVariable(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return globalObject.getProperty(name);
 	}
 
 	@Override
 	public JavaScriptObject getThisValue() {
-		// TODO Auto-generated method stub
-		return null;
+		return globalObject;
 	}
 
 	/**

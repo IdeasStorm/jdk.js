@@ -4,6 +4,9 @@ import parser.Expression;
 
 public abstract class JavaScriptObject {
 
+	public static final JavaScriptObject nullValue = null;
+	//TODO add special values for null and undefined
+
 	/**
 	 * @param args
 	 */
@@ -50,5 +53,16 @@ public abstract class JavaScriptObject {
 	public abstract JavaScriptObject operator(parser.Operator.OperatorType type, JavaScriptObject right);
 	
 	public abstract JavaScriptObject operator(parser.Operator.OperatorType type);
+
+	public void setProperty(java.lang.String name, JavaScriptObject value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public JavaScriptObject getProperty(java.lang.String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 
 }

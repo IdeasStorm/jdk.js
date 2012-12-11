@@ -39,6 +39,8 @@ public class Operator extends Expression {
 		Variable left = new Variable("a");
 		Literal right = Literal.createFromNumberLiteral("3.5");
 		Operator op = new Operator(OperatorType.Add, left, right);
+		ProgramContext p = new ProgramContext(null);
+		op.evaluate(p);
 	}
 	
 	

@@ -13,6 +13,10 @@ public class Number extends JavaScriptObject {
 		this.value = value;
 	}
 	
+	public Number(java.lang.String value) {
+		this.value = Double.parseDouble(value);
+	}
+	
 	public double Value() {
 		return value;
 	}

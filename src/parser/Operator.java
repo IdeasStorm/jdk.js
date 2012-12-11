@@ -36,6 +36,9 @@ public class Operator extends Expression {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		Variable left = new Variable("a");
+		Literal right = Literal.createFromNumberLiteral("3.5");
+		Operator op = new Operator(OperatorType.Add, left, right);
 	}
 	
 	
@@ -43,10 +46,5 @@ public class Operator extends Expression {
 		value = JavaScriptObject.operator(type,left,right);
 	}
 	
-	@Override
-	public JavaScriptObject getValue() {
-		// TODO Auto-generated method stub
-		return value;
-	}
 
 }

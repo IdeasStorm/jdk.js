@@ -1,9 +1,12 @@
 package parser;
 
+import java.util.HashMap;
+
 import lang.JavaScriptObject;
 
 public abstract class Context {
-
+	protected Context parent;
+	protected HashMap<String, JavaScriptObject> variables;
 	/**
 	 * @param args
 	 */

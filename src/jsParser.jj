@@ -45,6 +45,7 @@ SKIP :
 |	"\t"
 |	"\n"
 |	<"//" (~["\n"])* "\n">		//skip single-line comments
+|	<"/*"> : COMMENT			//skip multi-line comments
 }
 
 TOKEN : /* OPERATORS */
@@ -161,6 +162,11 @@ TOKEN : /* VARIABLE */
 |	< #DIGIT: ["0" - "9"]>
 }
 
+<COMMENT> SKIP :
+{
+	<~[]>
+|	<"*/"> : DEFAULT
+}
 
 
 int one_line() : {}

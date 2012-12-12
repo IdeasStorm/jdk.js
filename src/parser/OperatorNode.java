@@ -1,10 +1,10 @@
 package parser;
 
-import lang.JavaScriptObject;
+import lang.ObjectType;
 
-public class Operator extends Expression {
-	protected Expression left;
-	protected Expression right;
+public class OperatorNode extends ExpressionNode {
+	protected ExpressionNode left;
+	protected ExpressionNode right;
 	protected OperatorType type;
 	public enum OperatorType {
 		Add,
@@ -27,7 +27,7 @@ public class Operator extends Expression {
 		DivideBy
 	}
 	
-	public Operator(OperatorType type, Expression left, Expression right) {
+	public OperatorNode(OperatorType type, ExpressionNode left, ExpressionNode right) {
 		this.type = type;
 		this.left = left;
 		this.right = right;
@@ -38,16 +38,16 @@ public class Operator extends Expression {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		Variable left = new Variable("a");
-		Literal right = Literal.createFromNumberLiteral("3.5");
-		Operator op = new Operator(OperatorType.Add, left, right);
+		VariableNode left = new VariableNode("a");
+		LiteralNode right = LiteralNode.createFromNumberLiteral("3.5");
+		OperatorNode op = new OperatorNode(OperatorType.Add, left, right);
 		ProgramContext p = new ProgramContext(null);
 		op.evaluate(p);
 	}
 	
 	
 	public void execute(Context context) {
-		value = JavaScriptObject.operator(type,left,right);
+		value = ObjectType.operator(type,left,right);
 	}
 	
 

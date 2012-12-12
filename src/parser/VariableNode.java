@@ -1,8 +1,8 @@
 package parser;
 
-public class Variable extends Expression {
+public class VariableNode extends ExpressionNode {
 	protected String name;
-	public Variable(String name) {
+	public VariableNode(String name) {
 		this.name = name;
 	}
 	

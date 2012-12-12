@@ -1,30 +1,30 @@
 package parser;
 
-import lang.JavaScriptObject;
+import lang.ObjectType;
 
 public class ProgramContext extends Context {
-	protected JavaScriptObject globalObject;
+	protected ObjectType globalObject;
 	public ProgramContext(Context parent) {
 		this.parent = parent;
 	}
 	
 	@Override
-	public void defineVariable(String name, JavaScriptObject value) {
+	public void defineVariable(String name, ObjectType value) {
 		globalObject.setProperty(name, value);
 	}
 
 	@Override
 	public void defineVariable(String name) {
-		globalObject.setProperty(name, JavaScriptObject.nullValue);
+		globalObject.setProperty(name, ObjectType.nullValue);
 	}
 
 	@Override
-	public JavaScriptObject getVariable(String name) {
+	public ObjectType getVariable(String name) {
 		return globalObject.getProperty(name);
 	}
 
 	@Override
-	public JavaScriptObject getThisValue() {
+	public ObjectType getThisValue() {
 		return globalObject;
 	}
 

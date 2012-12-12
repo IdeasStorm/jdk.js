@@ -1,19 +1,19 @@
 package lang;
 
-import parser.Operator.*;
+import parser.OperatorNode.*;
 
-public class Number extends JavaScriptObject {
+public class NumberType extends ObjectType {
 	protected double value;
 	
-	public Number(String value) {
+	public NumberType(StringType value) {
 		this.value = Double.parseDouble(value.toString());
 	}
 	
-	public Number(Double value) {
+	public NumberType(Double value) {
 		this.value = value;
 	}
 	
-	public Number(java.lang.String value) {
+	public NumberType(java.lang.String value) {
 		this.value = Double.parseDouble(value);
 	}
 	
@@ -22,35 +22,35 @@ public class Number extends JavaScriptObject {
 	}
 	
 	@Override
-	public JavaScriptObject operator(OperatorType type, JavaScriptObject right) {
-		JavaScriptObject result = null;
+	public ObjectType operator(OperatorType type, ObjectType right) {
+		ObjectType result = null;
 		switch (type) {
 		case Add:
-			result = new Number(value + ((Number)right).value);
+			result = new NumberType(value + ((NumberType)right).value);
 			break;
 		case Subtract:
-			result = new Number(value - ((Number)right).value);
+			result = new NumberType(value - ((NumberType)right).value);
 			break;
 		case Multiply:
-			result = new Number(value * ((Number)right).value);
+			result = new NumberType(value * ((NumberType)right).value);
 			break;
 		case Division:
-			result = new Number(value / ((Number)right).value);
+			result = new NumberType(value / ((NumberType)right).value);
 			break;
 		case MultiplyBy:
-			this.value = value * ((Number)right).value;
+			this.value = value * ((NumberType)right).value;
 			result = this;
 			break;
 		case DivideBy:
-			this.value = value / ((Number)right).value;
+			this.value = value / ((NumberType)right).value;
 			result = this;
 			break;
 		case AddBy:
-			this.value = value + ((Number)right).value;
+			this.value = value + ((NumberType)right).value;
 			result = this;
 			break;
 		case SubtractBy:
-			this.value = value - ((Number)right).value;
+			this.value = value - ((NumberType)right).value;
 			result = this;
 			break;
 			
@@ -62,9 +62,9 @@ public class Number extends JavaScriptObject {
 	}
 
 	@Override
-	public JavaScriptObject operator(OperatorType type) {
+	public ObjectType operator(OperatorType type) {
 		//TODO add post and pre inc operators
-		JavaScriptObject result = null;
+		ObjectType result = null;
 		switch (type) {
 		case PreIncrement:
 			this.value++;
@@ -89,14 +89,14 @@ public class Number extends JavaScriptObject {
 		return result;
 	}
 	
-	public JavaScriptObject clone() {
-		return new Number(this.value);
+	public ObjectType clone() {
+		return new NumberType(this.value);
 	}
 
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(StringType[] args) {
 		// TODO Auto-generated method stub
 
 	}

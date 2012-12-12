@@ -2,11 +2,11 @@ package parser;
 
 import java.util.HashMap;
 
-import lang.JavaScriptObject;
+import lang.ObjectType;
 
 public abstract class Context {
 	protected Context parent;
-	protected HashMap<String, JavaScriptObject> variables;
+	protected HashMap<String, ObjectType> variables;
 	/**
 	 * @param args
 	 */
@@ -14,9 +14,9 @@ public abstract class Context {
 		// TODO Auto-generated method stub
 
 	}
-	public abstract void defineVariable(String name, JavaScriptObject value);
+	public abstract void defineVariable(String name, ObjectType value);
 	public abstract void defineVariable(String name);
-	public abstract JavaScriptObject getVariable(String name);
-	public abstract JavaScriptObject getThisValue();
+	public abstract ObjectType getVariable(String name);
+	public abstract ObjectType getThisValue();
 	
 }

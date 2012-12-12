@@ -170,7 +170,7 @@ TOKEN : /* BARCKET */
 }
 
 <COMMENT> SKIP :
-{
+{ 
 	<~[]>
 |	<"*/"> : DEFAULT
 }

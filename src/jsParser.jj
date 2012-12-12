@@ -44,6 +44,8 @@ SKIP :
 |	"\r"
 |	"\t"
 |	"\n"
+|	<"//" (~["\n"])* "\n">		//skip single-line comments
+|	<"/*"> : COMMENT			//skip multi-line comments
 }
 
 TOKEN : /* OPERATORS */
@@ -60,7 +62,7 @@ TOKEN : /* NUMBERS */
 	< NUMBER: (["0" - "9"])+ ("." (["0" - "9"])+)? >
 }
 
-TOKEN : /* SIGN COMPEARE */
+TOKEN : /* SIGN COMPARE */
 {
 	< GT: ">" >
 | 	< GTE: ">=" >
@@ -81,7 +83,7 @@ TOKEN : /* LOOPS */
 |	< DO: "do" >
 }
 
-TOKEN : /* COMPAER */
+TOKEN : /* COMPARE */
 {
 	< IF: "if" >
 |	< ELSE: "else" >
@@ -159,6 +161,13 @@ TOKEN : /* VARIABLE */
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< #DIGIT: ["0" - "9"]>
 }
+
+<COMMENT> SKIP :
+{
+	<~[]>
+|	<"*/"> : DEFAULT
+}
+
 
 int one_line() : {}
 {

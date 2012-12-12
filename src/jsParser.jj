@@ -186,10 +186,26 @@ void StatementList() : {}
 	Statement() (StatementList())*
 
 }
+// Variable Statement 
+void VariableStatement() : {}
+{
+	<TYPE> VariableDeclarationList() <SEMICOLON>
+}
+
+void VariableDeclarationList() : {}
+{
+	VariableDeclaration() ( "," VariableDeclarationList() )*
+}
+
+void VariableDeclaration() : {}
+{
+	// Temporarily to test
+	<SEMICOLON>
+}
 
 void Statement() : {}
 {
-	// tentatively
+	// Temporarily to test
 	<SEMICOLON>
 }
 

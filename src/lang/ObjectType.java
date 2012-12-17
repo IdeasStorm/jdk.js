@@ -1,10 +1,46 @@
 package lang;
 
+import java.util.HashMap;
+
 import parser.ExpressionNode;
 
 public abstract class ObjectType {
 
+	protected static class Property {
+		protected String name;
+		protected ObjectType value;
+		protected boolean writable;
+
+		public String getName() {
+			return name;
+		}
+		
+		static class PropertyNotAccesibleException extends RuntimeException {
+			protected Property property;
+			public PropertyNotAccesibleException(Property property) {
+				this.property = property;
+			}
+			
+			@Override
+			public String toString() {
+				// TODO Auto-generated method stub
+				return String.format("Propery %s is not accessible", this.property.getName());
+			}
+		}
+		
+		public ObjectType get() {
+			return value;
+		}
+		
+		public void set(ObjectType value) {
+			if (writable)
+				this.value = value;
+			else
+				throw new PropertyNotAccesibleException(this);
+		}
+	}
 	public static final ObjectType nullValue = null;
+	protected HashMap<String, Property> attributes;
 	//TODO add special values for null and undefined
 
 	/**

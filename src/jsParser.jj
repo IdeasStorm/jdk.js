@@ -161,13 +161,53 @@ TOKEN : /* VARIABLE */
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< #DIGIT: ["0" - "9"]>
 }
+TOKEN : /* BARCKET */
+{
+	< OPENBARCKET: "(" >
+|	< CLOSEBARCKET: ")" >
+|	< OPENCURLYBARCE: "{" >
+|	< CLOSECURLYBARCE: "}" >
+}
 
 <COMMENT> SKIP :
-{
+{ 
 	<~[]>
 |	<"*/"> : DEFAULT
 }
 
+// BLOCK Statement
+void Block() : {}
+{
+	<OPENCURLYBARCE> StatementList() <CLOSECURLYBARCE>
+}
+
+void StatementList() : {}
+{
+	Statement() (StatementList())*
+
+}
+// Variable Statement 
+void VariableStatement() : {}
+{
+	<TYPE> VariableDeclarationList() <SEMICOLON>
+}
+
+void VariableDeclarationList() : {}
+{
+	VariableDeclaration() ( "," VariableDeclarationList() )*
+}
+
+void VariableDeclaration() : {}
+{
+	// Temporarily to test
+	<SEMICOLON>
+}
+
+void Statement() : {}
+{
+	// Temporarily to test
+	<SEMICOLON>
+}
 
 int one_line() : {}
 {

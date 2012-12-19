@@ -168,7 +168,18 @@ TOKEN : /* VARIABLE */
 |	<"*/"> : DEFAULT
 }
 
-// BLOCK Statement
+//Expression
+void Expression() : {}
+{
+	AssignmentExpression() ("," Expression())*
+}
+
+void ExpressionNoIn() : {}
+{
+	AssignmentExpressionNoIn() ("," ExpressionNoIn())*
+}
+
+//Statement
 void Block() : {}
 {
 	"{" (StatementList())? "}"
@@ -179,7 +190,7 @@ void StatementList() : {}
 	Statement() (StatementList())*
 
 }
-// Variable Statement 
+
 void VariableStatement() : {}
 {
 	<TYPE> VariableDeclarationList() ";"
@@ -209,12 +220,12 @@ void VariableDeclarationNoIn() : {}
 
 void Initialiser() : {}
 {
-	"=" AssignmentExpression()
+	"=" //AssignmentExpression()
 	
 }
 void InitialiserNoIn() : {}
 {
-	"=" AssignmentExpressionNoIn()
+	"=" //AssignmentExpressionNoIn()
 }
 
 
@@ -229,6 +240,22 @@ void ExpressionStatement() : {}
 	Expression() ";" 
 }
 
+void Statement() : {}
+{
+	Block()
+|	VariableStatement()
+|	EmptyStatement()
+|	ExpressionStatement()
+/* TODO
+|	IfStatement()
+|	IterationStatement()
+|	ContinueStatement()
+|	BreakStatement()
+|	ReturnStatement()
+*/
+}
+
+// FunctionDeclaration
 void FunctionDeclaration() : {}
 {
 	<FUNCTION> <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
@@ -249,6 +276,7 @@ void FunctionBody() : {}
 	(SourceElements())?
 }
 
+// Program
 void Program() : {}
 {
 	( SourceElements() )?
@@ -265,20 +293,6 @@ void SourceElement() : {}
 |	FunctionDeclaration() 
 }
 
-void Statement() : {}
-{
-	Block()
-|	VariableStatement()
-|	EmptyStatement()
-|	ExpressionStatement()
-/* TODO
-|	IfStatement()
-|	IterationStatement()
-|	ContinueStatement()
-|	BreakStatement()
-|	ReturnStatement()
-*/
-}
 
 int one_line() : {}
 {

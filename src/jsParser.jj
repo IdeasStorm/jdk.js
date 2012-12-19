@@ -9,31 +9,11 @@ PARSER_BEGIN(compiler)
 
 public class compiler {
   public static void main(String args[]) throws ParseException {
-    compiler parser = new compiler(System.in);
-    while (true) {
-      System.out.println("Reading from standard input...");
-      System.out.print("NUMBER:");
-      try {
-        switch (compiler.one_line()) {
-        case 0:
-          System.out.println("OK.");
-          break;
-        case 1:
-          System.out.println("Goodbye.");
-          break;
-        default:
-          break;
-        }
-      } catch (Exception e) {
-        System.out.println("NOK.");
-        System.out.println(e.getMessage());
-        compiler.ReInit(System.in);
-      } catch (Error e) {
-        System.out.println("Oops.");
-        System.out.println(e.getMessage());
-        break;
-      }
-    }
+    compiler parser = new compiler("src//code.txt");
+    parser.start();
+    System.out.println("End Of Parser.");
+
+  	
   }
 }
 PARSER_END(compiler)
@@ -196,7 +176,9 @@ void VariableStatement() : {}
 
 void VariableDeclarationList() : {}
 {
-	VariableDeclaration() ( "," VariableDeclarationList() )*
+	
+	//VariableDeclaration() ( "," VariableDeclarationList() )*
+	<NUMBER>
 }
 
 void VariableDeclaration() : {}
@@ -211,11 +193,7 @@ void Statement() : {}
 	<SEMICOLON>
 }
 
-int one_line() : {}
-{
-  start() ";" { return 0; }
-| ";"	    { return 1; }
-}
+
 
 void start() : {}
 {

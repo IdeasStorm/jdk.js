@@ -198,12 +198,12 @@ void VariableDeclarationListNoIn() : {}
 
 void VariableDeclaration() : {}
 {
-	Identifier() (Initialiser())?
+	<IDENTIFIER> (Initialiser())?
 }
 
 void VariableDeclarationNoIn() : {}
 {
-	Identifier() (InitialiserNoIn())?
+	<IDENTIFIER> (InitialiserNoIn())?
 	
 }
 
@@ -225,23 +225,44 @@ void EmptyStatement() : {}
 
 void ExpressionStatement() : {}
 {
-	/* TODO [lookahead != {{, function}] 
-	Expression() ";" */
+	// TODO [lookahead != {{, function}] 
+	Expression() ";" 
+}
+
+void FunctionDeclaration() : {}
+{
+	<FUNCTION> <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
+}
+
+void FunctionExpression() : {}
+{
+	<FUNCTION> (<IDENTIFIER>)? "(" (FormalParameterList())? ")" "{" FunctionBody() "}"
+}
+
+void FormalParameterList() : {} 
+{
+	<IDENTIFIER> ("," FormalParameterList())*
+}
+
+void FunctionBody() : {}
+{
+	(SourceElements())?
 }
 
 void Program() : {}
 {
 	( SourceElements() )?
 }
+
 void SourceElements() : {}
 {
 	SourceElement() (SourceElements())*
 }
+
 void SourceElement() : {}
 {
 	Statement()
-	/* TODO 
-|	FunctionDeclaration() */
+|	FunctionDeclaration() 
 }
 
 void Statement() : {}

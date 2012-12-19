@@ -161,13 +161,6 @@ TOKEN : /* VARIABLE */
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< #DIGIT: ["0" - "9"]>
 }
-TOKEN : /* BARCKET */
-{
-	< OPENBARCKET: "(" >
-|	< CLOSEBARCKET: ")" >
-|	< OPENCURLYBARCE: "{" >
-|	< CLOSECURLYBARCE: "}" >
-}
 
 <COMMENT> SKIP :
 { 
@@ -178,7 +171,7 @@ TOKEN : /* BARCKET */
 // BLOCK Statement
 void Block() : {}
 {
-	<OPENCURLYBARCE> StatementList() <CLOSECURLYBARCE>
+	"{" (StatementList())? "}"
 }
 
 void StatementList() : {}
@@ -189,7 +182,7 @@ void StatementList() : {}
 // Variable Statement 
 void VariableStatement() : {}
 {
-	<TYPE> VariableDeclarationList() <SEMICOLON>
+	<TYPE> VariableDeclarationList() ";"
 }
 
 void VariableDeclarationList() : {}
@@ -197,16 +190,73 @@ void VariableDeclarationList() : {}
 	VariableDeclaration() ( "," VariableDeclarationList() )*
 }
 
+void VariableDeclarationListNoIn() : {}
+{
+	VariableDeclarationNoIn() ( "," VariableDeclarationListNoIn())* 
+}
+
+
 void VariableDeclaration() : {}
 {
-	// Temporarily to test
-	<SEMICOLON>
+	Identifier() (Initialiser())?
+}
+
+void VariableDeclarationNoIn() : {}
+{
+	Identifier() (InitialiserNoIn())?
+	
+}
+
+void Initialiser() : {}
+{
+	"=" AssignmentExpression()
+	
+}
+void InitialiserNoIn() : {}
+{
+	"=" AssignmentExpressionNoIn()
+}
+
+
+void EmptyStatement() : {}
+{
+		";"
+}
+
+void ExpressionStatement() : {}
+{
+	/* TODO [lookahead != {{, function}] 
+	Expression() ";" */
+}
+
+void Program() : {}
+{
+	( SourceElements() )?
+}
+void SourceElements() : {}
+{
+	SourceElement() (SourceElements())*
+}
+void SourceElement() : {}
+{
+	Statement()
+	/* TODO 
+|	FunctionDeclaration() */
 }
 
 void Statement() : {}
 {
-	// Temporarily to test
-	<SEMICOLON>
+	Block()
+|	VariableStatement()
+|	EmptyStatement()
+|	ExpressionStatement()
+/* TODO
+|	IfStatement()
+|	IterationStatement()
+|	ContinueStatement()
+|	BreakStatement()
+|	ReturnStatement()
+*/
 }
 
 int one_line() : {}

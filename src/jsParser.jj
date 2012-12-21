@@ -7,9 +7,13 @@ options {
 }
 PARSER_BEGIN(compiler)
 
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
+
 public class compiler {
-  public static void main(String args[]) throws ParseException {
-    compiler parser = new compiler("src//code.txt");
+  public static void main(String args[]) throws ParseException, FileNotFoundException  {
+    compiler parser = new compiler(new InputStreamReader(new FileInputStream("src//code.txt")));
     parser.start();
     System.out.println("End Of Parser.");  	
   }
@@ -184,7 +188,7 @@ void ExpressionNoIn() : {}
 //Statement
 void Block() : {}
 {
-	"{" StatementList() "}"
+	<OPENCURLYBARCE> StatementList() <CLOSECURLYBARCE>
 }
 
 void StatementList() : {}
@@ -306,5 +310,5 @@ void SourceElement() : {}
 
 void start() : {}
 {
-	<NUMBER>
+	Program()
 }

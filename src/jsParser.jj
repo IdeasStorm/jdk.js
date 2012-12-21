@@ -11,9 +11,7 @@ public class compiler {
   public static void main(String args[]) throws ParseException {
     compiler parser = new compiler("src//code.txt");
     parser.start();
-    System.out.println("End Of Parser.");
-
-  	
+    System.out.println("End Of Parser.");  	
   }
 }
 PARSER_END(compiler)
@@ -235,7 +233,7 @@ void ExpressionStatement() : {}
 
 void Statement() : {}
 {
-	Block()
+	Block() 		// „Ê ’ÕÌÕ Â«·ÕﬂÌ 
 |	VariableStatement()
 |	EmptyStatement()
 |	ExpressionStatement()
@@ -287,12 +285,13 @@ void SourceElement() : {}
 |	FunctionDeclaration() 
 }
 
-
-int one_line() : {}
+void WhileStatment()
+{}
 {
-  start() ";" { return 0; }
-| ";"	    { return 1; }
-}
+
+} 
+
+
 
 
 void start() : {}

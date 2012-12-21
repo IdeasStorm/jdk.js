@@ -33,8 +33,13 @@ TOKEN : /* OPERATORS */
 |	< MULTIPLY: "*" >
 |	< DIVIDE: "/" >
 |	< MOD: "%" >
-| 	< AND: "&">
-|	< OR: "|">
+}
+
+TOKEN : /* LOGIC OPERATORS */
+{
+ 	< AND: "&&">
+|	< OR: "||">
+|	< NOT: "!">
 }
 
 TOKEN : /* UNARY OPERATORES */
@@ -74,15 +79,12 @@ TOKEN : /* COMPARE */
 {
 	< IF: "if" >
 |	< ELSE: "else" >
-|	< AND: "&&" >
-|	< OR: "||" >
 |	< TRUE: "true" >
 |	< FALSE: "false" >
 |	< SWITCH: "switch" >
 |	< CASE: "case" >
 |	< CONTINUE: "continue" >
 |	< BREAK: "break" >
-|	< NOT: "!" >
 }
 
 TOKEN : /* KEYWORDS */
@@ -169,18 +171,20 @@ TOKEN : /* BARCKET */
 //Expression TODO Not finished yet
 void Expression() : {}
 {
-	AssignmentExpression() ("," Expression())*
+	//AssignmentExpression() ("," Expression())*
+	<NUMBER>
 }
 
 void ExpressionNoIn() : {}
 {
-	AssignmentExpressionNoIn() ("," ExpressionNoIn())*
+	//AssignmentExpressionNoIn() ("," ExpressionNoIn())*
+	<NUMBER>
 }
 
 //Statement
 void Block() : {}
 {
-	"{" (StatementList())? "}"
+	"{" StatementList() "}"
 }
 
 void StatementList() : {}
@@ -286,7 +290,7 @@ void Program() : {}
 
 void SourceElements() : {}
 {
-	SourceElement() (SourceElements())*
+	(SourceElement())+    
 }
 
 void SourceElement() : {}
@@ -295,11 +299,7 @@ void SourceElement() : {}
 |	FunctionDeclaration() 
 }
 
-void WhileStatment()
-{}
-{
-<NUMBER>
-} 
+
 
 
 

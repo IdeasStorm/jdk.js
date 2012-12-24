@@ -6,6 +6,8 @@
 function print (a, b, c)
 {
 
+var i,j ;
 
+;
 
 }

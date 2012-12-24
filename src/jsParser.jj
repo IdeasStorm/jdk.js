@@ -242,15 +242,26 @@ void SignedInteger(): {}
 | 	"+" DecimalDigits()
 |	"-" DecimalDigits()
 }
+
+void StringLiteral(): {}
+{
+// TO DO
+<NUMBER>
+}
 //		END LITERALS
 
-//Primary Expression
+
+// BEGIN PRIMARY EXPRESSION
 void PrimaryExpression() :{}
 {
 	"this"
 |	<IDENTIFIER>
-|
+|	Literal()
+|	ArrayLiteral()
+|	ObjectLiteral()
+|	Expression()
 }
+
 
 //Expression TODO Not finished yet
 void Expression() : {}

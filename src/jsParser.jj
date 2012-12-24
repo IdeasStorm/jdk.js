@@ -280,6 +280,27 @@ void Elision(): {}
 (",")+
 }
 
+void ObjectLiteral(): {}
+{
+	"{" "}"
+|	"{" PropertyNameAndValueList() "}"
+| 	"{" PropertyNameAndValueList() ","  "}"
+}
+
+void PropertyNameAndValueList(): {}
+{
+	PropertyAssignment()
+//|	something isn't important right now
+//|	something isn't important right now
+}
+
+void PropertyName(): {}
+{
+	< IDENTIFIER>
+|	StringLiteral()
+|	NumericLiteral()
+}
+
 //Expression TODO Not finished yet
 void Expression() : {}
 {

@@ -349,6 +349,7 @@ void PostfixExpression(): {}
 |	LeftHandSideExpression() "--"
 }
 
+// Unary Expression
 void UnaryExpression(): {}
 {
 	PostfixExpression()
@@ -360,6 +361,7 @@ void UnaryExpression(): {}
 |	"!" UnaryExpression()
 }
 
+//	Multiplicative Expression
 void MultiplicativeExpression(): {}
 {
 	UnaryExpression()
@@ -368,6 +370,7 @@ void MultiplicativeExpression(): {}
 |	UnaryExpression() "%" MultiplicativeExpression()
 }
 
+// Additive Expression
 void AdditiveExpression(): {}
 {
 	MultiplicativeExpression()
@@ -375,19 +378,27 @@ void AdditiveExpression(): {}
 |	MultiplicativeExpression() "-" AdditiveExpression()
 }
 
-
-//Expression TODO Not finished yet
-void Expression() : {}
+void AssignmentExpression(): {}
 {
-	//AssignmentExpression() ("," Expression())*
-	<NUMBER>
+	LeftHandSideExpression() "=" AssignmentExpression()
+|	LeftHandSideExpression() AssignmentOperator() AssignmentExpression()
 }
 
-void ExpressionNoIn() : {}
+void AssignmentOperator(): {}
 {
-	//AssignmentExpressionNoIn() ("," ExpressionNoIn())*
-	<NUMBER>
+	"*=" | "/=" | "%=" | "+=" | "-=" 
 }
+
+// Expression Finally !!
+
+void Expression(): {}
+{
+	AssignmentExpression()
+|	AssignmentExpression() "," Expression()
+}
+
+
+
 
 //Statement
 void Block() : {}

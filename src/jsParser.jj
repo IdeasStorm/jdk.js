@@ -301,6 +301,48 @@ void PropertyName(): {}
 |	NumericLiteral()
 }
 
+// 		LEFT HAND SIDE EXPRESSION
+
+void LeftHandSideExpression() : {}
+{
+	NewExpression()
+|	CallExpression()
+}
+
+void MemberExpression(): {}
+{
+	PrimaryExpression()
+|	FunctionExpression()
+//|	MemberExpression() "[" Expression() "]"   		there is left-recursion
+//|	MemberExpression() "." IdentifireName()			there is left recursion
+|	"new" MemberExpression() Arguments()
+}
+
+void NewExpression(): {}
+{
+	MemberExpression()
+|	"new" NewExpression()
+}
+
+void CallExpression(): {}
+{
+	MemberExpression() Arguments()
+// to be continued
+}
+
+void Arguments(): {}
+{
+	"(" ")"
+|	"(" ArgumentList() ")"
+}
+
+void ArgumentList(): {}
+{
+	AssignmentExpression()
+|	AssignmentExpression() "," ArgumentList()
+}
+
+
 //Expression TODO Not finished yet
 void Expression() : {}
 {
@@ -317,7 +359,7 @@ void ExpressionNoIn() : {}
 //Statement
 void Block() : {}
 {
-	<OPENCURLYBARCE> StatementList() <CLOSECURLYBARCE>
+	"{" StatementList() "}"
 }
 
 void StatementList() : {}

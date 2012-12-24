@@ -182,6 +182,28 @@ void Literal(): {}
 // | RegularExpressionLiteral()
 
 }
+void NullLiteral(): {}
+{
+<NULL>
+}
+void BooleanLiteral(): {}
+{
+	<TRUE>
+|	<FALSE>
+}
+
+void NumericLiteral(): {}
+{
+	DecimalLiteral()
+//|	HexIntegerLiteral()			to do if there is time	
+}
+
+void DecimalLiteral(): {}
+{
+	DecimalIntegerLiteral() "." (DecimalDigits())? (ExponentPart())?
+|	"." DecimalDigits() (ExponentPart())?
+|	DecimalIntegerLiteral() (ExponentPart())? 
+}
 
 //Primary Expression
 void PrimaryExpression() :{}

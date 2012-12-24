@@ -360,6 +360,21 @@ void UnaryExpression(): {}
 |	"!" UnaryExpression()
 }
 
+void MultiplicativeExpression(): {}
+{
+	UnaryExpression()
+|	UnaryExpression() "*" MultiplicativeExpression()
+|	UnaryExpression() "/" MultiplicativeExpression()
+|	UnaryExpression() "%" MultiplicativeExpression()
+}
+
+void AdditiveExpression(): {}
+{
+	MultiplicativeExpression()
+|	MultiplicativeExpression() "+" AdditiveExpression()
+|	MultiplicativeExpression() "-" AdditiveExpression()
+}
+
 
 //Expression TODO Not finished yet
 void Expression() : {}

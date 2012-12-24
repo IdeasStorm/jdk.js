@@ -342,6 +342,24 @@ void ArgumentList(): {}
 |	AssignmentExpression() "," ArgumentList()
 }
 
+void PostfixExpression(): {}
+{
+	LeftHandSideExpression()
+|	LeftHandSideExpression() "++"
+|	LeftHandSideExpression() "--"
+}
+
+void UnaryExpression(): {}
+{
+	PostfixExpression()
+|	"typeof" UnaryExpression()
+|	"++" UnaryExpression()
+|	"--" UnaryExpression()
+|	"+" UnaryExpression()
+|	"-" UnaryExpression()
+|	"!" UnaryExpression()
+}
+
 
 //Expression TODO Not finished yet
 void Expression() : {}

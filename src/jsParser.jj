@@ -262,6 +262,23 @@ void PrimaryExpression() :{}
 |	Expression()
 }
 
+void ArrayLiteral(): {}
+{
+	"[" (Elision())? "]"
+|	"[" ElementList() "]"
+|	"[" ElementList() "," (Elision())? "]"
+}
+
+void ElementList(): {}
+{
+	(Elision())? AssignmentExpression()
+|	(Elision())? AssignmentExpression() "," ElementList()
+}
+
+void Elision(): {}
+{
+(",")+
+}
 
 //Expression TODO Not finished yet
 void Expression() : {}

@@ -172,6 +172,25 @@ TOKEN : /* BARCKET */
 |	<"*/"> : DEFAULT
 }
 
+//Literals
+void Literal(): {}
+{
+	NullLiteral()
+|	BooleanLiteral()
+|	NumericLiteral()
+|	StringLiteral()
+// | RegularExpressionLiteral()
+
+}
+
+//Primary Expression
+void PrimaryExpression() :{}
+{
+	"this"
+|	<IDENTIFIER>
+|
+}
+
 //Expression TODO Not finished yet
 void Expression() : {}
 {
@@ -205,8 +224,8 @@ void VariableStatement() : {}
 void VariableDeclarationList() : {}
 {
 	
-	//VariableDeclaration() ( "," VariableDeclarationList() )*
-	<NUMBER>
+	VariableDeclaration() ( "," VariableDeclarationList() )*
+	
 }
 
 void VariableDeclarationListNoIn() : {}
@@ -250,7 +269,7 @@ void ExpressionStatement() : {}
 
 void Statement() : {}
 {
-	Block() 		// „Ê ’ÕÌÕ Â«·ÕﬂÌ 
+	Block() 		
 |	VariableStatement()
 |	EmptyStatement()
 |	ExpressionStatement()

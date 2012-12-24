@@ -172,7 +172,7 @@ TOKEN : /* BARCKET */
 |	<"*/"> : DEFAULT
 }
 
-//Literals
+//	BEGIN LITERALS
 void Literal(): {}
 {
 	NullLiteral()
@@ -204,6 +204,45 @@ void DecimalLiteral(): {}
 |	"." DecimalDigits() (ExponentPart())?
 |	DecimalIntegerLiteral() (ExponentPart())? 
 }
+
+void DecimalIntegerLiteral(): {}
+{
+	"0"
+|	NonZeroDigit() (DecimalDigits())?
+}
+
+void DecimalDigit(): {}
+{
+	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+}
+
+void DecimalDigits(): {}
+{
+	(DecimalDigit())+
+}
+
+void NonZeroDigit(): {}
+{
+	"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+}
+
+void ExponentPart(): {}
+{
+ExponentIndicator() SignedInteger()
+}
+
+void ExponentIndicator(): {}
+{
+"e" | "E"
+}
+
+void SignedInteger(): {}
+{
+	DecimalDigits()
+| 	"+" DecimalDigits()
+|	"-" DecimalDigits()
+}
+//		END LITERALS
 
 //Primary Expression
 void PrimaryExpression() :{}

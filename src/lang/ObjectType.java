@@ -3,21 +3,41 @@ package lang;
 import java.util.HashMap;
 
 import parser.ExpressionNode;
+import parser.OperatorNode.OperatorType;
 
 public abstract class ObjectType {
-
+	protected boolean extensible = true;
+	
 	protected static class Property {
 		protected String name;
 		protected ObjectType value;
 		protected boolean writable;
 
+		public Property(String name, ObjectType value, boolean writable) {
+			this.name = name;
+			this.value = value;
+			this.writable = writable;
+		}
+		
+		public Property(String name, ObjectType value) {
+			this(name,value,true);
+		}
+		
 		public String getName() {
 			return name;
 		}
 		
-		static class PropertyNotAccesibleException extends RuntimeException {
+		public ObjectType getValue() {
+			return value;
+		}
+		
+		static class PropertyNotWritableException extends RuntimeException {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -8633011999670559344L;
 			protected Property property;
-			public PropertyNotAccesibleException(Property property) {
+			public PropertyNotWritableException(Property property) {
 				this.property = property;
 			}
 			
@@ -36,19 +56,63 @@ public abstract class ObjectType {
 			if (writable)
 				this.value = value;
 			else
-				throw new PropertyNotAccesibleException(this);
+				throw new PropertyNotWritableException(this);
 		}
 	}
+	
+	public static class Undefined extends ObjectType {
+
+		protected Undefined() {
+			
+		}
+		
+		@Override
+		public ObjectType operator(OperatorType type, ObjectType right) {
+			return NumberType.NaN.operator(type, right);
+		}
+
+		@Override
+		public ObjectType operator(OperatorType type) {
+			return NumberType.NaN.operator(type);
+		}
+
+		@Override
+		public ObjectType clone() {
+			throw new RuntimeException("cannot clone undefined object");
+		}
+		
+		@Override
+		public StringType toJsString() {
+			return new StringType("undefined");
+		}
+		
+	}
+	
 	public static final ObjectType nullValue = null;
-	protected HashMap<String, Property> attributes;
+	public static final ObjectType undefined = new Undefined();
 	//TODO add special values for null and undefined
+	
+	protected HashMap<String, Property> attributes;
+	
+	public ObjectType getAttribute(String name) {
+		return attributes.get(name).getValue();
+	}
+	
+	public void setAttribute(String name, ObjectType value) {
+		if (!attributes.containsKey(name) && ! this.extensible)
+			return;
+		//TODO strict mode
+		attributes.put(name, new Property(name, value));
+	}
+	
+	
 
 	/**
 	 * @param args
 	 */
 	public static void main(StringType[] args) {
 		// TODO Auto-generated method stub
-
+		System.out.println("asd");
 	}
 
 	@SuppressWarnings("rawtypes")

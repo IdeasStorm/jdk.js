@@ -5,7 +5,7 @@ import lang.NumberType;
 
 public class LiteralNode extends ExpressionNode {
 
-	public LiteralNode(ObjectType obj) {
+	protected LiteralNode(ObjectType obj) {
 		this.value = obj;
 	}
 	
@@ -22,11 +22,11 @@ public class LiteralNode extends ExpressionNode {
 
 	}
 	
-	public static LiteralNode createFromNumberLiteral(String image) {
+	public static LiteralNode createNumberLiteral(String image) {
 		return new LiteralNode(new NumberType(image));
 	}
 	
-	public static LiteralNode createFromStringLiteral(String image) {
+	public static LiteralNode createStringLiteral(String image) {
 		return new LiteralNode(new lang.StringType(image));
 	}
 }

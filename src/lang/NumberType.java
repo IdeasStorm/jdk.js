@@ -4,16 +4,33 @@ import parser.OperatorNode.*;
 
 public class NumberType extends ObjectType {
 	protected double value;
+	public static final NaNType NaN = new NaNType();
+	public static class NaNType extends NumberType {
+		protected NaNType() {
+			this.value = Double.NaN;
+		}
+	}
+	
+	private void init() {
+		this.extensible = false;
+	}
+	
+	public NumberType() {
+		value = 0;
+	}
 	
 	public NumberType(StringType value) {
+		init();
 		this.value = Double.parseDouble(value.toString());
 	}
 	
 	public NumberType(Double value) {
+		init();
 		this.value = value;
 	}
 	
 	public NumberType(java.lang.String value) {
+		init();
 		this.value = Double.parseDouble(value);
 	}
 	
@@ -98,7 +115,8 @@ public class NumberType extends ObjectType {
 	 */
 	public static void main(StringType[] args) {
 		// TODO Auto-generated method stub
-
+		NumberType a = new NumberType(2.0);
+		a.toJsString().toString();
 	}
-
+	
 }

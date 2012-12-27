@@ -111,7 +111,7 @@ public class NumberType extends ObjectType {
 	}
 	
 	@Override
-	public StringType toJsString() {
+	public StringType toStringType() {
 		return new StringType(String.format("%f", value));
 	}
 
@@ -121,7 +121,7 @@ public class NumberType extends ObjectType {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		NumberType a = new NumberType(2.0);
-		System.out.println(a.toJsString().toString());
+		System.out.println(a.toStringType().toString());
 	}
 	
 }

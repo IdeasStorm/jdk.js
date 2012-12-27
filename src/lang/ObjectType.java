@@ -82,7 +82,7 @@ public class ObjectType {
 		}
 		
 		@Override
-		public StringType toJsString() {
+		public StringType toStringType() {
 			return new StringType("undefined");
 		}
 		
@@ -142,18 +142,18 @@ public class ObjectType {
 		if (inst_class.equals(obj.getClass()))
 			return obj;
 		if (inst_class.equals(StringType.class)) {
-			return obj.toJsString();
+			return obj.toStringType();
 		}else
 			return obj;
 	}
 	
-	public StringType toJsString() {
+	public StringType toStringType() {
 		//TODO return dynamic name (if exists) 
 		return new StringType("[object Object]");
 	}
 
 	public ObjectType operator(parser.OperatorNode.OperatorType type, ObjectType right) {
-		return this.toJsString().operator(type, right);
+		return this.toStringType().operator(type, right);
 	}
 	
 	public ObjectType operator(parser.OperatorNode.OperatorType type) {

@@ -104,15 +104,11 @@ TOKEN : /* KEYWORDS */
 
 TOKEN : /* VARIABLE */
 {
-<<<<<<< HEAD
+
 	< DIGIT: ["0" - "9"]>
 |	< CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
-=======
-	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
-|	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
-|	< #DIGIT: ["0" - "9"]>
->>>>>>> origin/master
+
 }
 
 <COMMENT> SKIP :

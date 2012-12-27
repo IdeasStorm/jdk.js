@@ -30,14 +30,7 @@ SKIP :
 |	<"/*"> : COMMENT			//skip multi-line comments
 }
 
-TOKEN : /* OPERATORS */
-{
-	< PLUS: "+" >
-|	< MINUS: "-" >
-|	< MULTIPLY: "*" >
-|	< DIVIDE: "/" >
-|	< MOD: "%" >
-}
+
 
 TOKEN : /* LOGIC OPERATORS */
 {
@@ -46,12 +39,7 @@ TOKEN : /* LOGIC OPERATORS */
 |	< NOT: "!">
 }
 
-TOKEN : /* UNARY OPERATORES */
-{
-	<INCREMENT: "++">
-|	<DECREMENT: "--">
 
-}
 
 TOKEN : /* NUMBERS */
 {
@@ -223,6 +211,7 @@ void ExponentPart(): {}
 {
 	ExponentIndicator() SignedInteger()
 }
+
 
 void ExponentIndicator(): {}
 {

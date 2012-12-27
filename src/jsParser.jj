@@ -152,7 +152,7 @@ TOKEN : /* VARIABLE */
 {
 	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
-|	< DIGIT: ["0" - "9"]>
+|	< #DIGIT: ["0" - "9"]>
 }
 
 <COMMENT> SKIP :
@@ -359,7 +359,7 @@ void MemberExpression(): {}
 
 void NewExpression(): {}
 {
-	(	LOOKAHEAD( 4 ) //TODO fixed it
+	(	LOOKAHEAD( 2 ) //TODO fixed it
 	MemberExpression()
 |	"new" NewExpression()
 )
@@ -571,7 +571,7 @@ void Statement() : {}
 // FunctionDeclaration
 void FunctionDeclaration() : {}
 {
-	<FUNCTION> <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
+	<FUNCTION>// <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
 }
 
 void FunctionExpression() : {}
@@ -592,7 +592,7 @@ void FunctionBody() : {}
 // Program
 void Program() : {}
 {
-	( SourceElements() )?
+	(SourceElements())?
 }
 
 void SourceElements() : {}
@@ -603,10 +603,10 @@ void SourceElements() : {}
 void SourceElement() : {}
 {
 	//TODO FIXED IT
-(	LOOKAHEAD( 2 )
-	Statement()
-|	FunctionDeclaration()
-) 
+	FunctionDeclaration()
+|	Statement()
+
+
 }
 
 

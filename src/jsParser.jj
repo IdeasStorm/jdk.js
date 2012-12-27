@@ -605,7 +605,6 @@ void SourceElement() : {}
 	//TODO FIXED IT
 	FunctionDeclaration()
 |	Statement()
-
 }
 
 void start() : {}

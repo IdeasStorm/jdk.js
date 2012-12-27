@@ -39,7 +39,6 @@ TOKEN : /* LOGIC OPERATORS */
 |	< NOT: "!">
 }
 
-
 TOKEN : /* SIGN COMPARE */
 {
 	< GT: ">" >
@@ -150,8 +149,7 @@ void DecimalLiteral(): {}
 
 void DecimalIntegerLiteral(): {}
 {
-	"0"
-|	NonZeroDigit() (DecimalDigits())?
+	NonZeroDigit() (DecimalDigits())?
 }
 
 void DecimalDigit(): {}
@@ -237,7 +235,7 @@ void PrimaryExpression() :{}
 |	Literal()
 |	ArrayLiteral()
 |	ObjectLiteral()
-|	Expression()
+|	"(" Expression() ")"
 }
 
 void ArrayLiteral(): {}
@@ -560,6 +558,6 @@ void SourceElement() : {}
 
 void start() : {}
 {
+	Program() <EOF>
 
-Program()
 }

@@ -113,7 +113,7 @@ public class ObjectType {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ObjectType obj = new ObjectType();
-		
+		System.out.println(obj.toStringType().toString());
 	}
 
 	@SuppressWarnings("rawtypes")

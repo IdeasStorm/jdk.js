@@ -101,40 +101,6 @@ TOKEN : /* KEYWORDS */
 |   < _DEFAULT: "default" >
 }
 
-TOKEN : /* Future Reserved Word */
-{
-	< ABSTRACT: "abstract" >
-|	< BOOLEAN: "boolean" >
-|	< BYTE: "byte" >
-|	< CHAR: "char" >
-|	< CLASS: "class" >
-|	< CONST: "const" >
-|	< DEBUGGER: "debugger" >
-|	< ENUM: "enum" >
-|	< EXPORT: "export" >
-|	< EXTENDS: "extends" >
-|	< FINAL : "final" >
-|	< FLOAT: "float" >
-|	< LONG: "long" >
-|	< SHORT: "short" >
-|	< INT: "int" >
-|	< DOUBLE: "double" >
-|	< GOTO: "goto" >
-|	< IMPLEMENTS: "implements" >
-|	< INTERFACE: "interface" >
-|	< NATIVE: "native" >
-|	< PACKAGE: "package" >
-|	< PRIVATE: "private" >
-|	< PUBLIC: "public" >
-|	< PROTECTED: "protected" >
-| 	< SYNCHROMIZED: "synchronized" >
-|	< STATIC: "static" >
-|	< SUPER: "super" >
-|	< THROWS: "throws" >
-|	< TRANSIENT: "transient" >
-|	< VOLATILE: "volatile" >
-|	< IMPORT: "import" >
-}
 
 TOKEN : /* VARIABLE */
 {

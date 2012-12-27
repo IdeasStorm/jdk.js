@@ -233,7 +233,7 @@ ExponentIndicator() SignedInteger()
 
 void ExponentIndicator(): {}
 {
-"e" | "E"
+	"e" | "E"
 }
 
 void SignedInteger(): {}
@@ -252,7 +252,7 @@ void StringLiteral(): {}
 
 
 // BEGIN PRIMARY EXPRESSION
-void PrimaryExpression() :{}
+/*void PrimaryExpression() :{}
 {
 	"this"
 |	<IDENTIFIER>
@@ -260,7 +260,7 @@ void PrimaryExpression() :{}
 |	ArrayLiteral()
 |	ObjectLiteral()
 |	Expression()
-}
+}*/
 
 void ArrayLiteral(): {}
 {
@@ -271,13 +271,12 @@ void ArrayLiteral(): {}
 
 void ElementList(): {}
 {
-	(Elision())? AssignmentExpression()
-|	(Elision())? AssignmentExpression() "," ElementList()
+	(Elision())? AssignmentExpression() ( "," ElementList())*
 }
 
 void Elision(): {}
 {
-(",")+
+	(",")+
 }
 
 void ObjectLiteral(): {}
@@ -289,7 +288,8 @@ void ObjectLiteral(): {}
 
 void PropertyNameAndValueList(): {}
 {
-	PropertyAssignment()
+	";"
+//	PropertyAssignment()
 //|	something isn't important right now
 //|	something isn't important right now
 }
@@ -311,8 +311,9 @@ void LeftHandSideExpression() : {}
 
 void MemberExpression(): {}
 {
-	PrimaryExpression()
-|	FunctionExpression()
+//	PrimaryExpression()
+//|	
+	FunctionExpression()
 //|	MemberExpression() "[" Expression() "]"   		there is left-recursion
 //|	MemberExpression() "." IdentifireName()			there is left recursion
 |	"new" MemberExpression() Arguments()
@@ -332,21 +333,17 @@ void CallExpression(): {}
 
 void Arguments(): {}
 {
-	"(" ")"
-|	"(" ArgumentList() ")"
+	"(" (ArgumentList())? ")"
 }
 
 void ArgumentList(): {}
 {
-	AssignmentExpression()
-|	AssignmentExpression() "," ArgumentList()
+	AssignmentExpression() ("," ArgumentList())*
 }
 
 void PostfixExpression(): {}
 {
-	LeftHandSideExpression()
-|	LeftHandSideExpression() "++"
-|	LeftHandSideExpression() "--"
+	LeftHandSideExpression() ("++" | "--")?
 }
 
 // Unary Expression
@@ -364,24 +361,27 @@ void UnaryExpression(): {}
 //	Multiplicative Expression
 void MultiplicativeExpression(): {}
 {
-	UnaryExpression()
-|	UnaryExpression() "*" MultiplicativeExpression()
-|	UnaryExpression() "/" MultiplicativeExpression()
-|	UnaryExpression() "%" MultiplicativeExpression()
+	UnaryExpression() (
+	 "*" MultiplicativeExpression()
+|	 "/" MultiplicativeExpression()
+|	 "%" MultiplicativeExpression()
+)
 }
 
 // Additive Expression
 void AdditiveExpression(): {}
 {
 	MultiplicativeExpression()
-|	MultiplicativeExpression() "+" AdditiveExpression()
-|	MultiplicativeExpression() "-" AdditiveExpression()
+(	 "+" AdditiveExpression()
+|	 "-" AdditiveExpression() )?
 }
 
 void AssignmentExpression(): {}
 {
-	LeftHandSideExpression() "=" AssignmentExpression()
-|	LeftHandSideExpression() AssignmentOperator() AssignmentExpression()
+	LeftHandSideExpression() 
+(	"=" AssignmentExpression()
+|	AssignmentOperator() AssignmentExpression()
+)
 }
 
 void AssignmentOperator(): {}
@@ -393,11 +393,8 @@ void AssignmentOperator(): {}
 
 void Expression(): {}
 {
-	AssignmentExpression()
-|	AssignmentExpression() "," Expression()
+	AssignmentExpression() ("," Expression())*
 }
-
-
 
 
 //Statement
@@ -443,7 +440,7 @@ void VariableDeclarationNoIn() : {}
 
 void Initialiser() : {}
 {
-	"=" //AssignmentExpression()
+	"=" AssignmentExpression()
 	
 }
 void InitialiserNoIn() : {}
@@ -463,19 +460,72 @@ void ExpressionStatement() : {}
 	Expression() ";" 
 }
 
+void IfStatement() : {}
+{
+	<IF> "(" Expression() ")" Statement() (<ELSE> Statement())?
+}
+
+void IterationStatement() : {}
+{
+	DoWhileStatement()
+|	WhileStatement()
+(	LOOKAHEAD( 4 ) //TODO
+	ForStatement()
+|	ForInStatement()
+)
+
+}
+
+void DoWhileStatement() : {}
+{
+	<DO> Statement() <WHILE> "(" Expression() ")" ";"
+}
+void WhileStatement() : {}
+{
+	<WHILE> "(" Expression() ")" Statement()
+}
+
+void ForStatement() : {}
+{
+	<FOR> "(" 
+//(	((ExpressionNoIn())? ";" (Expression())? ";" (Expression())? ")" Statement())
+//|
+	(<TYPE> VariableDeclarationListNoIn() ";" (Expression())? ";" (Expression())? ")" Statement())
+//)
+}
+void ForInStatement() : {}
+{
+	<FOR> "(" 
+(	(LeftHandSideExpression() "in" Expression() ")" Statement())
+|	(<TYPE> VariableDeclarationNoIn() "in" Expression() ")" Statement())
+)
+}
+
+void ContinueStatement() : {}
+{
+	<CONTINUE>
+(	(";")
+|
+//	[no LineTerminator here] 
+	(<IDENTIFIER> ";" )
+)
+}
+
+
+
 void Statement() : {}
 {
 	Block() 		
 |	VariableStatement()
 |	EmptyStatement()
 |	ExpressionStatement()
-/* TODO
 |	IfStatement()
 |	IterationStatement()
 |	ContinueStatement()
+/* TODO
 |	BreakStatement()
 |	ReturnStatement()
-|	WhileStatment
+|	WithStatment
 */
 }
 
@@ -493,7 +543,7 @@ void FunctionExpression() : {}
 
 void FormalParameterList() : {} 
 {
-	<IDENTIFIER> ("," FormalParameterList())*
+	<IDENTIFIER> ("," FormalParameterList())* 
 }
 
 void FunctionBody() : {}
@@ -514,8 +564,11 @@ void SourceElements() : {}
 
 void SourceElement() : {}
 {
+	//TODO FIXED IT
+(	LOOKAHEAD( 2 )
 	Statement()
-|	FunctionDeclaration() 
+|	FunctionDeclaration()
+) 
 }
 
 

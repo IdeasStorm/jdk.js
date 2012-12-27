@@ -1,7 +1,10 @@
 // code to test
 
-if (c<4)
+//test function declaration
+function myt (a,b)
 {
-//shit
+var i , j ;
+;
 
 }
+

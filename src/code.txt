@@ -1,9 +1,9 @@
-// code to test
+//as
 
-//test function declaration
-function myt (a,b)
-{
-var i , j ;
+var i ,j ;
+function myt (a ,b){
 ;
 
 }
+
+

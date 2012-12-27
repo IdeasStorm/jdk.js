@@ -1,2 +1,6 @@
 // CODE TO TEST
-for switch
+
+function mazen(a,b,c){
+
+
+}

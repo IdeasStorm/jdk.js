@@ -109,14 +109,19 @@ public class NumberType extends ObjectType {
 	public ObjectType clone() {
 		return new NumberType(this.value);
 	}
+	
+	@Override
+	public StringType toJsString() {
+		return new StringType(String.format("%f", value));
+	}
 
 	/**
 	 * @param args
 	 */
-	public static void main(StringType[] args) {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		NumberType a = new NumberType(2.0);
-		a.toJsString().toString();
+		System.out.println(a.toJsString().toString());
 	}
 	
 }

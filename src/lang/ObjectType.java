@@ -5,7 +5,7 @@ import java.util.HashMap;
 import parser.ExpressionNode;
 import parser.OperatorNode.OperatorType;
 
-public abstract class ObjectType {
+public class ObjectType {
 	protected boolean extensible = true;
 	
 	protected static class Property {
@@ -110,9 +110,10 @@ public abstract class ObjectType {
 	/**
 	 * @param args
 	 */
-	public static void main(StringType[] args) {
+	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("asd");
+		ObjectType obj = new ObjectType();
+		
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -146,13 +147,18 @@ public abstract class ObjectType {
 			return obj;
 	}
 	
-	public lang.StringType toJsString() {
-		return new lang.StringType(this.toString());
+	public StringType toJsString() {
+		//TODO return dynamic name (if exists) 
+		return new StringType("[object Object]");
 	}
 
-	public abstract ObjectType operator(parser.OperatorNode.OperatorType type, ObjectType right);
+	public ObjectType operator(parser.OperatorNode.OperatorType type, ObjectType right) {
+		return this.toJsString().operator(type, right);
+	}
 	
-	public abstract ObjectType operator(parser.OperatorNode.OperatorType type);
+	public ObjectType operator(parser.OperatorNode.OperatorType type) {
+		throw new RuntimeException("Invalid left-hand side expression in postfix operation");
+	}
 
 	public void setProperty(java.lang.String name, ObjectType value) {
 		// TODO Auto-generated method stub
@@ -164,6 +170,11 @@ public abstract class ObjectType {
 		return null;
 	}
 	
-	public abstract ObjectType clone();
+	@SuppressWarnings("unchecked")
+	public ObjectType clone() {
+		ObjectType cloned = new ObjectType();
+		cloned.attributes = (HashMap<String, Property>) attributes.clone();
+		return cloned;
+	}
 
 }

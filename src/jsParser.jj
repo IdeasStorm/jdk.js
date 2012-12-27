@@ -286,7 +286,7 @@ void SourceCharacter() : {}
 
 
 // BEGIN PRIMARY EXPRESSION
-/*void PrimaryExpression() :{}
+void PrimaryExpression() :{}
 {
 	"this"
 |	<IDENTIFIER>
@@ -294,7 +294,7 @@ void SourceCharacter() : {}
 |	ArrayLiteral()
 |	ObjectLiteral()
 |	Expression()
-}*/
+}
 
 void ArrayLiteral(): {}
 {

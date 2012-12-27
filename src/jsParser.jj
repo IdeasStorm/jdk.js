@@ -378,7 +378,7 @@ void Arguments(): {}
 
 void ArgumentList(): {}
 {
-	AssignmentExpression() ("," ArgumentList())*
+	AssignmentExpression() ("," AssignmentExpression() )*
 }
 
 void PostfixExpression(): {}
@@ -433,7 +433,7 @@ void AssignmentOperator(): {}
 
 void Expression(): {}
 {
-	AssignmentExpression() ("," Expression())*
+	AssignmentExpression() ("," AssignmentExpression())*
 }
 
 
@@ -457,13 +457,13 @@ void VariableStatement() : {}
 void VariableDeclarationList() : {}
 {
 	
-	VariableDeclaration() ( "," VariableDeclarationList() )*
+	VariableDeclaration() ( "," VariableDeclaration() )*
 	
 }
 
 void VariableDeclarationListNoIn() : {}
 {
-	VariableDeclarationNoIn() ( "," VariableDeclarationListNoIn())* 
+	VariableDeclarationNoIn() ( "," VariableDeclarationNoIn())* 
 }
 
 

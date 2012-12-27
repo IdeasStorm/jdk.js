@@ -104,9 +104,9 @@ TOKEN : /* KEYWORDS */
 
 TOKEN : /* VARIABLE */
 {
-	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
-|	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
-|	< DIGIT: ["0" - "9"]>
+	< DIGIT: ["0" - "9"]>
+|	< CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
+|	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
 }
 
 <COMMENT> SKIP :
@@ -159,8 +159,7 @@ void DecimalIntegerLiteral(): {}
 
 void DecimalDigit(): {}
 {
-	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-//	<DIGIT>
+	<DIGIT>
 }
 
 void DecimalDigits(): {}

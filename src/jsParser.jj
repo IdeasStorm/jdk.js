@@ -39,13 +39,6 @@ TOKEN : /* LOGIC OPERATORS */
 |	< NOT: "!">
 }
 
-
-
-TOKEN : /* NUMBERS */
-{
-	< NUMBER: (["0" - "9"])+ ("." (["0" - "9"])+)? >
-}
-
 TOKEN : /* SIGN COMPARE */
 {
 	< GT: ">" >
@@ -104,10 +97,17 @@ TOKEN : /* KEYWORDS */
 
 TOKEN : /* VARIABLE */
 {
+/*
+	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
+|	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
+|	< DIGIT: ["0" - "9"]>
+*/
 
 	< DIGIT: ["0" - "9"]>
-|	< CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
+|	< NUMBER: (["0" - "9"])+ ("." (["0" - "9"])+)? >
+|	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
+
 
 }
 
@@ -122,7 +122,7 @@ void Literal(): {}
 {
 	NullLiteral()
 |	BooleanLiteral()
-|	NumericLiteral()
+//|	NumericLiteral()
 |	StringLiteral()
 // | RegularExpressionLiteral()
 
@@ -137,13 +137,13 @@ void BooleanLiteral(): {}
 |	<FALSE>
 }
 
-void NumericLiteral(): {}
+/*void NumericLiteral(): {}
 {
 	DecimalLiteral()
 //|	HexIntegerLiteral()	to do if there is time	
-}
+}*/
 
-void DecimalLiteral(): {}
+/*void DecimalLiteral(): {}
 {
 (	DecimalIntegerLiteral() 
 	(	"." (DecimalDigits())? (ExponentPart())?
@@ -151,17 +151,21 @@ void DecimalLiteral(): {}
 	)
 )
 |	"." DecimalDigits() (ExponentPart())? 
-}
+}*/
+
 
 void DecimalIntegerLiteral(): {}
 {
-	"0"
-|	NonZeroDigit() (DecimalDigits())?
+
+	NonZeroDigit() (DecimalDigits())?
 }
 
 void DecimalDigit(): {}
 {
-	<DIGIT>
+
+	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+//	<DIGIT>
 }
 
 void DecimalDigits(): {}
@@ -174,13 +178,14 @@ void NonZeroDigit(): {}
 	"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 }
 
-void ExponentPart(): {}
+/*void ExponentPart(): {}
 {
 	ExponentIndicator() SignedInteger()
-}
+}*/
 
 
 void ExponentIndicator(): {}
+
 {
 	"e" | "E"
 }
@@ -240,12 +245,12 @@ void PrimaryExpression() :{}
 	"this"
 |	<IDENTIFIER>
 |	Literal()
-|	ArrayLiteral()
+//|	ArrayLiteral()
 |	ObjectLiteral()
-|	Expression()
+|	"(" Expression() ")"
 }
 
-void ArrayLiteral(): {}
+/*void ArrayLiteral(): {}
 {
 	"["
 (	 (Elision())? "]"
@@ -255,12 +260,12 @@ void ArrayLiteral(): {}
 	|	 	 "," (Elision())? "]")
 	)
 )
-}
+}*/
 
-void ElementList(): {}
+/*void ElementList(): {}
 {
 	(Elision())? AssignmentExpression() ( "," ElementList())*
-}
+}*/
 
 void Elision(): {}
 {
@@ -290,24 +295,23 @@ void PropertyName(): {}
 {
 	< IDENTIFIER>
 |	StringLiteral()
-|	NumericLiteral()
+//|	NumericLiteral()
 }
 
 // 		LEFT HAND SIDE EXPRESSION
 
 void LeftHandSideExpression() : {}
 {
-	(	LOOKAHEAD( 2 ) //TODO fixed it
+
 	NewExpression()
-|	CallExpression()
-)
+//|	CallExpression()
+
 }
 
 void MemberExpression(): {}
 {
-//	PrimaryExpression()
-//|	
-	FunctionExpression()
+	PrimaryExpression()
+|	FunctionExpression()
 //|	MemberExpression() "[" Expression() "]"   		there is left-recursion
 //|	MemberExpression() "." IdentifireName()			there is left recursion
 |	"new" MemberExpression() Arguments()
@@ -315,10 +319,10 @@ void MemberExpression(): {}
 
 void NewExpression(): {}
 {
-	(	LOOKAHEAD( 2 ) //TODO fixed it
+
 	MemberExpression()
-|	"new" NewExpression()
-)
+//|	"new" NewExpression()
+
 }
 
 void CallExpression(): {}
@@ -374,6 +378,7 @@ void AdditiveExpression(): {}
 
 void AssignmentExpression(): {}
 {
+	
 	LeftHandSideExpression() 
 (	"=" AssignmentExpression()
 |	AssignmentOperator() AssignmentExpression()
@@ -447,7 +452,7 @@ void InitialiserNoIn() : {}
 
 void EmptyStatement() : {}
 {
-		";"
+	";"
 }
 
 void ExpressionStatement() : {}
@@ -458,17 +463,17 @@ void ExpressionStatement() : {}
 
 void IfStatement() : {}
 {
-	<IF> "(" Expression() ")" Statement() (<ELSE> Statement())?
+	<IF> "(" Statement() ")" Statement() (<ELSE> Statement())?
 }
 
 void IterationStatement() : {}
 {
 	DoWhileStatement()
 |	WhileStatement()
-(	LOOKAHEAD( 4 ) //TODO
+//(	LOOKAHEAD( 4 ) //TODO
 	ForStatement()
 |	ForInStatement()
-)
+//)
 
 }
 
@@ -483,11 +488,8 @@ void WhileStatement() : {}
 
 void ForStatement() : {}
 {
-	<FOR> "(" 
-//(	((ExpressionNoIn())? ";" (Expression())? ";" (Expression())? ")" Statement())
-//|
-	(<TYPE> VariableDeclarationListNoIn() ";" (Expression())? ";" (Expression())? ")" Statement())
-//)
+	
+	<FOR> "(" (<TYPE> VariableDeclarationListNoIn() ";" (Expression())? ";" (Expression())? ")" Statement())
 }
 
 void ForInStatement() : {}
@@ -513,21 +515,21 @@ void Statement() : {}
 	Block()
 |	VariableStatement()
 |	EmptyStatement()
-|	ExpressionStatement()
+//|	ExpressionStatement()
 |	IfStatement()
-|	IterationStatement()
+/*||	IterationStatement()
 |	ContinueStatement()
-/* TODO
 |	BreakStatement()
 |	ReturnStatement()
 |	WithStatment
 */
+
 }
 
 // FunctionDeclaration
 void FunctionDeclaration() : {}
 {
-	<FUNCTION>// <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
+	<FUNCTION> <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
 }
 
 void FunctionExpression() : {}
@@ -548,22 +550,24 @@ void FunctionBody() : {}
 // Program
 void Program() : {}
 {
-	(SourceElements())?
+	(SourceElements())? // ?
 }
 
 void SourceElements() : {}
 {
-	(SourceElement())+    
+	(SourceElement())+
 }
 
 void SourceElement() : {}
 {
 	//TODO FIXED IT
-	FunctionDeclaration()
-|	Statement()
+	Statement()
+|	FunctionDeclaration()
+	
 }
 
 void start() : {}
 {
-	Program()
+	Program() <EOF>
+
 }

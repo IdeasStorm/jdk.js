@@ -152,19 +152,8 @@ TOKEN : /* VARIABLE */
 {
 	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
-|	< #DIGIT: ["0" - "9"]>
+|	< DIGIT: ["0" - "9"]>
 }
-
-TOKEN : /* BARCKET */
-{
-	< OPENBARCKET: "(" >
-|	< CLOSEBARCKET: ")" >
-|	< OPENCURLYBARCE: "{" >
-|	< CLOSECURLYBARCE: "}" >
-|	< OPENSQUAREBRACKET: "[" >
-|	< CLOSESQUAREBRACKET: "]" >
-}
-
 
 <COMMENT> SKIP :
 { 
@@ -184,7 +173,7 @@ void Literal(): {}
 }
 void NullLiteral(): {}
 {
-<NULL>
+	<NULL>
 }
 void BooleanLiteral(): {}
 {
@@ -195,14 +184,17 @@ void BooleanLiteral(): {}
 void NumericLiteral(): {}
 {
 	DecimalLiteral()
-//|	HexIntegerLiteral()			to do if there is time	
+//|	HexIntegerLiteral()	to do if there is time	
 }
 
 void DecimalLiteral(): {}
 {
-	DecimalIntegerLiteral() "." (DecimalDigits())? (ExponentPart())?
-|	"." DecimalDigits() (ExponentPart())?
-|	DecimalIntegerLiteral() (ExponentPart())? 
+(	DecimalIntegerLiteral() 
+	(	"." (DecimalDigits())? (ExponentPart())?
+|	(ExponentPart())?	
+	)
+)
+|	"." DecimalDigits() (ExponentPart())? 
 }
 
 void DecimalIntegerLiteral(): {}
@@ -214,6 +206,7 @@ void DecimalIntegerLiteral(): {}
 void DecimalDigit(): {}
 {
 	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+//	<DIGIT>
 }
 
 void DecimalDigits(): {}
@@ -298,9 +291,14 @@ void PrimaryExpression() :{}
 
 void ArrayLiteral(): {}
 {
-	"[" (Elision())? "]"
-|	"[" ElementList() "]"
-|	"[" ElementList() "," (Elision())? "]"
+	"["
+(	 (Elision())? "]"
+|
+	(	 	ElementList() 
+			 ("]"
+	|	 	 "," (Elision())? "]")
+	)
+)
 }
 
 void ElementList(): {}
@@ -315,9 +313,13 @@ void Elision(): {}
 
 void ObjectLiteral(): {}
 {
-	"{" "}"
-|	"{" PropertyNameAndValueList() "}"
-| 	"{" PropertyNameAndValueList() ","  "}"
+	"{" 
+(	"}"
+|	(	PropertyNameAndValueList()
+	(	  "}"
+	| 	 ","  "}" )
+	)
+)
 }
 
 void PropertyNameAndValueList(): {}

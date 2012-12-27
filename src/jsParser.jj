@@ -228,7 +228,7 @@ void NonZeroDigit(): {}
 
 void ExponentPart(): {}
 {
-ExponentIndicator() SignedInteger()
+	ExponentIndicator() SignedInteger()
 }
 
 void ExponentIndicator(): {}
@@ -243,10 +243,44 @@ void SignedInteger(): {}
 |	"-" DecimalDigits()
 }
 
+ //HexIntegerLiteral() : {} //NOT Worked !!?
+
 void StringLiteral(): {}
 {
-// TO DO
-<NUMBER>
+
+	"\"" (DoubleStringCharacters())? "\""
+|	"\'" (SingleStringCharacters())? "\'"
+}
+void DoubleStringCharacters() : {}
+{
+	( DoubleStringCharacter() )+
+}
+
+void SingleStringCharacters() : {}
+{
+	(SingleStringCharacter())+
+}
+
+void DoubleStringCharacter() : {}
+{
+	SourceCharacter() // but not one of " or \ or LineTerminator
+//|	"\\" EscapeSequence()
+//|	LineContinuation()
+	
+}
+
+void SingleStringCharacter() : {}
+{
+	SourceCharacter() // but not one of ' or \ or LineTerminator
+//|	\ EscapeSequence
+//|	LineContinuation
+}
+
+
+//TODO ALL Character !!
+void SourceCharacter() : {}
+{
+	";"
 }
 //		END LITERALS
 
@@ -493,6 +527,7 @@ void ForStatement() : {}
 	(<TYPE> VariableDeclarationListNoIn() ";" (Expression())? ";" (Expression())? ")" Statement())
 //)
 }
+
 void ForInStatement() : {}
 {
 	<FOR> "(" 
@@ -511,11 +546,9 @@ void ContinueStatement() : {}
 )
 }
 
-
-
 void Statement() : {}
 {
-	Block() 		
+	Block()
 |	VariableStatement()
 |	EmptyStatement()
 |	ExpressionStatement()
@@ -528,7 +561,6 @@ void Statement() : {}
 |	WithStatment
 */
 }
-
 
 // FunctionDeclaration
 void FunctionDeclaration() : {}
@@ -570,10 +602,6 @@ void SourceElement() : {}
 |	FunctionDeclaration()
 ) 
 }
-
-
-
-
 
 
 void start() : {}

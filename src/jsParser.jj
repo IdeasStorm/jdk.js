@@ -341,8 +341,10 @@ void PropertyName(): {}
 
 void LeftHandSideExpression() : {}
 {
+	(	LOOKAHEAD( 2 ) //TODO fixed it
 	NewExpression()
 |	CallExpression()
+)
 }
 
 void MemberExpression(): {}
@@ -357,8 +359,10 @@ void MemberExpression(): {}
 
 void NewExpression(): {}
 {
+	(	LOOKAHEAD( 4 ) //TODO fixed it
 	MemberExpression()
 |	"new" NewExpression()
+)
 }
 
 void CallExpression(): {}

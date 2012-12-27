@@ -581,7 +581,7 @@ void FunctionExpression() : {}
 
 void FormalParameterList() : {} 
 {
-	<IDENTIFIER> ("," FormalParameterList())* 
+	<IDENTIFIER> ("," <IDENTIFIER>)* 
 }
 
 void FunctionBody() : {}

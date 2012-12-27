@@ -1,9 +1,6 @@
-// code to test
+// CODE TO TEST
 
-//test function declaration
-function myt (a,b)
-{
-var i , j ;
-;
+function mazen(a,b,c){
+
 
 }

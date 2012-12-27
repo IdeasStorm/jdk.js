@@ -30,14 +30,7 @@ SKIP :
 |	<"/*"> : COMMENT			//skip multi-line comments
 }
 
-TOKEN : /* OPERATORS */
-{
-	< PLUS: "+" >
-|	< MINUS: "-" >
-|	< MULTIPLY: "*" >
-|	< DIVIDE: "/" >
-|	< MOD: "%" >
-}
+
 
 TOKEN : /* LOGIC OPERATORS */
 {
@@ -46,17 +39,6 @@ TOKEN : /* LOGIC OPERATORS */
 |	< NOT: "!">
 }
 
-TOKEN : /* UNARY OPERATORES */
-{
-	<INCREMENT: "++">
-|	<DECREMENT: "--">
-
-}
-
-TOKEN : /* NUMBERS */
-{
-	< NUMBER: (["0" - "9"])+ ("." (["0" - "9"])+)? >
-}
 
 TOKEN : /* SIGN COMPARE */
 {
@@ -113,46 +95,21 @@ TOKEN : /* KEYWORDS */
 |   < _DEFAULT: "default" >
 }
 
-TOKEN : /* Future Reserved Word */
-{
-	< ABSTRACT: "abstract" >
-|	< BOOLEAN: "boolean" >
-|	< BYTE: "byte" >
-|	< CHAR: "char" >
-|	< CLASS: "class" >
-|	< CONST: "const" >
-|	< DEBUGGER: "debugger" >
-|	< ENUM: "enum" >
-|	< EXPORT: "export" >
-|	< EXTENDS: "extends" >
-|	< FINAL : "final" >
-|	< FLOAT: "float" >
-|	< LONG: "long" >
-|	< SHORT: "short" >
-|	< INT: "int" >
-|	< DOUBLE: "double" >
-|	< GOTO: "goto" >
-|	< IMPLEMENTS: "implements" >
-|	< INTERFACE: "interface" >
-|	< NATIVE: "native" >
-|	< PACKAGE: "package" >
-|	< PRIVATE: "private" >
-|	< PUBLIC: "public" >
-|	< PROTECTED: "protected" >
-| 	< SYNCHROMIZED: "synchronized" >
-|	< STATIC: "static" >
-|	< SUPER: "super" >
-|	< THROWS: "throws" >
-|	< TRANSIENT: "transient" >
-|	< VOLATILE: "volatile" >
-|	< IMPORT: "import" >
-}
 
 TOKEN : /* VARIABLE */
 {
+/*
 	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< DIGIT: ["0" - "9"]>
+*/
+
+	< DIGIT: ["0" - "9"]>
+|	< NUMBER: (["0" - "9"])+ ("." (["0" - "9"])+)? >
+|	< CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
+|	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
+
+
 }
 
 <COMMENT> SKIP :
@@ -205,8 +162,10 @@ void BooleanLiteral(): {}
 
 void DecimalDigit(): {}
 {
-//	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-	<DIGIT>
+
+	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+//	<DIGIT>
 }
 
 void DecimalDigits(): {}
@@ -224,7 +183,9 @@ void DecimalDigits(): {}
 	ExponentIndicator() SignedInteger()
 }*/
 
-/*void ExponentIndicator(): {}
+
+void ExponentIndicator(): {}
+
 {
 	"e" | "E"
 }*/
@@ -592,7 +553,7 @@ void FunctionBody() : {}
 // Program
 void Program() : {}
 {
-	(SourceElements())
+	(SourceElements())? // ?
 }
 
 void SourceElements() : {}
@@ -610,5 +571,6 @@ void SourceElement() : {}
 
 void start() : {}
 {
-	Program()
+
+Program()
 }

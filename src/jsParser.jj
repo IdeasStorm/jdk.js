@@ -103,8 +103,8 @@ TOKEN : /* VARIABLE */
 |	< DIGIT: ["0" - "9"]>
 */
 
-	< DIGIT: ["0" - "9"]>
-|	< NUMBER: (["0" - "9"])+ ("." (["0" - "9"])+)? >
+	< NUMBER: (["0" - "9"])+>
+|	< DIGIT: ["0" - "9"]>
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
 
@@ -157,24 +157,27 @@ void DecimalLiteral(): {}
 
 void DecimalIntegerLiteral(): {}
 {
-
-	NonZeroDigit() (DecimalDigits())?
+//	"0"
+//|
+//	NonZeroDigit() (DecimalDigits())?
+	<NUMBER>
 }
 
 void DecimalDigit(): {}
 {
-
+//	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 	<DIGIT>
 }
 
 void DecimalDigits(): {}
 {
-	(DecimalDigit())+
+//	(DecimalDigit())+
+		<NUMBER>
 }
 
 void NonZeroDigit(): {}
 {
-	//"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+//	"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 	<DIGIT>
 }
 
@@ -294,17 +297,17 @@ void PropertyName(): {}
 void LeftHandSideExpression() : {}
 {
 
-MemberExpression() (Arguments())?
+	MemberExpression() (Arguments())?
 
 }
 
 void MemberExpression(): {}
 {
 	PrimaryExpression()
-|	FunctionExpression()
+//|	FunctionExpression()
 //|	MemberExpression() "[" Expression() "]"   		there is left-recursion
 //|	MemberExpression() "." IdentifireName()			there is left recursion
-|	"new" MemberExpression() Arguments()
+//|	"new" MemberExpression() Arguments()
 }
 
 void NewExpression(): {}
@@ -413,9 +416,16 @@ void ConditionalExpression():{}
 void AssignmentExpression(): {}
 {
 
-(LOOKAHEAD(2) LeftHandSideExpression() AssignmentOperator())* ConditionalExpression()
+//(LOOKAHEAD(2) LeftHandSideExpression() AssignmentOperator() )* ConditionalExpression()
 	
-
+//	(LOOKAHEAD(2)
+	ConditionalExpression()
+/*|	( 	LeftHandSideExpression() 
+		( 	("=" AssignmentExpression())
+		|	(AssignmentOperator()  AssignmentExpression())
+		)
+	)
+)*/
 }
 
 void AssignmentOperator(): {}
@@ -549,7 +559,7 @@ void Statement() : {}
 |	VariableStatement()
 |	EmptyStatement()
 //|	ExpressionStatement()
-|	IfStatement()
+//|	IfStatement()
 /*||	IterationStatement()
 |	ContinueStatement()
 |	BreakStatement()
@@ -602,5 +612,5 @@ void SourceElement() : {}
 void start() : {}
 {
 	Program() <EOF>
-
+//<NUMBER>
 }

@@ -1,12 +1,9 @@
 package parser;
 
-import java.util.HashMap;
-
 import lang.ObjectType;
 
 public abstract class Context {
 	protected Context parent;
-	protected HashMap<String, ObjectType> variables;
 	/**
 	 * @param args
 	 */

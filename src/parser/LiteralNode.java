@@ -29,4 +29,16 @@ public class LiteralNode extends ExpressionNode {
 	public static LiteralNode createStringLiteral(String image) {
 		return new LiteralNode(new lang.StringType(image));
 	}
+	
+	public static LiteralNode createBooleanLiteral(String image) {
+		throw new RuntimeException("not implemented yet");
+	}
+	
+	public static LiteralNode createNullLiteral() {
+		throw new RuntimeException("not implemented yet");
+	}
+	
+	public static LiteralNode createUndefinedLiteral() {
+		throw new RuntimeException("not implemented yet");
+	}
 }

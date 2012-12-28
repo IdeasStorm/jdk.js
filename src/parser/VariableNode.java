@@ -2,13 +2,23 @@ package parser;
 
 public class VariableNode extends ExpressionNode {
 	protected String name;
+	protected boolean isThisKeyWord = false;
+	public static VariableNode thisNode;
+	{
+		thisNode = new VariableNode("this");
+		thisNode.isThisKeyWord = true;
+	}
 	public VariableNode(String name) {
 		this.name = name;
 	}
 	
+	
 	@Override
 	public void execute(Context context) {
-		value = context.getVariable(name);
+		if (!isThisKeyWord)
+			value = context.getVariable(name);
+		else
+			value = context.getThisValue();
 	}
 
 	/**

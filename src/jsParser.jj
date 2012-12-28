@@ -245,22 +245,22 @@ void PrimaryExpression() :{}
 |	"(" Expression() ")"
 }
 
-/*void ArrayLiteral(): {}
+void ArrayLiteral(): {}
 {
 	"["
-(	 (Elision())? "]"
-|
+(	( (Elision())? "]" )
+	|
 	(	 	ElementList() 
 			 ("]"
 	|	 	 "," (Elision())? "]")
 	)
 )
-}*/
+}
 
-/*void ElementList(): {}
+void ElementList(): {}
 {
 	(Elision())? AssignmentExpression() ( "," ElementList())*
-}*/
+}
 
 void Elision(): {}
 {
@@ -275,15 +275,12 @@ void ObjectLiteral(): {}
 void PropertyNameAndValueList(): {}
 {
 	PropertyAssignment() (LOOKAHEAD(1)"," PropertyAssignment() )*
-
 }
 
 void PropertyAssignment(): {}
 {
 PropertyName() ":" AssignmentExpression()
 }
-
-
 
 void PropertyName(): {}
 {
@@ -293,21 +290,18 @@ void PropertyName(): {}
 }
 
 // 		LEFT HAND SIDE EXPRESSION
-
 void LeftHandSideExpression() : {}
 {
-
 	MemberExpression() (Arguments())?
-
 }
 
 void MemberExpression(): {}
 {
 	PrimaryExpression()
-//|	FunctionExpression()
-//|	MemberExpression() "[" Expression() "]"   		there is left-recursion
-//|	MemberExpression() "." IdentifireName()			there is left recursion
-//|	"new" MemberExpression() Arguments()
+|	FunctionExpression()
+//|	MemberExpression() "[" Expression() "]"  // 		there is left-recursion
+//|	MemberExpression() "." IdentifireName()	 //		there is left recursion
+|	"new" MemberExpression() Arguments()
 }
 
 void NewExpression(): {}
@@ -369,7 +363,7 @@ void ShiftExpression(): {}
 void RelationalExpression(): {}
 {
 //	ShiftExpression() ("<" ShiftExpression() | ">" ShiftExpression() | "<=" ShiftExpression() | ">=" ShiftExpression() | <INSTANCEOF> ShiftExpression() | <IN> ShiftExpression()  )*
-ShiftExpression() (("<" | ">"  | "<=" | ">="  | <INSTANCEOF>  | <IN>) ShiftExpression()  )*
+	ShiftExpression() (("<" | ">"  | "<=" | ">="  | <INSTANCEOF>  | <IN>) ShiftExpression()  )*
 }
 
 //Equality Expression
@@ -506,7 +500,7 @@ void ExpressionStatement() : {}
 
 void IfStatement() : {}
 {
-	<IF> "(" Expression() ")" Statement() (<ELSE> Statement())?
+	<IF> "(" Expression() ")" Statement() (LOOKAHEAD(1) <ELSE> Statement())?
 }
 
 void IterationStatement() : {}
@@ -604,9 +598,10 @@ void SourceElements() : {}
 void SourceElement() : {}
 {
 	//TODO FIXED IT
-	Statement()
-|	FunctionDeclaration()
-	
+( LOOKAHEAD (FunctionDeclaration())
+	FunctionDeclaration() 
+|	Statement()
+)
 }
 
 void start() : {}

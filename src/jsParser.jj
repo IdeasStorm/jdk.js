@@ -447,27 +447,45 @@ void StatementList() : {}
 
 }
 
-void VariableStatement() : {}
+VariableStatement VariableStatement() : 
 {
-	<TYPE> VariableDeclarationList() ";"
+	HashMap<String, ExpressionNode> values ;
+}
+{
+	<TYPE> values = VariableDeclarationList() ";"
+	{	VariableStatement VarSta = new VariableStatement(values) ;
+		return 	VarSta ;}
 }
 
-void VariableDeclarationList() : {}
+HashMap<String, ExpressionNode> VariableDeclarationList() : 
 {
-	
-	VariableDeclaration() ( "," VariableDeclaration() )*
-	
+	HashMap<String, ExpressionNode> values ;
+	HashMap<String, ExpressionNode> value ;
 }
+{
+	value = VariableDeclaration() ( "," VariableDeclarationList())*
+	{	values.putAll(value);
+		return values ;}	
+}
+
+HashMap<String, ExpressionNode> VariableDeclaration() : 
+{
+	HashMap<String, ExpressionNode> value ;
+	String s ;
+	ExpressionNode exp ;
+}
+{
+	s = <IDENTIFIER> ( exp = Initialiser())?
+	{
+		value.put(s,exp);
+		return value;
+	}
+}
+
 
 void VariableDeclarationListNoIn() : {}
 {
 	VariableDeclarationNoIn() ( "," VariableDeclarationNoIn())* 
-}
-
-
-void VariableDeclaration() : {}
-{
-	<IDENTIFIER> (Initialiser())?
 }
 
 void VariableDeclarationNoIn() : {}
@@ -508,8 +526,6 @@ void IterationStatement() : {}
 	DoWhileStatement()
 |	WhileStatement()
 |	ForStatement()
-//)
-
 }
 
 void DoWhileStatement() : {}

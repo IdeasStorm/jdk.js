@@ -416,14 +416,14 @@ void ConditionalExpression():{}
 void AssignmentExpression(): {}
 {
 
-//(LOOKAHEAD(2) LeftHandSideExpression() AssignmentOperator() )* ConditionalExpression()
-	
-//	(LOOKAHEAD(2)
+(LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
+ 		LeftHandSideExpression() AssignmentOperator() )* ConditionalExpression()
+
+	/*(LOOKAHEAD(ConditionalExpression())
 	ConditionalExpression()
-/*|	( 	LeftHandSideExpression() 
-		( 	("=" AssignmentExpression())
-		|	(AssignmentOperator()  AssignmentExpression())
-		)
+|
+	( 	LeftHandSideExpression() 
+		AssignmentOperator()  AssignmentExpression()
 	)
 )*/
 }
@@ -501,7 +501,7 @@ void EmptyStatement() : {}
 void ExpressionStatement() : {}
 {
 	// TODO [lookahead != {{, function}] 
-	Expression() ";" 
+	Expression() ";"
 }
 
 void IfStatement() : {}
@@ -558,8 +558,8 @@ void Statement() : {}
 	Block()
 |	VariableStatement()
 |	EmptyStatement()
-//|	ExpressionStatement()
-//|	IfStatement()
+|	ExpressionStatement()
+|	IfStatement()
 /*||	IterationStatement()
 |	ContinueStatement()
 |	BreakStatement()
@@ -611,6 +611,8 @@ void SourceElement() : {}
 
 void start() : {}
 {
+//	LeftHandSideExpression() "=" LeftHandSideExpression()
+//	ExpressionStatement()
 	Program() <EOF>
 //<NUMBER>
 }

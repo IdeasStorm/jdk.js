@@ -34,8 +34,9 @@ SKIP :
 
 TOKEN : /* LOGIC OPERATORS */
 {
-	< QUOTE: "\"">	: STRING
- 	< AND: "&&">
+	< DOUBLEQUOTE: "\"">	: DOUBLE_STRING
+|	< SINGLEQUOTE:"'">		: SINGLE_STRING
+| 	< AND: "&&">
 |	< OR: "||">
 |	< NOT: "!">
 }
@@ -118,20 +119,65 @@ TOKEN : /* VARIABLE */
 |	<"*/"> : DEFAULT
 }
 
-<STRING> TOKEN:
+<DOUBLE_STRING> TOKEN:
 {
-  <ENDQUOTE:"\""> : DEFAULT
-| <CHAR:~["\"","\\"]>
+  <DOUBLEENDQUOTE:"\""> : DEFAULT
+| <DOUBLECHAR:~["\"","\\"]>
 }
 
-<STRING> MORE:
+<DOUBLE_STRING> MORE:
 {
   "\\" : ESC_STATE
 }
 
+<SINGLE_STRING> TOKEN:
+{
+  <SINGLEENDQUOTE:"'"> : DEFAULT
+| <SINGLECHAR:~[]>
+}
+
+
 <ESC_STATE> TOKEN:
 {
-  <CNTRL_ESC:["\"","\\","/","b","f","n","r","t"]> : STRING
+  <CNTRL_ESC:["\"","\\","/","b","f","n","r","t"]> : DOUBLE_STRING
+}
+void doubleString_getChar(StringBuilder builder):
+{
+  Token t;
+}
+{
+  ( t = <DOUBLECHAR> | t = <CNTRL_ESC> )
+  {
+    if (t.image.length() < 2)
+    {
+      // CHAR
+      builder.append(t.image.charAt(0));
+    }
+    else if (t.image.length() < 6)
+    {
+      // ESC
+      char c = t.image.charAt(1);
+      switch (c)
+      {
+        case 'b': builder.append((char) 8); break;
+        case 'f': builder.append((char) 12); break;
+        case 'n': builder.append((char) 10); break;
+        case 'r': builder.append((char) 13); break;
+        case 't': builder.append((char) 9); break;
+        default: builder.append(c);
+      }
+    }
+  }
+}
+void singleString_getChar(StringBuilder builder):
+{
+  Token t;
+}
+{
+  ( t = <DOUBLECHAR>  )
+  {
+      builder.append(t.image.charAt(0));
+  }
 }
 
 
@@ -215,40 +261,35 @@ void SignedInteger(): {}
 void StringLiteral(): {}
 {
 
-	"\"" (DoubleStringCharacters())? "\""
-|	"\'" (SingleStringCharacters())? "\'"
-}
-void DoubleStringCharacters() : {}
-{
-	( DoubleStringCharacter() )+
+	<DOUBLEQUOTE> (DoubleStringCharacters())? <DOUBLEQUOTE>
+|	<SINGLEQUOTE> (SingleStringCharacters())? <SINGLEQUOTE>
 }
 
-void SingleStringCharacters() : {}
+String DoubleStringCharacters() :
 {
-	(SingleStringCharacter())+
+ StringBuilder builder = new StringBuilder();
+}
+{
+	( doubleString_getChar(builder) )+
+	{
+		return builder.toString();
+	}
 }
 
-void DoubleStringCharacter() : {}
+String SingleStringCharacters() : 
 {
-	SourceCharacter() // but not one of " or \ or LineTerminator
-//|	"\\" EscapeSequence()
-//|	LineContinuation()
-	
+	 StringBuilder builder = new StringBuilder();
 }
-
-void SingleStringCharacter() : {}
 {
-	SourceCharacter() // but not one of ' or \ or LineTerminator
-//|	\ EscapeSequence
-//|	LineContinuation
+	( singleString_getChar(builder) )+
+	{
+		return builder.toString();
+	}
 }
 
 
-//TODO ALL Character !!
-void SourceCharacter() : {}
-{
-	";"
-}
+
+
 //		END LITERALS
 
 
@@ -649,8 +690,10 @@ void start() : {}
 {
 //	LeftHandSideExpression() "=" LeftHandSideExpression()
 	//ExpressionStatement()
-	Program() <EOF>
+	//Program() <EOF>
 //	ArrayLiteral()
 //	";"
 //<NUMBER>
+
+StringLiteral()<EOF>
 }

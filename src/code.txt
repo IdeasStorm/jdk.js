@@ -1,6 +1,9 @@
 // CODE TO TEST
 
-function mazen(a,b,c){
+var a,b =5;
 
+if (x<=3 || x>=1)
+{
 
 }
+	

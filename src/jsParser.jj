@@ -122,7 +122,7 @@ void Literal(): {}
 {
 	NullLiteral()
 |	BooleanLiteral()
-//|	NumericLiteral()
+|	NumericLiteral()
 |	StringLiteral()
 // | RegularExpressionLiteral()
 
@@ -137,13 +137,14 @@ void BooleanLiteral(): {}
 |	<FALSE>
 }
 
-/*void NumericLiteral(): {}
+void NumericLiteral(): {}
 {
+	
 	DecimalLiteral()
-//|	HexIntegerLiteral()	to do if there is time	
-}*/
+	
+}
 
-/*void DecimalLiteral(): {}
+void DecimalLiteral(): {}
 {
 (	DecimalIntegerLiteral() 
 	(	"." (DecimalDigits())? (ExponentPart())?
@@ -151,7 +152,7 @@ void BooleanLiteral(): {}
 	)
 )
 |	"." DecimalDigits() (ExponentPart())? 
-}*/
+}
 
 
 void DecimalIntegerLiteral(): {}
@@ -163,9 +164,7 @@ void DecimalIntegerLiteral(): {}
 void DecimalDigit(): {}
 {
 
-	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-
-//	<DIGIT>
+	<DIGIT>
 }
 
 void DecimalDigits(): {}
@@ -175,20 +174,15 @@ void DecimalDigits(): {}
 
 void NonZeroDigit(): {}
 {
-	"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+	//"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+	<DIGIT>
 }
 
-/*void ExponentPart(): {}
+void ExponentPart(): {}
 {
-	ExponentIndicator() SignedInteger()
-}*/
-
-
-void ExponentIndicator(): {}
-
-{
-	"e" | "E"
+	("e" | "E") SignedInteger()
 }
+
 
 void SignedInteger(): {}
 {
@@ -196,8 +190,6 @@ void SignedInteger(): {}
 | 	"+" DecimalDigits()
 |	"-" DecimalDigits()
 }
-
- //HexIntegerLiteral() : {} //NOT Worked !!?
 
 void StringLiteral(): {}
 {
@@ -274,28 +266,27 @@ void Elision(): {}
 
 void ObjectLiteral(): {}
 {
-	"{" 
-(	"}"
-|	(	PropertyNameAndValueList()
-	(	  "}"
-	| 	 ","  "}" )
-	)
-)
+	"{" ("}"| (PropertyNameAndValueList() ( "}" | ","  "}" )))
 }
 
 void PropertyNameAndValueList(): {}
 {
-	";"
-//	PropertyAssignment()
-//|	something isn't important right now
-//|	something isn't important right now
+	PropertyAssignment() (LOOKAHEAD(1)"," PropertyAssignment() )*
+
 }
+
+void PropertyAssignment(): {}
+{
+PropertyName() ":" AssignmentExpression()
+}
+
+
 
 void PropertyName(): {}
 {
 	< IDENTIFIER>
 |	StringLiteral()
-//|	NumericLiteral()
+|	NumericLiteral()
 }
 
 // 		LEFT HAND SIDE EXPRESSION
@@ -303,8 +294,7 @@ void PropertyName(): {}
 void LeftHandSideExpression() : {}
 {
 
-	NewExpression()
-//|	CallExpression()
+MemberExpression() (Arguments())?
 
 }
 
@@ -319,16 +309,12 @@ void MemberExpression(): {}
 
 void NewExpression(): {}
 {
-
-	MemberExpression()
-//|	"new" NewExpression()
-
+	"new" MemberExpression()
 }
 
 void CallExpression(): {}
 {
-	MemberExpression() Arguments()
-// to be continued
+	MemberExpression() Arguments() (MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
 }
 
 void Arguments(): {}
@@ -361,33 +347,80 @@ void UnaryExpression(): {}
 //	Multiplicative Expression
 void MultiplicativeExpression(): {}
 {
-	UnaryExpression() (
-	 "*" MultiplicativeExpression()
-|	 "/" MultiplicativeExpression()
-|	 "%" MultiplicativeExpression()
-)
+	UnaryExpression() ("*" UnaryExpression() | "/" UnaryExpression() | "%" UnaryExpression() )*
 }
 
 // Additive Expression
 void AdditiveExpression(): {}
 {
-	MultiplicativeExpression()
-(	 "+" AdditiveExpression()
-|	 "-" AdditiveExpression() )?
+	MultiplicativeExpression() ("+" MultiplicativeExpression() | "-" MultiplicativeExpression() )*
+}
+
+//Shift Expression
+void ShiftExpression(): {}
+{
+	AdditiveExpression() (">>" AdditiveExpression() | "<<" AdditiveExpression() | ">>>" AdditiveExpression())*
+}
+
+//Relational Expression
+void RelationalExpression(): {}
+{
+//	ShiftExpression() ("<" ShiftExpression() | ">" ShiftExpression() | "<=" ShiftExpression() | ">=" ShiftExpression() | <INSTANCEOF> ShiftExpression() | <IN> ShiftExpression()  )*
+ShiftExpression() (("<" | ">"  | "<=" | ">="  | <INSTANCEOF>  | <IN>) ShiftExpression()  )*
+}
+
+//Equality Expression
+void EqualityExpression(): {}
+{
+	RelationalExpression()  ( ( "==" | "!=" | "===" | "!=="  ) RelationalExpression()  )*
+}
+
+//BINARY BITWISE OPERATORS
+//BitwiseAND Expression
+void BitwiseANDExpression(): {}
+{
+	EqualityExpression() ("&" EqualityExpression()  )*
+}
+//BitwiseXORExpression
+void BitwiseXORExpression(): {}
+{
+	BitwiseANDExpression() ("^" BitwiseANDExpression() )*
+}
+//bitwiseORExpression
+void BitwiseORExpression() : {}
+{
+	BitwiseXORExpression() ("|" BitwiseXORExpression())*
+}
+
+//BINARY LOGICAL OPERATORS
+void LogicalANDExpression():{}
+{
+	BitwiseORExpression() (<AND> BitwiseORExpression())*
+}
+
+void LogicalORExpression(): {}
+{
+	LogicalANDExpression() ("||" LogicalANDExpression() )*
+}
+
+//Conditional Expression
+void ConditionalExpression():{}
+{
+	LogicalORExpression() ("?" AssignmentExpression() ":" AssignmentExpression() )?
+
 }
 
 void AssignmentExpression(): {}
 {
+
+(LOOKAHEAD(2) LeftHandSideExpression() AssignmentOperator())* ConditionalExpression()
 	
-	LeftHandSideExpression() 
-(	"=" AssignmentExpression()
-|	AssignmentOperator() AssignmentExpression()
-)
+
 }
 
 void AssignmentOperator(): {}
 {
-	"*=" | "/=" | "%=" | "+=" | "-=" 
+	"*=" | "/=" | "%=" | "+=" | "-=" | "="
 }
 
 // Expression Finally !!
@@ -463,7 +496,7 @@ void ExpressionStatement() : {}
 
 void IfStatement() : {}
 {
-	<IF> "(" Statement() ")" Statement() (<ELSE> Statement())?
+	<IF> "(" Expression() ")" Statement() (<ELSE> Statement())?
 }
 
 void IterationStatement() : {}

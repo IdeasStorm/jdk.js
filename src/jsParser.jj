@@ -303,10 +303,12 @@ void LeftHandSideExpression() : {}
 
 void MemberExpression(): {}
 {
+(LOOKAHEAD(PrimaryExpression())
 	PrimaryExpression()
+|	("[" Expression() "]")*  // there is solution for left-recursion
+)
 |	FunctionExpression()
-//|	MemberExpression() "[" Expression() "]"  // 		there is left-recursion
-//|	MemberExpression() "." IdentifireName()	 //		there is left recursion
+//|	"." IdentifierName()*	 // not used !!
 |	"new" MemberExpression() Arguments()
 }
 

@@ -1,6 +1,7 @@
 // CODE TO TEST
-
-function mazen(a,b,c){
-
+//if (x<=3 || x>=1)
+{
+var a,b = ((y * 11.11) + (5 * 3)/31.12 + (--x));
+;
 
 }

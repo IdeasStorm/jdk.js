@@ -118,12 +118,14 @@ TOKEN : /* VARIABLE */
 }
 
 //	BEGIN LITERALS
-void Literal(): {}
+LiteralNode Literal(): {
+	LiteralNode literal;
+}
 {
 	NullLiteral()
-|	BooleanLiteral()
-|	NumericLiteral()
-|	StringLiteral()
+|	literal = BooleanLiteral()
+|	literal = NumericLiteral()
+|	literal = StringLiteral()
 // | RegularExpressionLiteral()
 
 }
@@ -131,13 +133,21 @@ void NullLiteral(): {}
 {
 	<NULL>
 }
-void BooleanLiteral(): {}
+LiteralNode BooleanLiteral(): {
+	Token symbol;
+}
 {
-	<TRUE>
-|	<FALSE>
+(
+	symbol = <TRUE>
+|	symbol = <FALSE>
+)
+{
+	return LiteralNode.createBooleanLiteral(symbol.image);
 }
 
-void NumericLiteral(): {}
+}
+
+LiteralNode NumericLiteral(): {}
 {
 	
 	DecimalLiteral()
@@ -194,11 +204,17 @@ void SignedInteger(): {}
 |	"-" DecimalDigits()
 }
 
-void StringLiteral(): {}
+LiteralNode StringLiteral(): {
+	String value = "";
+}
 {
-
-	"\"" (DoubleStringCharacters())? "\""
-|	"\'" (SingleStringCharacters())? "\'"
+(
+	"\"" (value = DoubleStringCharacters())? "\""
+|	"\'" (value = SingleStringCharacters())? "\'"
+)
+	{
+		return LiteralNode.createStringLiteral(value);
+	}
 }
 void DoubleStringCharacters() : {}
 {
@@ -235,14 +251,31 @@ void SourceCharacter() : {}
 
 
 // BEGIN PRIMARY EXPRESSION
-void PrimaryExpression() :{}
+ExpressionNode PrimaryExpression() :{
+	ExpressionNode exp;
+	Token identifier;
+}
 {
-	"this"
-|	<IDENTIFIER>
-|	Literal()
+(
+	"this" {
+		exp = VariableNode.thisNode;
+	}
+|	identifier = <IDENTIFIER> {
+		exp =  new VariableNode(identifier.image);
+	}
+|	literal = Literal() {
+		exp = literal;
+	}
 //|	ArrayLiteral()
-|	ObjectLiteral()
-|	"(" Expression() ")"
+|	literal = ObjectLiteral() {
+		exp = literal;
+	}
+|	"(" exp = Expression() ")"
+
+)
+	{
+		return exp;
+	}
 }
 
 void ArrayLiteral(): {}
@@ -407,11 +440,13 @@ void ConditionalExpression():{}
 
 }
 
-void AssignmentExpression(): {}
+ExpressionNode AssignmentExpression(): {
+	ExpressionNode exp;
+}
 {
 
 (LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
- 		LeftHandSideExpression() AssignmentOperator() )* ConditionalExpression()
+ 		LeftHandSideExpression() AssignmentOperator() )* exp = ConditionalExpression()
 
 	/*(LOOKAHEAD(ConditionalExpression())
 	ConditionalExpression()
@@ -420,6 +455,10 @@ void AssignmentExpression(): {}
 		AssignmentOperator()  AssignmentExpression()
 	)
 )*/
+	{
+		//TODO deal with left side 
+		return exp;
+	}
 }
 
 void AssignmentOperator(): {}
@@ -453,31 +492,37 @@ VariableStatement VariableStatement() :
 }
 {
 	<TYPE> values = VariableDeclarationList() ";"
-	{	VariableStatement VarSta = new VariableStatement(values) ;
-		return 	VarSta ;}
+	{ return new VariableStatement(values); }
 }
 
 HashMap<String, ExpressionNode> VariableDeclarationList() : 
 {
-	HashMap<String, ExpressionNode> values ;
-	HashMap<String, ExpressionNode> value ;
+	HashMap<String, ExpressionNode> values = new HashMap<String, ExpressionNode>();
+	Pair<String, ExpressionNode> temp ;
 }
 {
-	value = VariableDeclaration() ( "," VariableDeclarationList())*
-	{	values.putAll(value);
-		return values ;}	
+	temp = VariableDeclaration() {
+		values.put(temp.left,temp.right);
+	}  
+	( "," temp = VariableDeclaration(){
+		values.put(temp.left, temp.right);
+	})*
+	
+	{
+		return values ;
+	}	
 }
 
-HashMap<String, ExpressionNode> VariableDeclaration() : 
+Pair<String, ExpressionNode> VariableDeclaration() : 
 {
-	HashMap<String, ExpressionNode> value ;
+	Pair<String, ExpressionNode> value ;
 	String s ;
 	ExpressionNode exp ;
 }
 {
 	s = <IDENTIFIER> ( exp = Initialiser())?
 	{
-		value.put(s,exp);
+		value = new Pair<String, ExpressionNode>(s,exp);
 		return value;
 	}
 }
@@ -494,9 +539,11 @@ void VariableDeclarationNoIn() : {}
 	
 }
 
-void Initialiser() : {}
+ExpressionNode Initialiser() : {
+	ExpressionNode exp;
+}
 {
-	"=" AssignmentExpression()
+	"=" exp = AssignmentExpression()
 	
 }
 void InitialiserNoIn() : {}

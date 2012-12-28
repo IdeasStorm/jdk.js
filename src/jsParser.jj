@@ -303,12 +303,12 @@ void LeftHandSideExpression() : {}
 
 void MemberExpression(): {}
 {
-(LOOKAHEAD(PrimaryExpression())
+//(LOOKAHEAD(PrimaryExpression())
 	PrimaryExpression()
-|	("[" Expression() "]")*  // there is solution for left-recursion
-)
+//|	("[" Expression() "]")  // there is solution for left-recursion
+//)
 |	FunctionExpression()
-//|	"." IdentifierName()*	 // not used !!
+//|	"." IdentifierName()*	 // not uses 
 |	"new" MemberExpression() Arguments()
 }
 
@@ -630,8 +630,8 @@ void SourceElement() : {}
 void start() : {}
 {
 //	LeftHandSideExpression() "=" LeftHandSideExpression()
-	ExpressionStatement()
-	//Program() <EOF>
+	//ExpressionStatement()
+	Program() <EOF>
 //	ArrayLiteral()
 //	";"
 //<NUMBER>

@@ -1,6 +1,5 @@
 [a+b] ;
 // CODE TO TEST
-/*
 function mtr (a,b){
 	if (x<=311+1 || x>= 1++)
 	{
@@ -27,4 +26,3 @@ while (x != 10 && x >= y+1)
 
 for (i = 0 ; i< 10 ; i +=1)
 i++ ;
-*/

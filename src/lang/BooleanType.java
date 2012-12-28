@@ -7,6 +7,10 @@ public class BooleanType extends ObjectType {
 		this.value = Boolean.parseBoolean(value);
 	}
 	
+	public BooleanType(boolean value) {
+		this.value = value;
+	}
+	
 	@Override
 	public StringType toStringType() {
 		// TODO Auto-generated method stub
@@ -23,4 +27,13 @@ public class BooleanType extends ObjectType {
 
 	}
 
+	@Override
+	public BooleanType toBooleanType() {
+		// TODO Auto-generated method stub
+		return this;
+	}
+	
+	public boolean toBoolean() {
+		return this.value;
+	}
 }

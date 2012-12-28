@@ -147,10 +147,18 @@ public class ObjectType {
 			return obj;
 	}
 	
+	// Conversions Section
+	
 	public StringType toStringType() {
 		//TODO return dynamic name (if exists) 
 		return new StringType("[object Object]");
 	}
+	
+	public BooleanType toBooleanType() {
+		return new BooleanType(true);
+	}
+	
+	// End of Conversions Section
 
 	public ObjectType operator(parser.OperatorNode.OperatorType type, ObjectType right) {
 		return this.toStringType().operator(type, right);

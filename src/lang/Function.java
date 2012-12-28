@@ -1,5 +1,7 @@
 package lang;
 
+import java.util.Map;
+
 import parser.FunctionDeclarationStatement;
 
 public class Function extends ObjectType {
@@ -15,6 +17,8 @@ public class Function extends ObjectType {
 	}
 	
 	public ObjectType call(ObjectType...args) {
+		
+		
 		return null;
 	}
 

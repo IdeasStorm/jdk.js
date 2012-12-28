@@ -10,6 +10,8 @@ PARSER_BEGIN(compiler)
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
+import parser.*;
+import java.utils.HashMap;
 
 public class compiler {
   public static void main(String args[]) throws ParseException, FileNotFoundException  {
@@ -266,7 +268,9 @@ ExpressionNode PrimaryExpression() :{
 |	literal = Literal() {
 		exp = literal;
 	}
-//|	ArrayLiteral()
+|	literal = ArrayLiteral() {
+		exp = literal;
+	}
 |	literal = ObjectLiteral() {
 		exp = literal;
 	}
@@ -285,7 +289,7 @@ void ArrayLiteral(): {}
 	|
 	(	 	ElementList() 
 			 ("]"
-	|	 	 "," (Elision())? "]")
+		| 	 "," (Elision())? "]")
 	)
 )
 }
@@ -302,7 +306,13 @@ void Elision(): {}
 
 void ObjectLiteral(): {}
 {
-	"{" ("}"| (PropertyNameAndValueList() ( "}" | ","  "}" )))
+	"{" 
+	(	"}"
+		|
+		(PropertyNameAndValueList() 
+			( "}" | ","  "}" )
+		)
+	)
 }
 
 void PropertyNameAndValueList(): {}
@@ -312,7 +322,7 @@ void PropertyNameAndValueList(): {}
 
 void PropertyAssignment(): {}
 {
-PropertyName() ":" AssignmentExpression()
+	PropertyName() ":" AssignmentExpression()
 }
 
 void PropertyName(): {}
@@ -330,10 +340,12 @@ void LeftHandSideExpression() : {}
 
 void MemberExpression(): {}
 {
+//(LOOKAHEAD(PrimaryExpression())
 	PrimaryExpression()
+//|	("[" Expression() "]")  // there is solution for left-recursion
+//)
 |	FunctionExpression()
-//|	MemberExpression() "[" Expression() "]"  // 		there is left-recursion
-//|	MemberExpression() "." IdentifireName()	 //		there is left recursion
+//|	"." IdentifierName()*	 // not uses 
 |	"new" MemberExpression() Arguments()
 }
 
@@ -504,7 +516,7 @@ HashMap<String, ExpressionNode> VariableDeclarationList() :
 	temp = VariableDeclaration() {
 		values.put(temp.left,temp.right);
 	}  
-	( "," temp = VariableDeclaration(){
+	( LOOKAHEAD(1) "," temp = VariableDeclaration(){
 		values.put(temp.left, temp.right);
 	})*
 	
@@ -670,7 +682,9 @@ void SourceElement() : {}
 void start() : {}
 {
 //	LeftHandSideExpression() "=" LeftHandSideExpression()
-//	ExpressionStatement()
+	//ExpressionStatement()
 	Program() <EOF>
+//	ArrayLiteral()
+//	";"
 //<NUMBER>
 }

@@ -1,7 +1,11 @@
 package lang;
 
-public class Function extends ObjectType {
+import parser.FunctionDeclarationStatement;
 
+public class Function extends ObjectType {
+	public Function() {
+		// TODO Auto-generated constructor stub
+	}
 	/**
 	 * @param args
 	 */
@@ -10,8 +14,8 @@ public class Function extends ObjectType {
 
 	}
 	
-	public ObjectType call() {
-		
+	public ObjectType call(ObjectType...args) {
+		return null;
 	}
 
 }

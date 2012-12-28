@@ -1,6 +1,6 @@
 package parser;
 
-public class FunctionDecarationStatement extends JavaScriptNode {
+public class FunctionDeclarationStatement extends JavaScriptNode {
 
 	@Override
 	public void execute(Context context) {

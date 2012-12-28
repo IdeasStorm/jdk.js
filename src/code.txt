@@ -1,6 +1,6 @@
 // CODE TO TEST
 
-function mtr (a){
+function mtr (a,b){
 	if (x<=311+1 || x>= 1++)
 	{
 		x = (y + 1.1) ;

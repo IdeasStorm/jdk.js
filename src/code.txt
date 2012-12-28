@@ -1,9 +1,10 @@
+
 // CODE TO TEST
 
-var a,b =5;
+var a,b = 1 ; 
 
-if (x<=3 || x>=1)
+if (x<=31 || x>=1)
 {
+;
 
 }
-	

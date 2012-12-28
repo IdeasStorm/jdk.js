@@ -157,13 +157,13 @@ void DecimalLiteral(): {}
 
 void DecimalIntegerLiteral(): {}
 {
-
+//	"0"
+//|
 	NonZeroDigit() (DecimalDigits())?
 }
 
 void DecimalDigit(): {}
 {
-
 	<DIGIT>
 }
 
@@ -294,7 +294,7 @@ void PropertyName(): {}
 void LeftHandSideExpression() : {}
 {
 
-MemberExpression() (Arguments())?
+	MemberExpression() (Arguments())?
 
 }
 
@@ -413,9 +413,16 @@ void ConditionalExpression():{}
 void AssignmentExpression(): {}
 {
 
-(LOOKAHEAD(2) LeftHandSideExpression() AssignmentOperator())* ConditionalExpression()
+(LOOKAHEAD(2) LeftHandSideExpression() AssignmentOperator() ) * ConditionalExpression()
 	
-
+/*	(LOOKAHEAD(2)
+	ConditionalExpression()
+|	( 	LeftHandSideExpression() 
+		( 	("=" AssignmentExpression())
+		|	(AssignmentOperator()  AssignmentExpression())
+		)
+	)
+)*/
 }
 
 void AssignmentOperator(): {}

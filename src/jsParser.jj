@@ -240,7 +240,7 @@ void PrimaryExpression() :{}
 	"this"
 |	<IDENTIFIER>
 |	Literal()
-//|	ArrayLiteral()
+|	ArrayLiteral()
 |	ObjectLiteral()
 |	"(" Expression() ")"
 }
@@ -252,7 +252,7 @@ void ArrayLiteral(): {}
 	|
 	(	 	ElementList() 
 			 ("]"
-	|	 	 "," (Elision())? "]")
+		| 	 "," (Elision())? "]")
 	)
 )
 }
@@ -269,7 +269,13 @@ void Elision(): {}
 
 void ObjectLiteral(): {}
 {
-	"{" ("}"| (PropertyNameAndValueList() ( "}" | ","  "}" )))
+	"{" 
+	(	"}"
+		|
+		(PropertyNameAndValueList() 
+			( "}" | ","  "}" )
+		)
+	)
 }
 
 void PropertyNameAndValueList(): {}
@@ -279,7 +285,7 @@ void PropertyNameAndValueList(): {}
 
 void PropertyAssignment(): {}
 {
-PropertyName() ":" AssignmentExpression()
+	PropertyName() ":" AssignmentExpression()
 }
 
 void PropertyName(): {}
@@ -463,9 +469,8 @@ HashMap<String, ExpressionNode> VariableDeclarationList() :
 	HashMap<String, ExpressionNode> value ;
 }
 {
-	value = VariableDeclaration() ( "," VariableDeclarationList())*
-	{	values.putAll(value);
-		return values ;}	
+	value = VariableDeclaration(){values.putAll(value);} (LOOKAHEAD(1) "," VariableDeclarationList())*
+	{return values ;}	
 }
 
 HashMap<String, ExpressionNode> VariableDeclaration() : 
@@ -623,7 +628,9 @@ void SourceElement() : {}
 void start() : {}
 {
 //	LeftHandSideExpression() "=" LeftHandSideExpression()
-//	ExpressionStatement()
-	Program() <EOF>
+	ExpressionStatement()
+	//Program() <EOF>
+//	ArrayLiteral()
+//	";"
 //<NUMBER>
 }

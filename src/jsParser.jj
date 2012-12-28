@@ -508,8 +508,8 @@ void IterationStatement() : {}
 	DoWhileStatement()
 |	WhileStatement()
 //(	LOOKAHEAD( 4 ) //TODO
-	ForStatement()
-|	ForInStatement()
+	//ForStatement()
+//|	ForInStatement()
 //)
 
 }
@@ -554,8 +554,8 @@ void Statement() : {}
 |	EmptyStatement()
 |	ExpressionStatement()
 |	IfStatement()
-/*||	IterationStatement()
-|	ContinueStatement()
+|	IterationStatement()
+/*|	ContinueStatement()
 |	BreakStatement()
 |	ReturnStatement()
 |	WithStatment

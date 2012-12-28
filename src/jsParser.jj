@@ -240,7 +240,7 @@ void PrimaryExpression() :{}
 	"this"
 |	<IDENTIFIER>
 |	Literal()
-//|	ArrayLiteral()
+|	ArrayLiteral()
 |	ObjectLiteral()
 |	"(" Expression() ")"
 }
@@ -252,7 +252,7 @@ void ArrayLiteral(): {}
 	|
 	(	 	ElementList() 
 			 ("]"
-	|	 	 "," (Elision())? "]")
+		| 	 "," (Elision())? "]")
 	)
 )
 }
@@ -269,7 +269,13 @@ void Elision(): {}
 
 void ObjectLiteral(): {}
 {
-	"{" ("}"| (PropertyNameAndValueList() ( "}" | ","  "}" )))
+	"{" 
+	(	"}"
+		|
+		(PropertyNameAndValueList() 
+			( "}" | ","  "}" )
+		)
+	)
 }
 
 void PropertyNameAndValueList(): {}
@@ -279,7 +285,7 @@ void PropertyNameAndValueList(): {}
 
 void PropertyAssignment(): {}
 {
-PropertyName() ":" AssignmentExpression()
+	PropertyName() ":" AssignmentExpression()
 }
 
 void PropertyName(): {}
@@ -297,10 +303,12 @@ void LeftHandSideExpression() : {}
 
 void MemberExpression(): {}
 {
+//(LOOKAHEAD(PrimaryExpression())
 	PrimaryExpression()
+//|	("[" Expression() "]")  // there is solution for left-recursion
+//)
 |	FunctionExpression()
-//|	MemberExpression() "[" Expression() "]"  // 		there is left-recursion
-//|	MemberExpression() "." IdentifireName()	 //		there is left recursion
+//|	"." IdentifierName()*	 // not uses 
 |	"new" MemberExpression() Arguments()
 }
 
@@ -463,9 +471,8 @@ HashMap<String, ExpressionNode> VariableDeclarationList() :
 	HashMap<String, ExpressionNode> value ;
 }
 {
-	value = VariableDeclaration() ( "," VariableDeclarationList())*
-	{	values.putAll(value);
-		return values ;}	
+	value = VariableDeclaration(){values.putAll(value);} (LOOKAHEAD(1) "," VariableDeclarationList())*
+	{return values ;}	
 }
 
 HashMap<String, ExpressionNode> VariableDeclaration() : 
@@ -623,7 +630,9 @@ void SourceElement() : {}
 void start() : {}
 {
 //	LeftHandSideExpression() "=" LeftHandSideExpression()
-//	ExpressionStatement()
+	//ExpressionStatement()
 	Program() <EOF>
+//	ArrayLiteral()
+//	";"
 //<NUMBER>
 }

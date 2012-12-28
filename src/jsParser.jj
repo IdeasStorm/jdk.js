@@ -34,6 +34,7 @@ SKIP :
 
 TOKEN : /* LOGIC OPERATORS */
 {
+	< QUOTE: "\"">	: STRING
  	< AND: "&&">
 |	< OR: "||">
 |	< NOT: "!">
@@ -116,6 +117,23 @@ TOKEN : /* VARIABLE */
 	<~[]>
 |	<"*/"> : DEFAULT
 }
+
+<STRING> TOKEN:
+{
+  <ENDQUOTE:"\""> : DEFAULT
+| <CHAR:~["\"","\\"]>
+}
+
+<STRING> MORE:
+{
+  "\\" : ESC_STATE
+}
+
+<ESC_STATE> TOKEN:
+{
+  <CNTRL_ESC:["\"","\\","/","b","f","n","r","t"]> : STRING
+}
+
 
 //	BEGIN LITERALS
 void Literal(): {}

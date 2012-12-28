@@ -1,7 +1,6 @@
 package parser;
 
-import lang.ObjectType;
-import lang.NumberType;
+import lang.*;
 
 public class LiteralNode extends ExpressionNode {
 
@@ -31,7 +30,7 @@ public class LiteralNode extends ExpressionNode {
 	}
 	
 	public static LiteralNode createBooleanLiteral(String image) {
-		throw new RuntimeException("not implemented yet");
+		return new LiteralNode(new lang.BooleanType(image));
 	}
 	
 	public static LiteralNode createNullLiteral() {

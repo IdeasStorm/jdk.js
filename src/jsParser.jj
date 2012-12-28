@@ -11,7 +11,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import parser.*;
-import java.utils.HashMap;
+import java.util.HashMap;
 
 public class compiler {
   public static void main(String args[]) throws ParseException, FileNotFoundException  {
@@ -124,16 +124,24 @@ LiteralNode Literal(): {
 	LiteralNode literal;
 }
 {
-	NullLiteral()
+(
+	literal = NullLiteral()
 |	literal = BooleanLiteral()
 |	literal = NumericLiteral()
 |	literal = StringLiteral()
 // | RegularExpressionLiteral()
 
+)
+
+{return literal;}
+
 }
-void NullLiteral(): {}
+LiteralNode NullLiteral(): {}
 {
 	<NULL>
+	{
+		return LiteralNode.createNullLiteral();
+	}
 }
 LiteralNode BooleanLiteral(): {
 	Token symbol;
@@ -153,6 +161,10 @@ LiteralNode NumericLiteral(): {}
 {
 	
 	DecimalLiteral()
+	{
+		//TODO Get the real Number Literal
+		return LiteralNode.createNumberLiteral("0.0");
+	}
 	
 }
 
@@ -218,14 +230,22 @@ LiteralNode StringLiteral(): {
 		return LiteralNode.createStringLiteral(value);
 	}
 }
-void DoubleStringCharacters() : {}
+String DoubleStringCharacters() : {}
 {
 	( DoubleStringCharacter() )+
+	{
+		return "";
+		//TODO add real text
+	}
 }
 
-void SingleStringCharacters() : {}
+String SingleStringCharacters() : {}
 {
 	(SingleStringCharacter())+
+	{
+		return "";
+		//TODO add real text
+	}
 }
 
 void DoubleStringCharacter() : {}
@@ -256,6 +276,7 @@ void SourceCharacter() : {}
 ExpressionNode PrimaryExpression() :{
 	ExpressionNode exp;
 	Token identifier;
+	LiteralNode literal;
 }
 {
 (
@@ -268,13 +289,18 @@ ExpressionNode PrimaryExpression() :{
 |	literal = Literal() {
 		exp = literal;
 	}
-|	literal = ArrayLiteral() {
-		exp = literal;
+|	ArrayLiteral() {
+		exp = null;
+		//TODO fill exp
 	}
-|	literal = ObjectLiteral() {
-		exp = literal;
+|	ObjectLiteral() {
+		exp = null;
+		//TODO fill exp
 	}
-|	"(" exp = Expression() ")"
+|	"(" Expression() ")" {
+		exp = null;
+		//TODO fill exp
+	}
 
 )
 	{
@@ -458,7 +484,7 @@ ExpressionNode AssignmentExpression(): {
 {
 
 (LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
- 		LeftHandSideExpression() AssignmentOperator() )* exp = ConditionalExpression()
+ 		LeftHandSideExpression() AssignmentOperator() )* ConditionalExpression()
 
 	/*(LOOKAHEAD(ConditionalExpression())
 	ConditionalExpression()
@@ -469,7 +495,7 @@ ExpressionNode AssignmentExpression(): {
 )*/
 	{
 		//TODO deal with left side 
-		return exp;
+		return null;
 	}
 }
 
@@ -514,10 +540,10 @@ HashMap<String, ExpressionNode> VariableDeclarationList() :
 }
 {
 	temp = VariableDeclaration() {
-		values.put(temp.left,temp.right);
+		values.put(temp.getLeft(),temp.getRight());
 	}  
 	( LOOKAHEAD(1) "," temp = VariableDeclaration(){
-		values.put(temp.left, temp.right);
+		values.put(temp.getLeft(), temp.getRight());
 	})*
 	
 	{
@@ -528,13 +554,13 @@ HashMap<String, ExpressionNode> VariableDeclarationList() :
 Pair<String, ExpressionNode> VariableDeclaration() : 
 {
 	Pair<String, ExpressionNode> value ;
-	String s ;
-	ExpressionNode exp ;
+	Token s ;
+	ExpressionNode exp = null; //NOTE: NULL exp means no init => obj is undefined not null !
 }
 {
 	s = <IDENTIFIER> ( exp = Initialiser())?
 	{
-		value = new Pair<String, ExpressionNode>(s,exp);
+		value = new Pair<String, ExpressionNode>(s.image,exp);
 		return value;
 	}
 }
@@ -556,7 +582,7 @@ ExpressionNode Initialiser() : {
 }
 {
 	"=" exp = AssignmentExpression()
-	
+	{return exp;}
 }
 void InitialiserNoIn() : {}
 {

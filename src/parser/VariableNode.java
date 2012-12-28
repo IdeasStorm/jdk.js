@@ -3,12 +3,11 @@ package parser;
 public class VariableNode extends ExpressionNode {
 	protected String name;
 	protected boolean isThisKeyWord = false;
-	public static VariableNode thisNode;
-	{
-		thisNode = new VariableNode("this");
-		thisNode.isThisKeyWord = true;
-	}
+	public static VariableNode thisNode = new VariableNode("this");
+
 	public VariableNode(String name) {
+		if (name.equals("this"))
+			this.isThisKeyWord = true;
 		this.name = name;
 	}
 	

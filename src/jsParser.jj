@@ -174,9 +174,9 @@ void singleString_getChar(StringBuilder builder):
   Token t;
 }
 {
-  ( t = <DOUBLECHAR>  )
+  ( t = <SINGLECHAR>  )
   {
-      builder.append(t.image.charAt(0));
+      builder.append(t.image);
   }
 }
 
@@ -258,11 +258,16 @@ void SignedInteger(): {}
 |	"-" DecimalDigits()
 }
 
-void StringLiteral(): {}
+String StringLiteral(): 
 {
-
-	<DOUBLEQUOTE> (DoubleStringCharacters())? <DOUBLEQUOTE>
-|	<SINGLEQUOTE> (SingleStringCharacters())? <SINGLEQUOTE>
+String s="";
+}
+{
+	(<DOUBLEQUOTE> (s=DoubleStringCharacters())? <DOUBLEENDQUOTE>
+|	<SINGLEQUOTE> (s=SingleStringCharacters())? <SINGLEENDQUOTE>)
+	{
+		return s;
+	}
 }
 
 String DoubleStringCharacters() :

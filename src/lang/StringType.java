@@ -36,6 +36,11 @@ public class StringType extends ObjectType {
 		// TODO Auto-generated method stub
 		return value;
 	}
+	@Override
+	public BooleanType toBooleanType() {
+		// TODO Auto-generated method stub
+		return new BooleanType(this.value.length() == 0);
+	}
 	
 	public ObjectType clone() {
 		return new StringType(new java.lang.String(value));

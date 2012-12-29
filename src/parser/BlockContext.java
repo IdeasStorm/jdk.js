@@ -16,7 +16,7 @@ public class BlockContext extends Context {
 
 	@Override
 	public void defineVariable(String name) {
-		blockObject.setProperty(name, ObjectType.nullValue);
+		blockObject.setProperty(name, ObjectType.nullRef);
 	}
 
 	@Override

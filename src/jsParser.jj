@@ -712,22 +712,6 @@ void ContinueStatement() : {}
 )
 }
 
-void Statement() : {}
-{
-	Block()
-|	VariableStatement()
-|	EmptyStatement()
-|	ExpressionStatement()
-|	IfStatement()
-|	IterationStatement()
-/*|	ContinueStatement()
-|	BreakStatement()
-|	ReturnStatement()
-|	WithStatment
-*/
-
-}
-
 // FunctionDeclaration
 void FunctionDeclaration() : {}
 {
@@ -747,6 +731,34 @@ void FormalParameterList() : {}
 void FunctionBody() : {}
 {
 	(SourceElements())?
+}
+
+void ReturnStatement() : {} 
+{
+	<RETURN> (Expression())? ";" 
+	//[no LineTerminator here]	
+}
+
+void BreakStatement() : {}
+{
+	<BREAK> (<IDENTIFIER>)? ";"
+	// [no LineTerminator here]
+}
+
+void Statement() : {}
+{
+	Block()
+|	VariableStatement()
+|	EmptyStatement()
+|	ExpressionStatement()
+|	IfStatement()
+|	IterationStatement()
+|	ReturnStatement()
+|	BreakStatement()
+/*|	ContinueStatement()
+|	WithStatment
+*/
+
 }
 
 // Program

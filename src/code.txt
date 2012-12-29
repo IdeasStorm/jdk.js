@@ -12,6 +12,7 @@ function fun(a,b,c)
 	while (index != array.length)
 	{
 		array[index++] = "a"++ ; 
+		break ;
 	}
 	
 	if ( x != y && (y = 1) )
@@ -26,5 +27,6 @@ function fun(a,b,c)
 	person=new Object();
 	person={firstname:"John",lastname:"Doe",age:50,eyecolor:"blue"};
 	a = [1,2,3,4] ;
+	return a ;
 }
-myCars.indexOf("asd").tostring().asd;
+myCars.indexOf("asd").tostring();

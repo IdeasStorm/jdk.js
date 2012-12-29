@@ -409,7 +409,7 @@ void LeftHandSideExpression() : {}
 	//MemberExpression() (Arguments())?
 (LOOKAHEAD (CallExpression()) 
 		CallExpression()
-	|	NewExpression()	
+|		NewExpression()	
 )
 }
 
@@ -429,22 +429,23 @@ void MemberExpression(): {}
 
 void NewExpression(): {}
 {
-	"new" MemberExpression()
+(LOOKAHEAD (MemberExpression())
+	MemberExpression()	
+|	"new" MemberExpression()
+)
 }
 
 void CallExpression(): {}
 { 
 //	(MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
-	(MemberExpression() (Arguments())?)
-	(( Arguments() )
-	|
-	( "[" Expression() "]" )
-	|
-	( "." <IDENTIFIER> ) )*
-	
-
-	
-	
+	MemberExpression() Arguments()
+	(
+		( Arguments() )
+		|
+		( "[" Expression() "]" )
+		|
+		( "." <IDENTIFIER> ) 
+	)*
 	
 }
 

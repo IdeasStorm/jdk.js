@@ -27,4 +27,4 @@ function fun(a,b,c)
 	person={firstname:"John",lastname:"Doe",age:50,eyecolor:"blue"};
 	a = [1,2,3,4] ;
 }
-y=myCars.indexOf("Volvo").tostring() ;
+myCars.indexOf("asd").tostring().asd;

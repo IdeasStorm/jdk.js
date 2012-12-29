@@ -1,11 +1,17 @@
 // CODE TO TEST
 
-function fun(a,b,c)
+var obj = {
+name : "cool object",
+kind : "bla bla ",
+bla : "asdf"
+};
+
+var my_func = function fun(a,b,c)
 {
 	var mycars = new Array();
 	for ( i =0 ;i<y+1 ; i++)
 		myCars=new Array("Saab","Volvo","BMW");
-	var name=myCars[0];
+	name=myCars[0];
 	
 	var index = -1 ;
 	var array = new Array();
@@ -28,5 +34,5 @@ function fun(a,b,c)
 	person={firstname:"John",lastname:"Doe",age:50,eyecolor:"blue"};
 	a = [1,2,3,4] ;
 	return a ;
-}
+} ;
 myCars.indexOf("asd").tostring();

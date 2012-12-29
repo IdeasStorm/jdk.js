@@ -1,8 +1,6 @@
 package parser;
 
-import java.util.LinkedList;
-
-public class IfStatement extends JavaScriptNode {
+public class IfStatement extends ExpressionNode {
 	
 	private ExpressionNode exprssion;
 	private BlockStatement ifBlock;

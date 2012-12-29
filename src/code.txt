@@ -11,7 +11,7 @@ var my_func = function fun(a,b,c)
 	var mycars = new Array();
 	for ( i =0 ;i<y+1 ; i++)
 		myCars=new Array("Saab","Volvo","BMW");
-	var name=myCars[0];
+	name=myCars[0];
 	
 	var index = -1 ;
 	var array = new Array();

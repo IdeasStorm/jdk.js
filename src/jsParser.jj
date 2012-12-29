@@ -784,13 +784,5 @@ void SourceElement() : {}
 
 void start() : {}
 {
-//	LeftHandSideExpression() "=" LeftHandSideExpression()
-	//ExpressionStatement()
 	Program() (<EOF>)?
-//ObjectLiteral()
-//	ArrayLiteral()
-//	";"
-//<NUMBER>
-
-//StringLiteral()<EOF>
 }

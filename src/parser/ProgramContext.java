@@ -15,7 +15,7 @@ public class ProgramContext extends Context {
 
 	@Override
 	public void defineVariable(String name) {
-		globalObject.setProperty(name, ObjectType.nullValue);
+		globalObject.setProperty(name, ObjectType.nullRef);
 	}
 
 	@Override

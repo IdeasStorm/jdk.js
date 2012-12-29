@@ -1,27 +1,27 @@
 package parser;
 
-public class IfStatement extends ExpressionNode {
+public class IfStatement extends Statement {
 	
 	private ExpressionNode exprssion;
-	private BlockStatement ifBlock;
-	private BlockStatement elseBlock;
+	private Statement ifStatement;
+	private Statement elseStatement;
 
-	public IfStatement(ExpressionNode exprssion, BlockStatement ifBlock, 
-			BlockStatement elseBlock) {
+	public IfStatement(ExpressionNode exprssion, Statement ifStatement, 
+			Statement elseStatement) {
 		this.exprssion = exprssion;
-		this.ifBlock = ifBlock;
-		this.elseBlock = elseBlock;
+		this.ifStatement = ifStatement;
+		this.elseStatement = elseStatement;
 	}
 	
 	@Override
 	public void execute(Context context) {
 		// Get the boolean value of expression
 		if (exprssion.evaluate(context).toBooleanType().toBoolean()) { // if value true
-			Context ifBlockContext = new BlockContext(context);
-			ifBlock.execute(ifBlockContext);
+			Context ifStatementContext = new BlockContext(context);
+			ifStatement.execute(ifStatementContext);
 		} else { // if the value false
-			Context elseBlockContext = new BlockContext(context);
-			elseBlock.execute(elseBlockContext);
+			Context elseStatmentContext = new BlockContext(context);
+			elseStatement.execute(elseStatmentContext);
 		}
 	}
 

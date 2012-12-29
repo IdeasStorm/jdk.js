@@ -2,19 +2,19 @@ package parser;
 
 import java.util.LinkedList;
 
-public class BlockStatement extends JavaScriptNode {
+public class BlockStatement extends Statement {
 	
-	LinkedList<ExpressionNode> exprssions;
+	LinkedList<Statement> statements;
 	
-	public BlockStatement(LinkedList<ExpressionNode> exprssions) {
-		this.exprssions = exprssions;
+	public BlockStatement(LinkedList<Statement> statements) {
+		this.statements = statements;
 	}
 	
 	@Override
 	public void execute(Context context) {
 		BlockContext blockContext = new BlockContext(context);
-		for(ExpressionNode exp : exprssions) {
-			exp.execute(blockContext);
+		for(Statement statement : statements) {
+			statement.execute(blockContext);
 		}
 	}
 }

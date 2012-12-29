@@ -2,18 +2,18 @@ package parser;
 
 public class WhileStatement extends ExpressionNode {
 	ExpressionNode exprssion;
-	BlockStatement whileBlock;
+	Statement whileStatement;
 	
-	public WhileStatement(ExpressionNode exprssion, BlockStatement whileBlock) {
+	public WhileStatement(ExpressionNode exprssion, Statement whileStatement) {
 		this.exprssion = exprssion;
-		this.whileBlock = whileBlock;
+		this.whileStatement = whileStatement;
 	}
 	
 	@Override
 	public void execute(Context context) {
-		Context whileBlockContext = new BlockContext(context);
+		Context whileStatementContext = new BlockContext(context);
 		while (exprssion.evaluate(context).toBooleanType().toBoolean()) {
-			whileBlock.execute(whileBlockContext);
+			whileStatement.execute(whileStatementContext);
 		}
 	}
 

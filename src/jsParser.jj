@@ -222,32 +222,44 @@ LiteralNode BooleanLiteral():
 	}
 }
 
-LiteralNode NumericLiteral(): {}
+LiteralNode NumericLiteral(): 
+{
+	LiteralNode num ;
+}
 {	
-	DecimalLiteral()
+	num = DecimalLiteral()
 	{
 		//TODO Get the real Number Literal
-		return LiteralNode.createNumberLiteral("0.0");
+		//return LiteralNode.createNumberLiteral("0.0");
+		return num ;
 	}	
 }
 
-void DecimalLiteral(): {}
+LiteralNode DecimalLiteral(): 
 {
-	(	DecimalIntegerLiteral() 
-		(	"." (DecimalDigits())? (ExponentPart())?
-	|	(ExponentPart())?	
-		)
+	LiteralNode num ;
+}
+{
+	(	num = DecimalIntegerLiteral() 
+//TODO		(	"." (DecimalDigits())? (ExponentPart())?
+//	|	(ExponentPart())?	
+//		)
 	)
-	|	"." DecimalDigits() (ExponentPart())? 
+//	|	("." DecimalDigits() (ExponentPart())?)
+	{return num ;}
 }
 
 
-void DecimalIntegerLiteral(): {}
+LiteralNode DecimalIntegerLiteral(): 
+{
+	Token num ;
+}
 {
 //	"0" TODO 
 //|
 //	NonZeroDigit() (DecimalDigits())?
-	<NUMBER>
+	num = <NUMBER>
+	{ return LiteralNode.createNumberLiteral(num.image);}
 }
 
 void DecimalDigit(): {}
@@ -256,10 +268,14 @@ void DecimalDigit(): {}
 	<DIGIT>
 }
 
-void DecimalDigits(): {}
+LiteralNode DecimalDigits(): 
+{
+	Token num ; 
+}
 {
 //	(DecimalDigit())+
-		<NUMBER>
+		num = <NUMBER>
+		{ return LiteralNode.createNumberLiteral(num.image);}
 }
 
 void NonZeroDigit(): {}
@@ -319,7 +335,7 @@ String SingleStringCharacters() :
 
 // BEGIN PRIMARY EXPRESSION
 ExpressionNode PrimaryExpression() :{
-	ExpressionNode exp;
+	ExpressionNode exp = null;
 	Token identifier;
 	LiteralNode literal;
 }
@@ -405,35 +421,48 @@ void PropertyName(): {}
 }
 
 // 		LEFT HAND SIDE EXPRESSION
-void LeftHandSideExpression() : {}
+ExpressionNode LeftHandSideExpression() :
+{
+	ExpressionNode exp = null ;
+}
 {
 	//MemberExpression() (Arguments())?
 (LOOKAHEAD (CallExpression()) 
 		CallExpression()
-|		NewExpression()	
+|		exp = NewExpression()
 )
+{return exp ;}
 }
 
-void MemberExpression(): {}
+ExpressionNode MemberExpression(): 
 {
-(
-(	PrimaryExpression()
+	ExpressionNode exp = null ;
+}
+{
+((
+(	exp = PrimaryExpression()
 |	FunctionExpression()
 )
-	(
+	( //TODO return ExpressionNode !!!
 	("[" Expression() "]")  // there is solution for left-recursion
 	|("." <IDENTIFIER>)	 // not uses IdentifierName()
 	)*
 )
 |	"new" MemberExpression() Arguments()
+) {return exp ;}
 }
 
-void NewExpression(): {}
+ExpressionNode NewExpression(): 
+{
+	ExpressionNode exp = null ;
+}
 {
 (LOOKAHEAD (MemberExpression())
-	MemberExpression()	
+	exp = MemberExpression()
+	//TODO return ExpressionNode !!!	
 |	"new" MemberExpression()
 )
+{return exp ;}
 }
 
 void CallExpression(): {}
@@ -460,117 +489,241 @@ void ArgumentList(): {}
 	AssignmentExpression() ("," AssignmentExpression() )*
 }
 
-void PostfixExpression(): {}
+ExpressionNode PostfixExpression(): 
 {
-	LeftHandSideExpression() ("++" | "--")?
+	ExpressionNode exp = null ; 
+}
+{
+(	
+	exp = LeftHandSideExpression() 
+	(
+	"++" 
+	| "--"
+	)?
+)
+	{return exp ;}
 }
 
 // Unary Expression
-void UnaryExpression(): {}
+ExpressionNode UnaryExpression(): 
 {
-	PostfixExpression()
-|	"typeof" UnaryExpression()
-|	"++" UnaryExpression()
-|	"--" UnaryExpression()
-|	"+" UnaryExpression()
-|	"-" UnaryExpression()
-|	"!" UnaryExpression()
+	ExpressionNode exp = null; 
+}
+{
+(
+	exp = PostfixExpression()
+	|	"typeof" UnaryExpression()
+	|	"++" UnaryExpression()
+	|	"--" UnaryExpression()
+	|	"+" UnaryExpression()
+	|	"-" UnaryExpression()
+	|	"!" UnaryExpression()
+)
+	{return exp ;}
 }
 
 //	Multiplicative Expression
-void MultiplicativeExpression(): {}
+ExpressionNode MultiplicativeExpression(): 
 {
-	UnaryExpression() ("*" UnaryExpression() | "/" UnaryExpression() | "%" UnaryExpression() )*
+	ExpressionNode exp = null ; 
+}
+{
+(
+	exp = UnaryExpression() 
+	(
+	"*" UnaryExpression() 
+	| "/" UnaryExpression() 
+	| "%" UnaryExpression() 
+	)*
+)
+	{return exp ;}
 }
 
 // Additive Expression
-void AdditiveExpression(): {}
+ExpressionNode AdditiveExpression():
 {
-	MultiplicativeExpression() ("+" MultiplicativeExpression() | "-" MultiplicativeExpression() )*
+	ExpressionNode exp = null ; 
+}
+{
+(
+	exp =MultiplicativeExpression() 
+	(
+	"+" MultiplicativeExpression() 
+	| "-" MultiplicativeExpression() 
+	)*
+)
+	{return exp ;}
 }
 
 //Shift Expression
-void ShiftExpression(): {}
+ExpressionNode ShiftExpression(): 
 {
-	AdditiveExpression() (">>" AdditiveExpression() | "<<" AdditiveExpression() | ">>>" AdditiveExpression())*
+	ExpressionNode exp = null ; 
+}
+{
+(
+	exp = AdditiveExpression() 
+	(
+	">>" AdditiveExpression() 
+	| "<<" AdditiveExpression() 
+	| ">>>" AdditiveExpression()
+	)*
+)
+	{return exp ;}
 }
 
 //Relational Expression
-void RelationalExpression(): {}
+ExpressionNode RelationalExpression(): 
+{
+	ExpressionNode exp = null ; 
+}
 {
 //	ShiftExpression() ("<" ShiftExpression() | ">" ShiftExpression() | "<=" ShiftExpression() | ">=" ShiftExpression() | <INSTANCEOF> ShiftExpression() | <IN> ShiftExpression()  )*
-	ShiftExpression() (("<" | ">"  | "<=" | ">="  | <INSTANCEOF>  | <IN>) ShiftExpression()  )*
+(
+	exp = ShiftExpression() 
+	(
+		( "<" | ">"  | "<=" | ">="  | <INSTANCEOF>  | <IN> )
+		ShiftExpression()  
+	)*
+)
+	{return exp ;}
 }
 
 //Equality Expression
-void EqualityExpression(): {}
+ExpressionNode EqualityExpression(): 
 {
-	RelationalExpression()  ( ( "==" | "!=" | "===" | "!=="  ) RelationalExpression()  )*
+	ExpressionNode exp = null ;
+}
+{
+(
+	exp = RelationalExpression()  
+	(
+		 ( "==" | "!=" | "===" | "!=="  ) 
+		 RelationalExpression()  
+	)*
+)
+	{return exp ;}
 }
 
 //BINARY BITWISE OPERATORS
 //BitwiseAND Expression
-void BitwiseANDExpression(): {}
+ExpressionNode BitwiseANDExpression(): 
 {
-	EqualityExpression() ("&" EqualityExpression()  )*
+	ExpressionNode exp = null ;
+}
+{
+(
+	exp = EqualityExpression() 
+	(
+		"&" EqualityExpression()  
+	)*	
+)
+	{return exp ; }
 }
 //BitwiseXORExpression
-void BitwiseXORExpression(): {}
+ExpressionNode BitwiseXORExpression(): 
 {
-	BitwiseANDExpression() ("^" BitwiseANDExpression() )*
+	ExpressionNode exp = null ;
+}
+{
+(
+	exp = BitwiseANDExpression() 
+	(
+		"^" BitwiseANDExpression() 
+	)*
+)
+	{return exp ;}
 }
 //bitwiseORExpression
-void BitwiseORExpression() : {}
+ExpressionNode BitwiseORExpression() : 
 {
-	BitwiseXORExpression() ("|" BitwiseXORExpression())*
+	ExpressionNode exp = null ;
+}
+{
+(
+	exp = BitwiseXORExpression() 
+	(
+		"|" BitwiseXORExpression()
+	)*
+)
+	{return exp ;}
 }
 
 //BINARY LOGICAL OPERATORS
-void LogicalANDExpression():{}
+ExpressionNode LogicalANDExpression():
 {
-	BitwiseORExpression() (<AND> BitwiseORExpression())*
+	ExpressionNode exp = null ;
+}
+{
+(
+	exp = BitwiseORExpression() 
+	(
+		<AND> BitwiseORExpression()
+	)*
+)
+	{return exp ;}
 }
 
-void LogicalORExpression(): {}
+ExpressionNode LogicalORExpression(): 
 {
-	LogicalANDExpression() ("||" LogicalANDExpression() )*
+	ExpressionNode exp = null ;
+}
+{
+(
+	exp = LogicalANDExpression() 
+	(
+		"||" LogicalANDExpression() 
+	)*
+)
+	{return exp ;}
 }
 
 //Conditional Expression
-void ConditionalExpression():{}
+ExpressionNode ConditionalExpression():
 {
-	LogicalORExpression() ("?" AssignmentExpression() ":" AssignmentExpression() )?
-
+	ExpressionNode exp = null ;
+}
+{
+(	//TODO deal with ? : !!?
+	exp = LogicalORExpression() ("?" AssignmentExpression() ":" AssignmentExpression() )?
+)
+	{return exp ;}
 }
 
 ExpressionNode AssignmentExpression(): {
-	ExpressionNode exp;
+	//ExpressionNode exp = null;
+	OperatorNode exp ;
+	ExpressionNode left = null,right = null;
+	OperatorNode.OperatorType op =null;
 }
 {
 
 (LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
- 		LeftHandSideExpression() AssignmentOperator() )* ConditionalExpression()
 
-	/*(LOOKAHEAD(ConditionalExpression())
-	ConditionalExpression()
-|
-	( 	LeftHandSideExpression() 
-		AssignmentOperator()  AssignmentExpression()
-	)
-)*/
+	//TODO deal with * how !!!?
+ 	left = LeftHandSideExpression() op = AssignmentOperator() )* right = ConditionalExpression()
 	{
-		//TODO deal with left side 
-		return null;
+		//TODO deal with left side
+		exp = new OperatorNode (op,left,right) ; 
+		return exp;
 	}
 }
 
-void AssignmentOperator(): {}
+OperatorNode.OperatorType AssignmentOperator() : 
 {
-	"*=" | "/=" | "%=" | "+=" | "-=" | "="
+	OperatorNode.OperatorType op ;
+	op = OperatorNode.OperatorType.Add ;
+}
+{
+	 ( //TODO Complete it 
+	 "*=" | "/=" | "%=" | "+=" | "-=" | "=" { op = OperatorNode.OperatorType.Assignment ; }
+	 )
+	 {
+	 	return op ;
+	 }
 }
 
 // Expression Finally !!
-
 void Expression(): {}
 {
 	AssignmentExpression() ("," AssignmentExpression())*
@@ -643,12 +796,13 @@ void VariableDeclarationNoIn() : {}
 }
 
 ExpressionNode Initialiser() : {
-	ExpressionNode exp;
+	ExpressionNode exp = null;
 }
 {
 	"=" exp = AssignmentExpression()
 	{return exp;}
 }
+
 void InitialiserNoIn() : {}
 {
 	"=" //AssignmentExpressionNoIn()

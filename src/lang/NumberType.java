@@ -114,6 +114,12 @@ public class NumberType extends ObjectType {
 	public StringType toStringType() {
 		return new StringType(String.format("%f", value));
 	}
+	
+	@Override
+	public BooleanType toBooleanType() {
+		// TODO Auto-generated method stub
+		return new BooleanType(this.value == 0);
+	}
 
 	/**
 	 * @param args

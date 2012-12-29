@@ -86,9 +86,51 @@ public class ObjectType {
 			return new StringType("undefined");
 		}
 		
+		@Override
+		public BooleanType toBooleanType() {
+			// TODO Auto-generated method stub
+			return new BooleanType(false);
+		}
+		
 	}
 	
-	public static final ObjectType nullValue = null;
+	public static class Null extends ObjectType {
+
+		protected Null() {
+			
+		}
+		
+		@Override
+		public ObjectType operator(OperatorType type, ObjectType right) {
+			//TODO implement a real conversion
+			return new NumberType(0.0).operator(type, right);
+		}
+
+		@Override
+		public ObjectType operator(OperatorType type) {
+			//TODO implement a real conversion
+			return new NumberType(0.0).operator(type);
+		}
+
+		@Override
+		public ObjectType clone() {
+			throw new RuntimeException("cannot call clone of null ");
+		}
+		
+		@Override
+		public StringType toStringType() {
+			return new StringType("null");
+		}
+		
+		@Override
+		public BooleanType toBooleanType() {
+			// TODO Auto-generated method stub
+			return new BooleanType(false);
+		}
+		
+	}
+	
+	public static final ObjectType nullRef = new Null();
 	public static final ObjectType undefined = new Undefined();
 	//TODO add special values for null and undefined
 	

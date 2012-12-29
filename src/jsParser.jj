@@ -415,9 +415,8 @@ void MemberExpression(): {}
 (	PrimaryExpression()
 |	FunctionExpression()
 )
-//(	("[" Expression() "]")*  // there is solution for left-recursion
+	("[" Expression() "]")*  // there is solution for left-recursion
 	("." <IDENTIFIER>)*	 // not uses IdentifierName()
-//)
 )
 |	"new" MemberExpression() Arguments()
 }

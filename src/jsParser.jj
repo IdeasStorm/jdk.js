@@ -406,7 +406,11 @@ void PropertyName(): {}
 // 		LEFT HAND SIDE EXPRESSION
 void LeftHandSideExpression() : {}
 {
-	MemberExpression() (Arguments())?
+	//MemberExpression() (Arguments())?
+(LOOKAHEAD (CallExpression()) 
+		CallExpression()
+	|	NewExpression()	
+)
 }
 
 void MemberExpression(): {}
@@ -415,8 +419,10 @@ void MemberExpression(): {}
 (	PrimaryExpression()
 |	FunctionExpression()
 )
-	("[" Expression() "]")*  // there is solution for left-recursion
-	("." <IDENTIFIER>)*	 // not uses IdentifierName()
+	(
+	("[" Expression() "]")  // there is solution for left-recursion
+	|("." <IDENTIFIER>)	 // not uses IdentifierName()
+	)*
 )
 |	"new" MemberExpression() Arguments()
 }
@@ -428,11 +434,18 @@ void NewExpression(): {}
 
 void CallExpression(): {}
 { 
-	//(MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
-	MemberExpression() Arguments() 
-	( Arguments() )* 
-	( "[" Expression() "]" )*
-	( "." <IDENTIFIER> )*
+//	(MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
+	(MemberExpression() (Arguments())?)
+	(( Arguments() )
+	|
+	( "[" Expression() "]" )
+	|
+	( "." <IDENTIFIER> ) )*
+	
+
+	
+	
+	
 }
 
 void Arguments(): {}

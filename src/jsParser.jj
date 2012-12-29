@@ -380,9 +380,7 @@ void ObjectLiteral(): {}
 	"{" 
 	(	"}"
 		|
-		(PropertyNameAndValueList() 
-			( "}" | ","  "}" )
-		)
+		PropertyNameAndValueList()  (",")? "}"
 	)
 }
 
@@ -394,6 +392,9 @@ void PropertyNameAndValueList(): {}
 void PropertyAssignment(): {}
 {
 	PropertyName() ":" AssignmentExpression()
+|	"get" PropertyName() "(" ")" "{" FunctionBody() "}" 
+|	"set" PropertyName() "(" <IDENTIFIER> ")" "{" FunctionBody() "}" 
+	
 }
 
 void PropertyName(): {}
@@ -786,6 +787,7 @@ void start() : {}
 //	LeftHandSideExpression() "=" LeftHandSideExpression()
 	//ExpressionStatement()
 	Program() (<EOF>)?
+//ObjectLiteral()
 //	ArrayLiteral()
 //	";"
 //<NUMBER>

@@ -1,5 +1,11 @@
 // CODE TO TEST
 
+var obj = {
+name : "cool object",
+kind : "bla bla ",
+bla : "asdf"
+};
+
 var my_func = function fun(a,b,c)
 {
 	var mycars = new Array();

@@ -211,13 +211,11 @@ public class ObjectType {
 	}
 
 	public void setProperty(java.lang.String name, ObjectType value) {
-		// TODO Auto-generated method stub
-		
+		setAttribute(name, value);
 	}
 
 	public ObjectType getProperty(java.lang.String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return getAttribute(name);
 	}
 	
 	@SuppressWarnings("unchecked")

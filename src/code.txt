@@ -5,13 +5,24 @@ function fun(a,b,c)
 	var mycars = new Array();
 	for ( i =0 ;i<y+1 ; i++)
 		myCars=new Array("Saab","Volvo","BMW");
-	//var name=myCars[0];
+	var name=myCars[0];
+	
+	var index = -1 ;
+	var array = new Array();
+	while (index != array.length)
+	{
+		array[index++] = "a"++ ; 
+	}
+	
 	if ( x != y && y == 1)
 	{
 		a.b(c) = (myCars++).length ;
 		var y=myCars.indexOf("Volvo") ;
 	}
 	
+	dataSum += parseFloat(data[i]);
+	
+	var data = a[i];
 	person=new Object();
 	person={firstname:"John",lastname:"Doe",age:50,eyecolor:"blue"};
 	a = [1,2,3,4] ;

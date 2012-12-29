@@ -14,7 +14,7 @@ function fun(a,b,c)
 		array[index++] = "a"++ ; 
 	}
 	
-	if ( x != y && y == 1)
+	if ( x != y && (y = 1) )
 	{
 		a.b(c) = (myCars++).length ;
 		var y=myCars.indexOf("Volvo") ;

@@ -193,7 +193,7 @@ LiteralNode Literal(): {
 |	literal = BooleanLiteral()
 |	literal = NumericLiteral()
 |	literal = StringLiteral()
-// | RegularExpressionLiteral()
+// | RegularExpressionLiteral() TODO in future 
 
 )
 
@@ -207,45 +207,44 @@ LiteralNode NullLiteral(): {}
 		return LiteralNode.createNullLiteral();
 	}
 }
-LiteralNode BooleanLiteral(): {
+
+LiteralNode BooleanLiteral(): 
+{
 	Token symbol;
 }
 {
-(
-	symbol = <TRUE>
-|	symbol = <FALSE>
-)
-{
-	return LiteralNode.createBooleanLiteral(symbol.image);
-}
-
+	(
+		symbol = <TRUE>
+	|	symbol = <FALSE>
+	)
+	{
+		return LiteralNode.createBooleanLiteral(symbol.image);
+	}
 }
 
 LiteralNode NumericLiteral(): {}
-{
-	
+{	
 	DecimalLiteral()
 	{
 		//TODO Get the real Number Literal
 		return LiteralNode.createNumberLiteral("0.0");
-	}
-	
+	}	
 }
 
 void DecimalLiteral(): {}
 {
-(	DecimalIntegerLiteral() 
-	(	"." (DecimalDigits())? (ExponentPart())?
-|	(ExponentPart())?	
+	(	DecimalIntegerLiteral() 
+		(	"." (DecimalDigits())? (ExponentPart())?
+	|	(ExponentPart())?	
+		)
 	)
-)
-|	"." DecimalDigits() (ExponentPart())? 
+	|	"." DecimalDigits() (ExponentPart())? 
 }
 
 
 void DecimalIntegerLiteral(): {}
 {
-//	"0"
+//	"0" TODO 
 //|
 //	NonZeroDigit() (DecimalDigits())?
 	<NUMBER>
@@ -277,18 +276,19 @@ void ExponentPart(): {}
 
 void SignedInteger(): {}
 {
-	DecimalDigits()
-| 	"+" DecimalDigits()
-|	"-" DecimalDigits()
+		DecimalDigits()
+	| 	"+" DecimalDigits()
+	|	"-" DecimalDigits()
 }
 
 LiteralNode StringLiteral(): 
 {
-String s="";
+	String s="";
 }
 {
-	(<DOUBLEQUOTE> (s=DoubleStringCharacters())? <DOUBLEENDQUOTE>
-|	<SINGLEQUOTE> (s=SingleStringCharacters())? <SINGLEENDQUOTE>)
+	(	<DOUBLEQUOTE> (s=DoubleStringCharacters())? <DOUBLEENDQUOTE>
+	|	<SINGLEQUOTE> (s=SingleStringCharacters())? <SINGLEENDQUOTE>
+	)
 	{
 		return LiteralNode.createStringLiteral(s);
 	}
@@ -398,9 +398,9 @@ void PropertyAssignment(): {}
 
 void PropertyName(): {}
 {
-	< IDENTIFIER>
-|	StringLiteral()
-|	NumericLiteral()
+		< IDENTIFIER>
+	|	StringLiteral()
+	|	NumericLiteral()
 }
 
 // 		LEFT HAND SIDE EXPRESSION
@@ -427,8 +427,12 @@ void NewExpression(): {}
 }
 
 void CallExpression(): {}
-{
-	MemberExpression() Arguments() (MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
+{ 
+	//(MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
+	MemberExpression() Arguments() 
+	( Arguments() )* 
+	( "[" Expression() "]" )*
+	( "." <IDENTIFIER> )*
 }
 
 void Arguments(): {}

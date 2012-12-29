@@ -11,10 +11,13 @@ public class BlockStatement extends Statement {
 	}
 	
 	@Override
-	public void execute(Context context) {
+	public Trilogy execute(Context context) {
 		BlockContext blockContext = new BlockContext(context);
 		for(Statement statement : statements) {
-			statement.execute(blockContext);
+			Trilogy trilogy = statement.execute(blockContext);
+			if (trilogy.type == Trilogy.Type.Break)
+				return new Trilogy(Trilogy.Type.Break, null, trilogy.getIdentifier());
 		}
+		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 }

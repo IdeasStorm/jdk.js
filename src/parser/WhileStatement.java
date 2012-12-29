@@ -10,11 +10,13 @@ public class WhileStatement extends ExpressionNode {
 	}
 	
 	@Override
-	public void execute(Context context) {
+	public Trilogy execute(Context context) {
 		Context whileStatementContext = new BlockContext(context);
 		while (exprssion.evaluate(context).toBooleanType().toBoolean()) {
 			whileStatement.execute(whileStatementContext);
+			//TODO Same for loop
 		}
+		return new Trilogy(Trilogy.Type.Normal, null, null);		
 	}
 
 }

@@ -8,8 +8,9 @@ public class ExpressionStatement extends Statement {
 	}
 	
 	@Override
-	public void execute(Context context) {
+	public Trilogy execute(Context context) {
 		expression.execute(context);
+		return new Trilogy(null, null, null);
 	}
 	
 }

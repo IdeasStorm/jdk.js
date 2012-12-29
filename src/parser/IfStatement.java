@@ -14,14 +14,18 @@ public class IfStatement extends Statement {
 	}
 	
 	@Override
-	public void execute(Context context) {
+	public Trilogy execute(Context context) {
 		// Get the boolean value of expression
 		if (exprssion.evaluate(context).toBooleanType().toBoolean()) { // if value true
 			Context ifStatementContext = new BlockContext(context);
-			ifStatement.execute(ifStatementContext);
+			Trilogy trilogy = ifStatement.execute(ifStatementContext);
+			//TODO check this
+			return new Trilogy(Trilogy.Type.Normal, null, null);
 		} else { // if the value false
 			Context elseStatmentContext = new BlockContext(context);
-			elseStatement.execute(elseStatmentContext);
+			Trilogy trilogy = elseStatement.execute(elseStatmentContext);
+			//TODO check this
+			return new Trilogy(Trilogy.Type.Normal, null, null);
 		}
 	}
 

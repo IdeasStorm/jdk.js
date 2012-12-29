@@ -314,10 +314,6 @@ String SingleStringCharacters() :
 		return builder.toString();
 	}
 }
-
-
-
-
 //		END LITERALS
 
 
@@ -415,12 +411,14 @@ void LeftHandSideExpression() : {}
 
 void MemberExpression(): {}
 {
-//(LOOKAHEAD(PrimaryExpression())
-	PrimaryExpression()
-//|	("[" Expression() "]")  // there is solution for left-recursion
-//)
+(
+(	PrimaryExpression()
 |	FunctionExpression()
-//|	"." IdentifierName()*	 // not uses 
+)
+//(	("[" Expression() "]")*  // there is solution for left-recursion
+	("." <IDENTIFIER>)*	 // not uses IdentifierName()
+//)
+)
 |	"new" MemberExpression() Arguments()
 }
 
@@ -758,10 +756,10 @@ void start() : {}
 {
 //	LeftHandSideExpression() "=" LeftHandSideExpression()
 	//ExpressionStatement()
-	//Program() <EOF>
+	Program() (<EOF>)?
 //	ArrayLiteral()
 //	";"
 //<NUMBER>
 
-StringLiteral()<EOF>
+//StringLiteral()<EOF>
 }

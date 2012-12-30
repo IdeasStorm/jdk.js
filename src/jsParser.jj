@@ -1072,7 +1072,7 @@ Statement Statement() :
 |	sta = EmptyStatement()
 |	sta = ExpressionStatement()
 |	sta = IfStatement()
-|	IterationStatement()
+|	sta = IterationStatement()
 |	ReturnStatement()
 |	BreakStatement()
 /*|	ContinueStatement()

@@ -35,7 +35,11 @@ public class OperatorNode extends ExpressionNode {
 		Or, // ||
 		HAnd, // &
 		HOr, // |
-		Shapo // ^
+		Shapo, // ^
+		BitWiseAnd,
+		BitWiseOr,
+		BitWiseXor,
+		BitWiseNot
 	}
 	
 	public OperatorNode(OperatorType type, ExpressionNode left, ExpressionNode right) {
@@ -57,8 +61,9 @@ public class OperatorNode extends ExpressionNode {
 	}
 	
 	
-	public void execute(Context context) {
+	public Trilogy execute(Context context) {
 		value = ObjectType.operator(type,left,right);
+		return new Trilogy(null, null, null);
 	}
 	
 

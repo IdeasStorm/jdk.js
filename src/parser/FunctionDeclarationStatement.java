@@ -3,8 +3,9 @@ package parser;
 public class FunctionDeclarationStatement extends JavaScriptNode {
 
 	@Override
-	public void execute(Context context) {
+	public Trilogy execute(Context context) {
 		// TODO Auto-generated method stub
+		return new Trilogy(null, null, null);
 
 	}
 

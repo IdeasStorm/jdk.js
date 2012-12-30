@@ -714,15 +714,15 @@ ExpressionNode AssignmentExpression(): {
 }
 {
 
-(LOOKAHEAD( LeftHandSideExpression() op = AssignmentOperator())
+//(LOOKAHEAD( LeftHandSideExpression() op = AssignmentOperator())
 
-( LOOKAHEAD( 1) right = LeftHandSideExpression() op = AssignmentOperator())*
-( left = ConditionalExpression() ) 
-//(//LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
+//( LOOKAHEAD( 1) right = LeftHandSideExpression() op = AssignmentOperator())*
+//( left = ConditionalExpression() ) 
+(LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
 	//TODO deal with * how !!!? // a = b = c 
-// 	left = LeftHandSideExpression() op = AssignmentOperator() { exp2 = new OperatorNode(op,left,null);left = exp2 ; } 
- 	//)* 
-)	
+ 	left = LeftHandSideExpression() op = AssignmentOperator() //{ exp2 = new OperatorNode(op,left,null);left = exp2 ; } 
+ 	)* 
+	right = ConditionalExpression() 	
 	{
 		//TODO deal with left side
 		exp = new OperatorNode (op,left,right) ; 

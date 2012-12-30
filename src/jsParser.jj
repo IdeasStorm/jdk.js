@@ -884,25 +884,47 @@ ExpressionStatement ExpressionStatement() :
 	{return new ExpressionStatement(exp) ;}
 }
 
-void IfStatement() : {}
+IfStatement IfStatement() : 
 {
-	<IF> "(" Expression() ")" Statement() (LOOKAHEAD(1) <ELSE> Statement())?
+	IfStatement sta ;
+	ExpressionNode exp ;
+	Statement sta1 , sta2 =null;
+}
+{
+	<IF> "(" exp = Expression() ")" sta1 = Statement() (LOOKAHEAD(1) <ELSE> sta2 = Statement())?
+	{return new IfStatement(exp,sta1,sta2) ;}
 }
 
-void IterationStatement() : {}
+Statement IterationStatement() : 
 {
-	DoWhileStatement()
-|	WhileStatement()
-|	ForStatement()
+	Statement sta ;
+}
+{
+(	sta = DoWhileStatement()
+|	sta = WhileStatement()
+|	sta = ForStatement()
+)
+	{return sta ; }
 }
 
-void DoWhileStatement() : {}
+Statement DoWhileStatement() : 
 {
-	<DO> Statement() <WHILE> "(" Expression() ")" ";"
+	Statement sta ;
+	ExpressionNode exp ;
 }
-void WhileStatement() : {}
 {
-	<WHILE> "(" Expression() ")" Statement()
+	<DO> sta = Statement() <WHILE> "(" exp = Expression() ")" ";"
+	//{return new DoWhileStatement(sta,exp) ; }
+	{return sta ; }
+}
+WhileStatement WhileStatement() : 
+{
+	Statement sta ;
+	ExpressionNode exp ;
+}
+{
+	<WHILE> "(" exp = Expression() ")" sta = Statement()
+	{return new WhileStatement(exp , sta) ; }
 }
 
 ForStatement ForStatement() : 
@@ -1049,7 +1071,7 @@ Statement Statement() :
 |	sta = VariableStatement()
 |	sta = EmptyStatement()
 |	sta = ExpressionStatement()
-|	IfStatement()
+|	sta = IfStatement()
 |	IterationStatement()
 |	ReturnStatement()
 |	BreakStatement()

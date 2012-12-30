@@ -50,8 +50,9 @@ public class OperatorNode extends ExpressionNode {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		VariableNode left = new VariableNode("a");
+		//VariableNode left = new VariableNode("a");
 		LiteralNode right = LiteralNode.createNumberLiteral("3.5");
+		LiteralNode left = LiteralNode.createNumberLiteral("1");
 		OperatorNode op = new OperatorNode(OperatorType.Add, left, right);
 		ProgramContext p = new ProgramContext(null);
 		op.evaluate(p);

@@ -1,7 +1,7 @@
 /**
  * JavaCC file
  */
- 
+
 options {
   JDK_VERSION = "1.5";
 }
@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import parser.*;
 import java.util.HashMap;
+import java.util.ArrayList;  
+import java.util.List;
 
 public class compiler {
   public static void main(String args[]) throws ParseException, FileNotFoundException  {
@@ -358,8 +360,7 @@ ExpressionNode PrimaryExpression() :{
 		exp = null;
 		//TODO fill exp
 	}
-|	"(" Expression() ")" {
-		exp = null;
+|	"(" exp = Expression() ")" {
 		//TODO fill exp
 	}
 
@@ -428,7 +429,7 @@ ExpressionNode LeftHandSideExpression() :
 {
 	//MemberExpression() (Arguments())?
 (LOOKAHEAD (CallExpression()) 
-		CallExpression()
+		exp = CallExpression()
 |		exp = NewExpression()
 )
 {return exp ;}
@@ -437,18 +438,21 @@ ExpressionNode LeftHandSideExpression() :
 ExpressionNode MemberExpression(): 
 {
 	ExpressionNode exp = null ;
+	List <ExpressionNode> args  = new ArrayList<ExpressionNode>() ;
+	ExpressionNode temp ;
+	Token t ;
 }
 {
 ((
 (	exp = PrimaryExpression()
-|	FunctionExpression()
+|	exp = FunctionExpression() // {return new functionNode(exp)}
 )
 	( //TODO return ExpressionNode !!!
-	("[" Expression() "]")  // there is solution for left-recursion
-	|("." <IDENTIFIER>)	 // not uses IdentifierName()
+	("[" temp = Expression() "]" {args.add(temp);} ) // {return CallArrayNode(args);}
+	|("." t = <IDENTIFIER> {args.add(new VariableNode(t.image));} ) // {return CallPropNode(args);} 
 	)*
 )
-|	"new" MemberExpression() Arguments()
+|	( "new" exp = MemberExpression() args = Arguments() )// {return NewFunction(exp,args);}
 ) {return exp ;}
 }
 
@@ -460,33 +464,53 @@ ExpressionNode NewExpression():
 (LOOKAHEAD (MemberExpression())
 	exp = MemberExpression()
 	//TODO return ExpressionNode !!!	
-|	"new" MemberExpression()
+|	"new" exp = MemberExpression() //{return new newExpr(exp) } 
 )
 {return exp ;}
 }
 
-void CallExpression(): {}
+ExpressionNode CallExpression(): 
+{
+	ExpressionNode exp = null;
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+	ExpressionNode temp ;
+	List <ExpressionNode> templist ;
+	Token t ; 
+}
 { 
 //	(MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
-	MemberExpression() Arguments()
+	exp = MemberExpression() args = Arguments()
 	(
-		( Arguments() )
+		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
 		|
-		( "[" Expression() "]" )
+		( "[" temp = Expression() "]" {args.add(temp); }) //return new CallArrayNode(exp,args) ;} )
 		|
-		( "." <IDENTIFIER> ) 
+		( "." t = <IDENTIFIER> {args.add(new VariableNode(t.image)); }) //return new CallPropNode(exp,args) ;} )
 	)*
-	
+	{return exp ;}
 }
 
-void Arguments(): {}
+List<ExpressionNode> Arguments(): 
 {
-	"(" (ArgumentList())? ")"
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+}
+{
+	"(" (args = ArgumentList())? ")"
+	{return args ;}
 }
 
-void ArgumentList(): {}
+List<ExpressionNode> ArgumentList(): 
 {
-	AssignmentExpression() ("," AssignmentExpression() )*
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+	ExpressionNode exp ;
+}
+{
+	exp = AssignmentExpression()
+	{args.add(exp);} 
+	(	"," exp = AssignmentExpression()
+		{args.add(exp);} 
+	)*
+	{ return args ; }
 }
 
 ExpressionNode PostfixExpression(): 
@@ -748,9 +772,18 @@ OperatorNode.OperatorType AssignmentOperator() :
 }
 
 // Expression Finally !!
-void Expression(): {}
+ExpressionNode Expression(): 
 {
-	AssignmentExpression() ("," AssignmentExpression())*
+//	List<ExpressionNode> exps ;
+	ExpressionNode exp ;
+}
+{
+	exp = AssignmentExpression()
+//	{exps.add(exp);} 
+//	(	"," exp = AssignmentExpression()
+//		{exps.add(exp);}
+//	)*
+	{return exp ;}
 }
 
 
@@ -896,19 +929,67 @@ void FunctionDeclaration() : {}
 	<FUNCTION> <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
 }
 
-void FunctionExpression() : {}
+ExpressionNode FunctionExpression() : 
 {
-	<FUNCTION> (<IDENTIFIER>)? "(" (FormalParameterList())? ")" "{" FunctionBody() "}"
+	ExpressionNode exp = null;
+	Token name ;
+	List<ExpressionNode> body ;
+	ArrayList<String> params = new ArrayList<String>();
+}
+{
+	<FUNCTION> (name = <IDENTIFIER>)? "(" 
+	(params = FormalParameterList())? ")" 
+	"{" body = FunctionBody() "}"
+	//{exp = new FunctionNode (name.image , params , body) }
+	{	return exp ; }
 }
 
-void FormalParameterList() : {} 
+ArrayList<String> FormalParameterList() : 
 {
-	<IDENTIFIER> ("," <IDENTIFIER>)* 
+	ArrayList<String> params = new ArrayList<String>() ;
+	Token t ;
+} 
+{
+	t = <IDENTIFIER>
+	{params.add(t.image);} 
+	(	"," t = <IDENTIFIER>
+		{params.add(t.image);}
+	)* 
+	{	return params ; }
 }
 
-void FunctionBody() : {}
+List<ExpressionNode> FunctionBody() : 
 {
-	(SourceElements())?
+	List<ExpressionNode> body = new ArrayList<ExpressionNode>();
+}
+{
+	(body = SourceElements())?
+	{	return body ;	}
+}
+
+List<ExpressionNode> SourceElements() : 
+{
+	List<ExpressionNode> elems = new ArrayList<ExpressionNode>() ;
+	ExpressionNode temp ;
+}
+{
+	(temp = SourceElement())+
+	{	elems.add(temp) ;
+		return elems ;
+	}
+}
+
+ExpressionNode SourceElement() : 
+{
+	ExpressionNode exp = null ;
+}
+{
+	//TODO FIXED IT
+( LOOKAHEAD (FunctionDeclaration())
+	 FunctionDeclaration() 
+|	 Statement()
+)
+	{return exp ;}
 }
 
 void ReturnStatement() : {} 
@@ -922,7 +1003,6 @@ void BreakStatement() : {}
 	<BREAK> (<IDENTIFIER>)? ";"
 	// [no LineTerminator here]
 }
-
 void Statement() : {}
 {
 	Block()
@@ -938,25 +1018,10 @@ void Statement() : {}
 */
 
 }
-
 // Program
 void Program() : {}
 {
 	(SourceElements())? // ?
-}
-
-void SourceElements() : {}
-{
-	(SourceElement())+
-}
-
-void SourceElement() : {}
-{
-	//TODO FIXED IT
-( LOOKAHEAD (FunctionDeclaration())
-	FunctionDeclaration() 
-|	Statement()
-)
 }
 
 void start() : {}

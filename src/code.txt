@@ -21,7 +21,7 @@ var my_func = function fun(a,b,c)
 		break ;
 	}
 	
-	if ( x != y && (y = 1) )
+	if ( x != y && y == 123 )
 	{
 		a.b(c) = (myCars++).length ;
 		var y=myCars.indexOf("Volvo") ;
@@ -35,4 +35,5 @@ var my_func = function fun(a,b,c)
 	a = [1,2,3,4] ;
 	return a ;
 } ;
-myCars.indexOf("asd").tostring();
+
+myCars.indexOf("asd").tostring() ;

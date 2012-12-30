@@ -38,9 +38,9 @@ TOKEN : /* LOGIC OPERATORS */
 {
 	< DOUBLEQUOTE: "\"">	: DOUBLE_STRING
 |	< SINGLEQUOTE:"'">		: SINGLE_STRING
-| 	< AND: "&&">
-|	< OR: "||">
-|	< NOT: "!">
+| 	< AND: "&&" | "and" >
+|	< OR: "||" | "or" >
+|	< NOT: "!" | "not" >
 }
 
 TOKEN : /* SIGN COMPARE */
@@ -107,7 +107,7 @@ TOKEN : /* VARIABLE */
 |	< DIGIT: ["0" - "9"]>
 */
 
-	< NUMBER: (["0" - "9"])+>
+	< NUMBER: (["0" - "9"])+ | ( (["0" - "9"])* ("." (["0" - "9"])+) )>
 |	< DIGIT: ["0" - "9"]>
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
@@ -491,14 +491,15 @@ void ArgumentList(): {}
 
 ExpressionNode PostfixExpression(): 
 {
-	ExpressionNode exp = null ; 
+	ExpressionNode exp ;
+	ExpressionNode left; 
 }
 {
 (	
-	exp = LeftHandSideExpression() 
+	left = LeftHandSideExpression() { exp = left ;}
 	(
-	"++" 
-	| "--"
+	 ( "++" { exp = new OperatorNode(OperatorNode.OperatorType.PostIncrement,left , null) ;} ) 
+	|( "--" { exp = new OperatorNode(OperatorNode.OperatorType.PostDecrement,left ,null) ;} )
 	)?
 )
 	{return exp ;}
@@ -507,17 +508,18 @@ ExpressionNode PostfixExpression():
 // Unary Expression
 ExpressionNode UnaryExpression(): 
 {
-	ExpressionNode exp = null; 
+	ExpressionNode exp ;
+	ExpressionNode right ;
 }
 {
 (
-	exp = PostfixExpression()
-	|	"typeof" UnaryExpression()
-	|	"++" UnaryExpression()
-	|	"--" UnaryExpression()
-	|	"+" UnaryExpression()
-	|	"-" UnaryExpression()
-	|	"!" UnaryExpression()
+	( exp = PostfixExpression() )
+//	|	"typeof" UnaryExpression()
+	|	( "++" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.PreIncrement,null , right) ;} )
+	|	( "--" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.PreDecrement,null , right) ;} )
+	|	( "+" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Add,null , right) ;}  )
+	|	( "-" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Subtract,null , right) ;}  )
+	|	( <NOT> right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Not,null , right) ;} )
 )
 	{return exp ;}
 }
@@ -525,15 +527,15 @@ ExpressionNode UnaryExpression():
 //	Multiplicative Expression
 ExpressionNode MultiplicativeExpression(): 
 {
-	ExpressionNode exp = null ; 
+	ExpressionNode exp,left,right =null; 
 }
 {
 (
-	exp = UnaryExpression() 
+	( left = UnaryExpression() {exp = left ;}) 
 	(
-	"*" UnaryExpression() 
-	| "/" UnaryExpression() 
-	| "%" UnaryExpression() 
+		( "*" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Multiply,left , right) ;  left = exp ; }) 
+	|	(  "/" UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Division,left , right) ;  left = exp ; } )
+	|	( "%" UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Mod,left , right) ;  left = exp ; } ) 
 	)*
 )
 	{return exp ;}
@@ -542,14 +544,14 @@ ExpressionNode MultiplicativeExpression():
 // Additive Expression
 ExpressionNode AdditiveExpression():
 {
-	ExpressionNode exp = null ; 
+	ExpressionNode exp,left,right = null ; 
 }
 {
 (
-	exp =MultiplicativeExpression() 
+	( left =MultiplicativeExpression() {exp = left ; })  
 	(
-	"+" MultiplicativeExpression() 
-	| "-" MultiplicativeExpression() 
+		( "+" MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Add, left , right) ;  left = exp ; }  ) 
+	| 	( "-" MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Subtract ,left , right) ;  left = exp ; }  ) 
 	)*
 )
 	{return exp ;}
@@ -575,15 +577,23 @@ ExpressionNode ShiftExpression():
 //Relational Expression
 ExpressionNode RelationalExpression(): 
 {
-	ExpressionNode exp = null ; 
+	ExpressionNode exp,left,right = null ;
+	OperatorNode.OperatorType op ; 
 }
 {
 //	ShiftExpression() ("<" ShiftExpression() | ">" ShiftExpression() | "<=" ShiftExpression() | ">=" ShiftExpression() | <INSTANCEOF> ShiftExpression() | <IN> ShiftExpression()  )*
 (
-	exp = ShiftExpression() 
+	( left = ShiftExpression() {exp = left ;}) 
 	(
-		( "<" | ">"  | "<=" | ">="  | <INSTANCEOF>  | <IN> )
-		ShiftExpression()  
+		(
+			 "<" { op = OperatorNode.OperatorType.Less; }    
+		|	 ">"  { op = OperatorNode.OperatorType.Greater; }
+		|	 "<=" { op = OperatorNode.OperatorType.LessOrEqual; }
+		|	 ">="  { op = OperatorNode.OperatorType.GreaterOrEqual; }
+		|	 <INSTANCEOF>  { op = OperatorNode.OperatorType.INSTANCEOF; }
+		|	 <IN> { op = OperatorNode.OperatorType.In; }
+		)
+		right = ShiftExpression() { exp = new OperatorNode(op, left , right) ;  left = exp ; }  
 	)*
 )
 	{return exp ;}
@@ -592,14 +602,20 @@ ExpressionNode RelationalExpression():
 //Equality Expression
 ExpressionNode EqualityExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right ;
+	OperatorNode.OperatorType op ;
 }
 {
 (
-	exp = RelationalExpression()  
+	left = RelationalExpression() {exp = left;}  
 	(
-		 ( "==" | "!=" | "===" | "!=="  ) 
-		 RelationalExpression()  
+		 (
+		  "=="  { op = OperatorNode.OperatorType.Equals; }
+		  | "!="  { op = OperatorNode.OperatorType.NotEquals; }
+//		  | "===" { op = OperatorNode.OperatorType.INSTANCEOF; }
+//		  | "!=="  { op = OperatorNode.OperatorType.INSTANCEOF; }
+		 )
+		 right = RelationalExpression() { exp = new OperatorNode(op, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}
@@ -609,27 +625,27 @@ ExpressionNode EqualityExpression():
 //BitwiseAND Expression
 ExpressionNode BitwiseANDExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right ;
 }
 {
 (
-	exp = EqualityExpression() 
+	left = EqualityExpression() {exp = left ;} 
 	(
-		"&" EqualityExpression()  
-	)*	
+		"&" right = EqualityExpression() { exp = new OperatorNode(OperatorNode.OperatorType.HAnd, left , right) ;  left = exp ; }
+	)*
 )
 	{return exp ; }
 }
 //BitwiseXORExpression
 ExpressionNode BitwiseXORExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right ;
 }
 {
 (
-	exp = BitwiseANDExpression() 
+	left = BitwiseANDExpression() {exp = left ;} 
 	(
-		"^" BitwiseANDExpression() 
+		"^" right = BitwiseANDExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Shapo, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}
@@ -637,13 +653,13 @@ ExpressionNode BitwiseXORExpression():
 //bitwiseORExpression
 ExpressionNode BitwiseORExpression() : 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right ;
 }
 {
 (
-	exp = BitwiseXORExpression() 
+	left = BitwiseXORExpression() {exp = left ;}
 	(
-		"|" BitwiseXORExpression()
+		"|" right = BitwiseXORExpression() { exp = new OperatorNode(OperatorNode.OperatorType.HOr, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}
@@ -652,13 +668,13 @@ ExpressionNode BitwiseORExpression() :
 //BINARY LOGICAL OPERATORS
 ExpressionNode LogicalANDExpression():
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right;
 }
 {
 (
-	exp = BitwiseORExpression() 
+	left = BitwiseORExpression() {exp =left;} 
 	(
-		<AND> BitwiseORExpression()
+		<AND> right = BitwiseORExpression() { exp = new OperatorNode(OperatorNode.OperatorType.And, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}
@@ -666,13 +682,13 @@ ExpressionNode LogicalANDExpression():
 
 ExpressionNode LogicalORExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,right,left;
 }
 {
 (
-	exp = LogicalANDExpression() 
+	left = LogicalANDExpression() {exp = left ; } 
 	(
-		"||" LogicalANDExpression() 
+		<OR> right = LogicalANDExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Or, left , right) ;  left = exp ; } 
 	)*
 )
 	{return exp ;}
@@ -699,7 +715,6 @@ ExpressionNode AssignmentExpression(): {
 {
 
 (LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
-
 	//TODO deal with * how !!!?
  	left = LeftHandSideExpression() op = AssignmentOperator() )* right = ConditionalExpression()
 	{
@@ -791,8 +806,7 @@ void VariableDeclarationListNoIn() : {}
 
 void VariableDeclarationNoIn() : {}
 {
-	<IDENTIFIER> (InitialiserNoIn())?
-	
+	<IDENTIFIER> (InitialiserNoIn())?	
 }
 
 ExpressionNode Initialiser() : {
@@ -939,4 +953,6 @@ void SourceElement() : {}
 void start() : {}
 {
 	Program() (<EOF>)?
+	//NumericLiteral()
+	
 }

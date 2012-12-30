@@ -7,24 +7,34 @@ public class OperatorNode extends ExpressionNode {
 	protected ExpressionNode right;
 	protected OperatorType type;
 	public enum OperatorType {
-		Add,
-		PostIncrement,
-		Subtract,
-		PostDecrement,
-		PreIncrement,
-		PreDecrement,
-		Equals,
-		Assignment,
-		Greater,
-		Less,
-		GreaterOrEqual,
-		LessOrEqual,
-		Multiply,
-		Division,
-		AddBy,
-		SubtractBy,
-		MultiplyBy,
-		DivideBy
+		Add, //+
+		PostIncrement, // i++
+		Subtract, // -
+		PostDecrement, // i--
+		PreIncrement, //++i
+		PreDecrement, // --i
+		Equals, // ==
+		NotEquals, // !=
+		Assignment, // =
+		Greater, // >
+		Less, // <
+		GreaterOrEqual, // >=
+		LessOrEqual, // <=
+		Multiply, // *
+		Division, // /
+		AddBy, // +=
+		SubtractBy, // -=
+		MultiplyBy, // *= 
+		DivideBy, // /= 
+		Not,// !
+		Mod, // %
+		INSTANCEOF, 
+		In,
+		And, // &&
+		Or, // ||
+		HAnd, // &
+		HOr, // |
+		Shapo // ^
 	}
 	
 	public OperatorNode(OperatorType type, ExpressionNode left, ExpressionNode right) {

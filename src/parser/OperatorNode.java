@@ -24,7 +24,14 @@ public class OperatorNode extends ExpressionNode {
 		AddBy,
 		SubtractBy,
 		MultiplyBy,
-		DivideBy
+		DivideBy,
+		And,
+		or,
+		Not,
+		BitWiseAnd,
+		BitWiseOr,
+		BitWiseXor,
+		BitWiseNot
 	}
 	
 	public OperatorNode(OperatorType type, ExpressionNode left, ExpressionNode right) {

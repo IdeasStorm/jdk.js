@@ -796,7 +796,6 @@ void Block() : {}
 void StatementList() : {}
 {
 	(Statement())*
-
 }
 
 VariableStatement VariableStatement() : 
@@ -840,7 +839,7 @@ Pair<String, ExpressionNode> VariableDeclaration() :
 	}
 }
 
-
+/*
 void VariableDeclarationListNoIn() : {}
 {
 	VariableDeclarationNoIn() ( "," VariableDeclarationNoIn())* 
@@ -851,6 +850,12 @@ void VariableDeclarationNoIn() : {}
 	<IDENTIFIER> (InitialiserNoIn())?	
 }
 
+void InitialiserNoIn() : {}
+{
+	"=" //AssignmentExpressionNoIn()
+}
+*/
+
 ExpressionNode Initialiser() : {
 	ExpressionNode exp = null;
 }
@@ -859,21 +864,24 @@ ExpressionNode Initialiser() : {
 	{return exp;}
 }
 
-void InitialiserNoIn() : {}
+Statement EmptyStatement() : 
 {
-	"=" //AssignmentExpressionNoIn()
+	Statement sta ;
 }
-
-
-void EmptyStatement() : {}
 {
 	";"
+	{return new Statement() ; }
 }
 
-void ExpressionStatement() : {}
+ExpressionStatement ExpressionStatement() : 
+{
+	ExpressionStatement sta ;
+	ExpressionNode exp ;
+}
 {
 	// TODO [lookahead != {{, function}] 
-	Expression() ";"
+	exp = Expression() ";"
+	{return new ExpressionStatement(exp) ;}
 }
 
 void IfStatement() : {}
@@ -897,7 +905,11 @@ void WhileStatement() : {}
 	<WHILE> "(" Expression() ")" Statement()
 }
 
-void ForStatement() : {}
+ForStatement ForStatement() : 
+{
+	ExpressionNode exp1=null,exp2=null,exp3=null ;
+	Statement body ;
+}
 {
 	<FOR> "(" 
 	(
@@ -906,14 +918,18 @@ void ForStatement() : {}
 //	|	<TYPE> VariableDeclarationNoIn() "in" Expression() ")" Statement()
 //	|
 (LOOKAHEAD(LeftHandSideExpression() "in")
-		LeftHandSideExpression() "in" Expression() ")" Statement()
-	|	(Expression())? ";" (Expression())? ";" (Expression())? ")" Statement()
-
+		exp1 = LeftHandSideExpression() "in" exp2 = Expression() ")" body = Statement()
+//		{ return new ForInStatement(exp1,exp2,body);}
+	|	(exp1 = Expression())? ";" (exp2 = Expression())? ";" (exp3 = Expression())? ")" body = Statement()
 	)
 )
+	{return new ForStatement(exp1,exp2,exp3,body) ; }
 }
 
-void ContinueStatement() : {}
+Statement ContinueStatement() : 
+{
+	Statement sta ;
+}
 {
 	<CONTINUE>
 (	(";")
@@ -924,16 +940,24 @@ void ContinueStatement() : {}
 }
 
 // FunctionDeclaration
-void FunctionDeclaration() : {}
+Statement FunctionDeclaration() : 
 {
-	<FUNCTION> <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
+	Statement sta ;
+	Token name ;
+	List<ExpressionNode> body ;
+	ArrayList<String> params = new ArrayList<String>();
+}
+{
+	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() "}"
+	//{return new FunctionStatement (name.image ,params,body) ;}
+	{return sta ;}
 }
 
 ExpressionNode FunctionExpression() : 
 {
 	ExpressionNode exp = null;
 	Token name ;
-	List<ExpressionNode> body ;
+	List<Statement> body ;
 	ArrayList<String> params = new ArrayList<String>();
 }
 {
@@ -958,19 +982,19 @@ ArrayList<String> FormalParameterList() :
 	{	return params ; }
 }
 
-List<ExpressionNode> FunctionBody() : 
+List<Statement> FunctionBody() : 
 {
-	List<ExpressionNode> body = new ArrayList<ExpressionNode>();
+	List<Statement> body = new ArrayList<Statement>();
 }
 {
 	(body = SourceElements())?
 	{	return body ;	}
 }
 
-List<ExpressionNode> SourceElements() : 
+List<Statement> SourceElements() : 
 {
-	List<ExpressionNode> elems = new ArrayList<ExpressionNode>() ;
-	ExpressionNode temp ;
+	List<Statement> elems = new ArrayList<Statement>() ;
+	Statement temp ;
 }
 {
 	(temp = SourceElement())+
@@ -979,36 +1003,52 @@ List<ExpressionNode> SourceElements() :
 	}
 }
 
-ExpressionNode SourceElement() : 
+Statement SourceElement() : 
 {
-	ExpressionNode exp = null ;
+	Statement sta = null ;
 }
 {
 	//TODO FIXED IT
 ( LOOKAHEAD (FunctionDeclaration())
-	 FunctionDeclaration() 
-|	 Statement()
+	 sta = FunctionDeclaration() 
+|	 sta = Statement()
 )
-	{return exp ;}
+	{return sta ;}
 }
 
-void ReturnStatement() : {} 
+Statement ReturnStatement() : 
 {
-	<RETURN> (Expression())? ";" 
-	//[no LineTerminator here]	
+	Statement sta =null ;
+	ExpressionNode exp ;
+} 
+{
+	<RETURN> (exp = Expression())? ";" 
+	//[no LineTerminator here]
+	//{return new ReturnStatement(exp) ;}	
+	{return sta ;}
 }
 
-void BreakStatement() : {}
+Statement BreakStatement() : 
 {
-	<BREAK> (<IDENTIFIER>)? ";"
+//	BreakStatement sta ;
+	Statement sta =null;
+	Token t ;
+}
+{
+	<BREAK> (t = <IDENTIFIER>)? ";"
 	// [no LineTerminator here]
+	//{return new BreakStatement (t.image) ;}
+	{return sta ;} 
 }
-void Statement() : {}
+Statement Statement() : 
 {
-	Block()
-|	VariableStatement()
-|	EmptyStatement()
-|	ExpressionStatement()
+	Statement sta = null;
+}
+{
+(	Block()
+|	sta = VariableStatement()
+|	sta = EmptyStatement()
+|	sta = ExpressionStatement()
 |	IfStatement()
 |	IterationStatement()
 |	ReturnStatement()
@@ -1016,18 +1056,20 @@ void Statement() : {}
 /*|	ContinueStatement()
 |	WithStatment
 */
-
+)
+	{	return sta ;	}
 }
 // Program
-void Program() : {}
+List<Statement> Program() :
 {
-	(SourceElements())? // ?
+	List<Statement> list = new ArrayList<Statement>();
+}
+{
+	(list = SourceElements())? // ?
+	{return list ;}
 }
 
 void start() : {}
 {
 	Program() (<EOF>)?
-//AssignmentExpression() ";"
-	//NumericLiteral()
-	
 }

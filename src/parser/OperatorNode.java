@@ -53,8 +53,9 @@ public class OperatorNode extends ExpressionNode {
 	}
 	
 	
-	public void execute(Context context) {
+	public Trilogy execute(Context context) {
 		value = ObjectType.operator(type,left,right);
+		return new Trilogy(null, null, null);
 	}
 	
 

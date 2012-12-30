@@ -10,13 +10,14 @@ public class VariableStatement extends JavaScriptNode {
 	}
 	
 	@Override
-	public void execute(Context context) {
+	public Trilogy execute(Context context) {
 		// TODO Auto-generated method stub
 		// for each variable in Hash
 		for(String name : variables.keySet()) {
 			// Add variable to context 
 			context.defineVariable(name, variables.get(name).evaluate(context));
 		}
+		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 	
 

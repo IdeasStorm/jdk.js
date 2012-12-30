@@ -13,13 +13,9 @@ public class SwitchStatement extends ExpressionNode {
 	}
 	
 	@Override
-	public void execute(Context context) {		
-		for (int i=0; i<exprssions.size(); i++) {
-			if (exprssions.get(i).evaluate(context).toBooleanType().toBoolean()) {
-				BlockContext caseBlock = new BlockContext(context);
-				blocksStatement.get(i).execute(caseBlock);
-			}
-		}
+	public Trilogy execute(Context context) {		
+		//TODO made one block
+		return new Trilogy(null, null, null);
 	}
 
 }

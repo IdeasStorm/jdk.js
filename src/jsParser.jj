@@ -961,8 +961,8 @@ void SourceElement() : {}
 
 void start() : {}
 {
-//	Program() (<EOF>)?
-AssignmentExpression() ";"
+	Program() (<EOF>)?
+//AssignmentExpression() ";"
 	//NumericLiteral()
 	
 }

@@ -715,8 +715,8 @@ ExpressionNode AssignmentExpression(): {
 {
 
 (LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
-	//TODO deal with * how !!!?
- 	left = LeftHandSideExpression() op = AssignmentOperator() )* right = ConditionalExpression()
+	//TODO deal with * how !!!? // a = b= c 
+ 	left = LeftHandSideExpression() op = AssignmentOperator() {left = exp ;} )* right = ConditionalExpression()
 	{
 		//TODO deal with left side
 		exp = new OperatorNode (op,left,right) ; 
@@ -731,7 +731,12 @@ OperatorNode.OperatorType AssignmentOperator() :
 }
 {
 	 ( //TODO Complete it 
-	 "*=" | "/=" | "%=" | "+=" | "-=" | "=" { op = OperatorNode.OperatorType.Assignment ; }
+	 "*="  { op = OperatorNode.OperatorType.MultiplyBy ; }
+	 | "/="  { op = OperatorNode.OperatorType.DivideBy ; }
+	 | "%="  { op = OperatorNode.OperatorType.ModBy ; }
+	 | "+="  { op = OperatorNode.OperatorType.AddBy ; }
+	 | "-="  { op = OperatorNode.OperatorType.SubtractBy ; }
+	 | "=" { op = OperatorNode.OperatorType.Assignment ; }
 	 )
 	 {
 	 	return op ;

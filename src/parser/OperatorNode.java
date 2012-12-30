@@ -25,7 +25,8 @@ public class OperatorNode extends ExpressionNode {
 		AddBy, // +=
 		SubtractBy, // -=
 		MultiplyBy, // *= 
-		DivideBy, // /= 
+		DivideBy, // -=
+		ModBy, // %=
 		Not,// !
 		Mod, // %
 		INSTANCEOF, 

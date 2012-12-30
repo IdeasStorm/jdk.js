@@ -631,7 +631,7 @@ ExpressionNode BitwiseANDExpression():
 (
 	left = EqualityExpression() {exp = left ;} 
 	(
-		"&" right = EqualityExpression() { exp = new OperatorNode(OperatorNode.OperatorType.HAnd, left , right) ;  left = exp ; }
+		"&" right = EqualityExpression() { exp = new OperatorNode(OperatorNode.OperatorType.BitWiseAnd, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ; }
@@ -659,7 +659,7 @@ ExpressionNode BitwiseORExpression() :
 (
 	left = BitwiseXORExpression() {exp = left ;}
 	(
-		"|" right = BitwiseXORExpression() { exp = new OperatorNode(OperatorNode.OperatorType.HOr, left , right) ;  left = exp ; }
+		"|" right = BitwiseXORExpression() { exp = new OperatorNode(OperatorNode.OperatorType.BitWiseOr, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}

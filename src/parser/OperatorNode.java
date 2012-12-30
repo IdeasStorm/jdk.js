@@ -33,8 +33,6 @@ public class OperatorNode extends ExpressionNode {
 		In,
 		And, // &&
 		Or, // ||
-		HAnd, // &
-		HOr, // |
 		Shapo, // ^
 		BitWiseAnd,
 		BitWiseOr,

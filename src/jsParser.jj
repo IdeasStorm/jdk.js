@@ -708,15 +708,21 @@ ExpressionNode ConditionalExpression():
 
 ExpressionNode AssignmentExpression(): {
 	//ExpressionNode exp = null;
-	OperatorNode exp ;
+	OperatorNode exp2=null,exp = null ;
 	ExpressionNode left = null,right = null;
 	OperatorNode.OperatorType op =null;
 }
 {
 
-(LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
-	//TODO deal with * how !!!? // a = b= c 
- 	left = LeftHandSideExpression() op = AssignmentOperator() {left = exp ;} )* right = ConditionalExpression()
+(LOOKAHEAD( LeftHandSideExpression() op = AssignmentOperator())
+
+( LOOKAHEAD( 1) right = LeftHandSideExpression() op = AssignmentOperator())*
+( left = ConditionalExpression() ) 
+//(//LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
+	//TODO deal with * how !!!? // a = b = c 
+// 	left = LeftHandSideExpression() op = AssignmentOperator() { exp2 = new OperatorNode(op,left,null);left = exp2 ; } 
+ 	//)* 
+)	
 	{
 		//TODO deal with left side
 		exp = new OperatorNode (op,left,right) ; 

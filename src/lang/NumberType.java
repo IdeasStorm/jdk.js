@@ -118,7 +118,7 @@ public class NumberType extends ObjectType {
 	@Override
 	public BooleanType toBooleanType() {
 		// TODO Auto-generated method stub
-		return new BooleanType(this.value == 0);
+		return new BooleanType(this.value != 0);
 	}
 
 	/**

@@ -32,16 +32,21 @@ public abstract class Context {
 		ObjectType ref = _get(name);
 		if (ref != ObjectType.undefined)
 			return ref;
-		else
+		else if (parent != null)
 			return parent.getVariable(name);
+		else
+			return ObjectType.undefined;
+		//TODO strict mode
 	}
 	
 	public final ObjectType getThisValue() {
 		ObjectType ref = _getThis();
 		if (ref != ObjectType.undefined)
 			return ref;
+		else if (parent != null)
+			return parent.getThisValue();
 		else
-			return parent.getThisValue(); 
+			return ObjectType.undefined;
 	}
 	
 	public abstract void _define(String name, ObjectType value);

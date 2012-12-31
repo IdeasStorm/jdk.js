@@ -9,25 +9,26 @@ public class ProgramContext extends Context {
 	}
 	
 	@Override
-	public void defineVariable(String name, ObjectType value) {
+	public void _define(String name, ObjectType value) {
 		globalObject.setProperty(name, value);
 	}
 
-	@Override
-	public void defineVariable(String name) {
-		globalObject.setProperty(name, ObjectType.nullRef);
-	}
 
 	@Override
-	public ObjectType getVariable(String name) {
+	public ObjectType _get(String name) {
 		return globalObject.getProperty(name);
 	}
 
 	@Override
-	public ObjectType getThisValue() {
+	public ObjectType _getThis() {
 		return globalObject;
 	}
 
+	@Override
+	public void _set(String name, ObjectType value) {
+		globalObject.setAttribute(name, value);
+	}
+	
 	/**
 	 * @param args
 	 */

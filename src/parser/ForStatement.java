@@ -18,7 +18,7 @@ public class ForStatement extends Statement {
 	public Trilogy execute(Context context) {
 		BlockContext forStatementContext = new BlockContext(context); 
 		frExprssion.execute(forStatementContext);
-		while (sdExpression.evaluate(context).toBooleanType().toBoolean()) {
+		while (sdExpression.evaluate(forStatementContext).toBooleanType().toBoolean()) {
 			Trilogy trilogy = statement.execute(forStatementContext);
 			thdExpression.execute(forStatementContext);
 			if (trilogy.type == Trilogy.Type.Break)

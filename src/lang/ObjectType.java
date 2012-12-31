@@ -173,8 +173,8 @@ public class ObjectType {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ObjectType obj = new ObjectType();
-		obj.invokeHosted("toString");
-		System.out.println(obj.invokeHosted("toString",new StringType("s")).toString());
+		
+		System.out.println(obj.callHostedMethod("_","toString",new StringType("s")).toString());
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -256,22 +256,25 @@ public class ObjectType {
 	}
 	
 	// methods
-	public ObjectType invoke(String methodName, ObjectType... args) {
+	public ObjectType callMethod(String methodName, ObjectType... args) {
 		FunctionType function;
 		try {
-			function = (FunctionType)getProperty(methodName);			
+			ObjectType member = getProperty(methodName);
+			if (member == undefined)
+				throw new RuntimeException(String.format("Object has no method named %s", methodName));
+			//TODO call hosted methods
+			function = (FunctionType) member;			
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("Property %s is not a function", methodName));
 		}
 		
-		return function.call(this, args);
+		return function.invoke(this, args);
 	}
 	
-	public ObjectType invokeHosted(String methodName, ObjectType... args) {
+	protected ObjectType callHostedMethod(String prefix, String methodName, ObjectType... args) {
 		try {
-			Method m = this.getClass().getMethod("_" + methodName, StringType.class);
-			//TODO implement args please
-			return (ObjectType)m.invoke(this, new StringType(""));
+			Method m = this.getClass().getMethod(prefix + methodName, objectsToClasses(args));
+			return (ObjectType)m.invoke(this, args);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

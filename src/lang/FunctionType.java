@@ -23,7 +23,7 @@ public class FunctionType extends ObjectType {
 		// TODO Auto-generated method stub
 	}
 	
-	public ObjectType call(ObjectType obj, ObjectType...args) {
+	public ObjectType invoke(ObjectType obj, ObjectType...args) {
 		try {
 			Context functionContext = new FunctionContext(obj,new ObjectType(signature, args),c);
 			Trilogy status = body.execute(functionContext);

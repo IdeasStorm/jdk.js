@@ -9,8 +9,7 @@ public class ExpressionStatement extends Statement {
 	
 	@Override
 	public Trilogy execute(Context context) {
-		expression.execute(context);
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return expression.execute(context);
 	}
 	
 }

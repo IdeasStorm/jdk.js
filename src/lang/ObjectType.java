@@ -138,6 +138,23 @@ public class ObjectType {
 
 	protected HashMap<String, Property> attributes;
 
+	public ObjectType(String[] keys, ObjectType[] values) throws Exception {
+		try {
+			for (int i = 0; i < keys.length; i++) {
+				if (i < values.length)
+					setAttribute(keys[i], values[i]);
+				else
+					setAttribute(keys[i], ObjectType.undefined);
+			}	
+		} catch (Exception e) {
+			throw new Exception("incompatible keys/values");
+		}
+	}
+	
+	public ObjectType() {
+		//TODO check initialization
+	}
+
 	public ObjectType getAttribute(String name) {
 		return attributes.get(name).getValue();
 	}

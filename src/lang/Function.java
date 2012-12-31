@@ -2,7 +2,7 @@ package lang;
 
 import java.util.Map;
 
-import parser.FunctionDeclarationStatement;
+import parser.FunctionDeclarationExpression;
 
 public class Function extends ObjectType {
 	public Function() {

@@ -1,3 +1,1 @@
-{
-	if (false) { debug 3; } else { debug "ad"; }
-} 
+debug 1 + 1 ; 

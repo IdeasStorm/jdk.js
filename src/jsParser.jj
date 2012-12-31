@@ -577,8 +577,8 @@ ExpressionNode AdditiveExpression():
 (
 	( left =MultiplicativeExpression() {exp = left ; })  
 	(
-		( "+" MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Add, left , right) ;  left = exp ; }  ) 
-	| 	( "-" MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Subtract ,left , right) ;  left = exp ; }  ) 
+		( "+" right = MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Add, left , right) ;  left = exp ; }  ) 
+	| 	( "-" right = MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Subtract ,left , right) ;  left = exp ; }  ) 
 	)*
 )
 	{return exp ;}
@@ -741,13 +741,10 @@ ExpressionNode AssignmentExpression(): {
 {
 
 (LOOKAHEAD(LeftHandSideExpression() AssignmentOperator() )
-	( left = LeftHandSideExpression() op = AssignmentOperator() right = AssignmentExpression() {exp = new OperatorNode (op,left,right) ;})
+	( left = LeftHandSideExpression() op = AssignmentOperator() right = AssignmentExpression() {return new OperatorNode (op,left,right) ;})
 	|
-	( exp = ConditionalExpression() )
+	( exp = ConditionalExpression() { return exp;})
 )
-	{ 
-		return exp;
-	}
 //(LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
 	//TODO deal with * how !!!? // a = b = c 
 // 	left = LeftHandSideExpression() op = AssignmentOperator() //{ exp2 = new OperatorNode(op,left,null);left = exp2 ; } 

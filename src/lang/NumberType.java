@@ -34,6 +34,10 @@ public class NumberType extends ObjectType {
 		this.value = Double.parseDouble(value);
 	}
 	
+	public NumberType(int value) {
+		this.value = value;
+	}
+
 	public double Value() {
 		return value;
 	}

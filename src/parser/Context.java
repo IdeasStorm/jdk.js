@@ -11,9 +11,47 @@ public abstract class Context {
 		// TODO Auto-generated method stub
 
 	}
-	public abstract void defineVariable(String name, ObjectType value);
-	public abstract void defineVariable(String name);
-	public abstract ObjectType getVariable(String name);
-	public abstract ObjectType getThisValue();
+	
+	public final void defineVariable(String name, ObjectType value) {
+		_define(name,value);
+	}
+	
+	public final void defineVariable(String name) {
+		_define(name, ObjectType.undefined);
+	}
+	
+	public final void setVariable(String name, ObjectType value) {
+		ObjectType ref = _get(name); 
+		if ( ref == ObjectType.undefined)
+			parent.setVariable(name, value);
+		else
+			_set(name, value);
+	}
+	
+	public final ObjectType getVariable(String name) {
+		ObjectType ref = _get(name);
+		if (ref != ObjectType.undefined)
+			return ref;
+		else if (parent != null)
+			return parent.getVariable(name);
+		else
+			return ObjectType.undefined;
+		//TODO strict mode
+	}
+	
+	public final ObjectType getThisValue() {
+		ObjectType ref = _getThis();
+		if (ref != ObjectType.undefined)
+			return ref;
+		else if (parent != null)
+			return parent.getThisValue();
+		else
+			return ObjectType.undefined;
+	}
+	
+	public abstract void _define(String name, ObjectType value);
+	public abstract ObjectType _get(String name);
+	public abstract void _set(String name, ObjectType value);
+	public abstract ObjectType _getThis();
 	
 }

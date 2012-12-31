@@ -22,10 +22,12 @@ public class IfStatement extends Statement {
 			if (trilogy.type != Trilogy.Type.Normal)
 				return trilogy;
 		} else { // if the value false
-			Context elseStatmentContext = new BlockContext(context);
-			Trilogy trilogy = elseStatement.execute(elseStatmentContext);
-			if (trilogy.type != Trilogy.Type.Normal)
-				return trilogy;
+			if (elseStatement != null) {
+				Context elseStatmentContext = new BlockContext(context);
+				Trilogy trilogy = elseStatement.execute(elseStatmentContext);
+				if (trilogy.type != Trilogy.Type.Normal)
+					return trilogy;
+			}
 		}
 		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}

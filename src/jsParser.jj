@@ -12,13 +12,15 @@ import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import parser.*;
 import java.util.HashMap;
-import java.util.ArrayList;  
+import java.util.ArrayList;
+import java.util.LinkedList;  
 import java.util.List;
 
 public class compiler {
   public static void main(String args[]) throws ParseException, FileNotFoundException  {
     compiler parser = new compiler(new InputStreamReader(new FileInputStream("src//code.txt")));
-    parser.start();
+    BlockStatement program = parser.start();
+    program.execute(new BlockContext(null));
     System.out.println("End Of Parser.");  	
   }
 }
@@ -98,6 +100,7 @@ TOKEN : /* KEYWORDS */
 |	< UNDEFINED: "undefined" >
 |	< SEMICOLON: ";" >
 |   < _DEFAULT: "default" >
+|	< DEBUG: "debug">
 }
 
 
@@ -788,14 +791,25 @@ ExpressionNode Expression():
 
 
 //Statement
-void Block() : {}
+BlockStatement Block() : {
+	LinkedList<Statement> statements;
+}
 {
-	"{" StatementList() "}"
+	"{" statements = StatementList() "}"
+	{
+		return new BlockStatement(statements);
+	}
 }
 
-void StatementList() : {}
+LinkedList<Statement> StatementList() : {
+	LinkedList<Statement> statements = new LinkedList<Statement>();
+	Statement stmt;
+}
 {
-	(Statement())*
+	(stmt = Statement() { statements.add(stmt); })*
+	{
+		return statements;
+	}
 }
 
 VariableStatement VariableStatement() : 
@@ -1019,8 +1033,9 @@ List<Statement> SourceElements() :
 	Statement temp ;
 }
 {
-	(temp = SourceElement())+
-	{	elems.add(temp) ;
+	(temp = SourceElement() { elems.add(temp); })+
+	
+	{
 		return elems ;
 	}
 }
@@ -1062,12 +1077,22 @@ Statement BreakStatement() :
 	//{return new BreakStatement (t.image) ;}
 	{return sta ;} 
 }
+Statement DebugStatement(): {
+	 ExpressionNode s;
+}
+{
+	<DEBUG> s = Expression() ";"
+	{
+		return new DebugStatement(s);
+	}
+}
+
 Statement Statement() : 
 {
 	Statement sta = null;
 }
 {
-(	Block()
+(	sta = Block()
 |	sta = VariableStatement()
 |	sta = EmptyStatement()
 |	sta = ExpressionStatement()
@@ -1075,6 +1100,7 @@ Statement Statement() :
 |	sta = IterationStatement()
 |	ReturnStatement()
 |	BreakStatement()
+|	sta = DebugStatement()
 /*|	ContinueStatement()
 |	WithStatment
 */
@@ -1084,14 +1110,20 @@ Statement Statement() :
 // Program
 List<Statement> Program() :
 {
-	List<Statement> list = new ArrayList<Statement>();
+	List<Statement> list = null;
 }
 {
 	(list = SourceElements())? // ?
 	{return list ;}
 }
 
-void start() : {}
+BlockStatement start() : {
+	BlockStatement block;
+	List<Statement> program;
+}
 {
-	Program() (<EOF>)?
+	program = Program() (<EOF>)?
+	{
+		return new BlockStatement(program);
+	}
 }

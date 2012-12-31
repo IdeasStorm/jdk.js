@@ -34,6 +34,10 @@ public class NumberType extends ObjectType {
 		this.value = Double.parseDouble(value);
 	}
 	
+	public NumberType(int value) {
+		this.value = value;
+	}
+
 	public double Value() {
 		return value;
 	}
@@ -118,7 +122,7 @@ public class NumberType extends ObjectType {
 	@Override
 	public BooleanType toBooleanType() {
 		// TODO Auto-generated method stub
-		return new BooleanType(this.value == 0);
+		return new BooleanType(this.value != 0);
 	}
 
 	/**

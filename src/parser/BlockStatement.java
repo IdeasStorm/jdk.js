@@ -1,12 +1,12 @@
 package parser;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class BlockStatement extends Statement {
 	
-	LinkedList<Statement> statements;
+	List<Statement> statements;
 	
-	public BlockStatement(LinkedList<Statement> statements) {
+	public BlockStatement(List<Statement> statements) {
 		this.statements = statements;
 	}
 	

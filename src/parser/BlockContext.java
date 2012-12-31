@@ -6,6 +6,7 @@ public class BlockContext extends Context {
 	protected ObjectType blockObject;
 	
 	public BlockContext(Context parent) {
+		this.blockObject = new ObjectType();
 		this.parent = parent;
 	}
 	

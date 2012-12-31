@@ -55,7 +55,7 @@ public class OperatorNode extends ExpressionNode {
 		LiteralNode left = LiteralNode.createNumberLiteral("1");
 		OperatorNode op = new OperatorNode(OperatorType.Add, left, right);
 		ProgramContext p = new ProgramContext(null);
-		op.evaluate(p);
+		System.out.println(op.evaluate(p).toStringType().toString());
 	}
 	
 	

@@ -136,7 +136,7 @@ public class ObjectType {
 	public static final ObjectType undefined = new Undefined();
 	// TODO add special values for null and undefined
 
-	protected HashMap<String, Property> attributes;
+	protected HashMap<String, Property> attributes = new HashMap<String, ObjectType.Property>();
 
 	public ObjectType getAttribute(String name) {
 		return attributes.get(name).getValue();

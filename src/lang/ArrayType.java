@@ -1,6 +1,5 @@
 package lang;
 
-import java.io.Console;
 import java.util.ArrayDeque;
 
 public class ArrayType extends ObjectType {

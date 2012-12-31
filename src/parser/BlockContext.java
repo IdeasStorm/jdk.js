@@ -27,7 +27,7 @@ public class BlockContext extends Context {
 
 	@Override
 	public ObjectType _getThis() {
-		return blockObject;
+		return ObjectType.undefined;
 	}
 
 }

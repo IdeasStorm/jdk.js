@@ -1,5 +1,6 @@
 package lang;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import parser.ExpressionNode;
@@ -172,7 +173,8 @@ public class ObjectType {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ObjectType obj = new ObjectType();
-		System.out.println(obj.toStringType().toString());
+		obj.invokeHosted("toString");
+		System.out.println(obj.invokeHosted("toString",new StringType("s")).toString());
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -238,7 +240,12 @@ public class ObjectType {
 	}
 
 	public ObjectType getProperty(java.lang.String name) {
-		return getAttribute(name);
+		try {
+			return getAttribute(name);
+		} catch (Exception e) {
+			return undefined;
+		}
+		
 	}
 
 	@SuppressWarnings("unchecked")
@@ -247,5 +254,39 @@ public class ObjectType {
 		cloned.attributes = (HashMap<String, Property>) attributes.clone();
 		return cloned;
 	}
-
+	
+	// methods
+	public ObjectType invoke(String methodName, ObjectType... args) {
+		FunctionType function;
+		try {
+			function = (FunctionType)getProperty(methodName);			
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("Property %s is not a function", methodName));
+		}
+		
+		return function.call(this, args);
+	}
+	
+	public ObjectType invokeHosted(String methodName, ObjectType... args) {
+		try {
+			Method m = this.getClass().getMethod("_" + methodName, StringType.class);
+			//TODO implement args please
+			return (ObjectType)m.invoke(this, new StringType(""));
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static Class[] objectsToClasses(ObjectType... objects) {
+		Class[] classes = new Class[objects.length];
+		
+		for (int i = 0; i < classes.length; i++) {
+			classes[i] = objects[i].getClass();
+		}
+		return classes;
+	}
+	
+	public ObjectType _toString(StringType s) {
+		return toStringType();
+	}
 }

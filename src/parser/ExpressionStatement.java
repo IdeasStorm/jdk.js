@@ -10,7 +10,7 @@ public class ExpressionStatement extends Statement {
 	@Override
 	public Trilogy execute(Context context) {
 		expression.execute(context);
-		return new Trilogy(null, null, null);
+		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 	
 }

@@ -1,7 +1,7 @@
 /**
  * JavaCC file
  */
- 
+
 options {
   JDK_VERSION = "1.5";
 }
@@ -12,6 +12,8 @@ import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import parser.*;
 import java.util.HashMap;
+import java.util.ArrayList;  
+import java.util.List;
 
 public class compiler {
   public static void main(String args[]) throws ParseException, FileNotFoundException  {
@@ -38,9 +40,9 @@ TOKEN : /* LOGIC OPERATORS */
 {
 	< DOUBLEQUOTE: "\"">	: DOUBLE_STRING
 |	< SINGLEQUOTE:"'">		: SINGLE_STRING
-| 	< AND: "&&">
-|	< OR: "||">
-|	< NOT: "!">
+| 	< AND: "&&" | "and" >
+|	< OR: "||" | "or" >
+|	< NOT: "!" | "not" >
 }
 
 TOKEN : /* SIGN COMPARE */
@@ -107,7 +109,7 @@ TOKEN : /* VARIABLE */
 |	< DIGIT: ["0" - "9"]>
 */
 
-	< NUMBER: (["0" - "9"])+>
+	< NUMBER: (["0" - "9"])+ | ( (["0" - "9"])* ("." (["0" - "9"])+) )>
 |	< DIGIT: ["0" - "9"]>
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
@@ -358,8 +360,7 @@ ExpressionNode PrimaryExpression() :{
 		exp = null;
 		//TODO fill exp
 	}
-|	"(" Expression() ")" {
-		exp = null;
+|	"(" exp = Expression() ")" {
 		//TODO fill exp
 	}
 
@@ -428,7 +429,7 @@ ExpressionNode LeftHandSideExpression() :
 {
 	//MemberExpression() (Arguments())?
 (LOOKAHEAD (CallExpression()) 
-		CallExpression()
+		exp = CallExpression()
 |		exp = NewExpression()
 )
 {return exp ;}
@@ -437,18 +438,21 @@ ExpressionNode LeftHandSideExpression() :
 ExpressionNode MemberExpression(): 
 {
 	ExpressionNode exp = null ;
+	List <ExpressionNode> args  = new ArrayList<ExpressionNode>() ;
+	ExpressionNode temp ;
+	Token t ;
 }
 {
 ((
 (	exp = PrimaryExpression()
-|	FunctionExpression()
+|	exp = FunctionExpression() // {return new functionNode(exp)}
 )
 	( //TODO return ExpressionNode !!!
-	("[" Expression() "]")  // there is solution for left-recursion
-	|("." <IDENTIFIER>)	 // not uses IdentifierName()
+	("[" temp = Expression() "]" {args.add(temp);} ) // {return CallArrayNode(args);}
+	|("." t = <IDENTIFIER> {args.add(new VariableNode(t.image));} ) // {return CallPropNode(args);} 
 	)*
 )
-|	"new" MemberExpression() Arguments()
+|	( "new" exp = MemberExpression() args = Arguments() )// {return NewFunction(exp,args);}
 ) {return exp ;}
 }
 
@@ -460,45 +464,66 @@ ExpressionNode NewExpression():
 (LOOKAHEAD (MemberExpression())
 	exp = MemberExpression()
 	//TODO return ExpressionNode !!!	
-|	"new" MemberExpression()
+|	"new" exp = MemberExpression() //{return new newExpr(exp) } 
 )
 {return exp ;}
 }
 
-void CallExpression(): {}
+ExpressionNode CallExpression(): 
+{
+	ExpressionNode exp = null;
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+	ExpressionNode temp ;
+	List <ExpressionNode> templist ;
+	Token t ; 
+}
 { 
 //	(MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
-	MemberExpression() Arguments()
+	exp = MemberExpression() args = Arguments()
 	(
-		( Arguments() )
+		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
 		|
-		( "[" Expression() "]" )
+		( "[" temp = Expression() "]" {args.add(temp); }) //return new CallArrayNode(exp,args) ;} )
 		|
-		( "." <IDENTIFIER> ) 
+		( "." t = <IDENTIFIER> {args.add(new VariableNode(t.image)); }) //return new CallPropNode(exp,args) ;} )
 	)*
-	
+	{return exp ;}
 }
 
-void Arguments(): {}
+List<ExpressionNode> Arguments(): 
 {
-	"(" (ArgumentList())? ")"
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+}
+{
+	"(" (args = ArgumentList())? ")"
+	{return args ;}
 }
 
-void ArgumentList(): {}
+List<ExpressionNode> ArgumentList(): 
 {
-	AssignmentExpression() ("," AssignmentExpression() )*
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+	ExpressionNode exp ;
+}
+{
+	exp = AssignmentExpression()
+	{args.add(exp);} 
+	(	"," exp = AssignmentExpression()
+		{args.add(exp);} 
+	)*
+	{ return args ; }
 }
 
 ExpressionNode PostfixExpression(): 
 {
-	ExpressionNode exp = null ; 
+	ExpressionNode exp ;
+	ExpressionNode left; 
 }
 {
 (	
-	exp = LeftHandSideExpression() 
+	left = LeftHandSideExpression() { exp = left ;}
 	(
-	"++" 
-	| "--"
+	 ( "++" { exp = new OperatorNode(OperatorNode.OperatorType.PostIncrement,left , null) ;} ) 
+	|( "--" { exp = new OperatorNode(OperatorNode.OperatorType.PostDecrement,left ,null) ;} )
 	)?
 )
 	{return exp ;}
@@ -507,17 +532,18 @@ ExpressionNode PostfixExpression():
 // Unary Expression
 ExpressionNode UnaryExpression(): 
 {
-	ExpressionNode exp = null; 
+	ExpressionNode exp ;
+	ExpressionNode right ;
 }
 {
 (
-	exp = PostfixExpression()
-	|	"typeof" UnaryExpression()
-	|	"++" UnaryExpression()
-	|	"--" UnaryExpression()
-	|	"+" UnaryExpression()
-	|	"-" UnaryExpression()
-	|	"!" UnaryExpression()
+	( exp = PostfixExpression() )
+//	|	"typeof" UnaryExpression()
+	|	( "++" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.PreIncrement,null , right) ;} )
+	|	( "--" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.PreDecrement,null , right) ;} )
+	|	( "+" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Add,null , right) ;}  )
+	|	( "-" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Subtract,null , right) ;}  )
+	|	( <NOT> right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Not,null , right) ;} )
 )
 	{return exp ;}
 }
@@ -525,15 +551,15 @@ ExpressionNode UnaryExpression():
 //	Multiplicative Expression
 ExpressionNode MultiplicativeExpression(): 
 {
-	ExpressionNode exp = null ; 
+	ExpressionNode exp,left,right =null; 
 }
 {
 (
-	exp = UnaryExpression() 
+	( left = UnaryExpression() {exp = left ;}) 
 	(
-	"*" UnaryExpression() 
-	| "/" UnaryExpression() 
-	| "%" UnaryExpression() 
+		( "*" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Multiply,left , right) ;  left = exp ; }) 
+	|	(  "/" UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Division,left , right) ;  left = exp ; } )
+	|	( "%" UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Mod,left , right) ;  left = exp ; } ) 
 	)*
 )
 	{return exp ;}
@@ -542,14 +568,14 @@ ExpressionNode MultiplicativeExpression():
 // Additive Expression
 ExpressionNode AdditiveExpression():
 {
-	ExpressionNode exp = null ; 
+	ExpressionNode exp,left,right = null ; 
 }
 {
 (
-	exp =MultiplicativeExpression() 
+	( left =MultiplicativeExpression() {exp = left ; })  
 	(
-	"+" MultiplicativeExpression() 
-	| "-" MultiplicativeExpression() 
+		( "+" MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Add, left , right) ;  left = exp ; }  ) 
+	| 	( "-" MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Subtract ,left , right) ;  left = exp ; }  ) 
 	)*
 )
 	{return exp ;}
@@ -575,15 +601,23 @@ ExpressionNode ShiftExpression():
 //Relational Expression
 ExpressionNode RelationalExpression(): 
 {
-	ExpressionNode exp = null ; 
+	ExpressionNode exp,left,right = null ;
+	OperatorNode.OperatorType op ; 
 }
 {
 //	ShiftExpression() ("<" ShiftExpression() | ">" ShiftExpression() | "<=" ShiftExpression() | ">=" ShiftExpression() | <INSTANCEOF> ShiftExpression() | <IN> ShiftExpression()  )*
 (
-	exp = ShiftExpression() 
+	( left = ShiftExpression() {exp = left ;}) 
 	(
-		( "<" | ">"  | "<=" | ">="  | <INSTANCEOF>  | <IN> )
-		ShiftExpression()  
+		(
+			 "<" { op = OperatorNode.OperatorType.Less; }    
+		|	 ">"  { op = OperatorNode.OperatorType.Greater; }
+		|	 "<=" { op = OperatorNode.OperatorType.LessOrEqual; }
+		|	 ">="  { op = OperatorNode.OperatorType.GreaterOrEqual; }
+		|	 <INSTANCEOF>  { op = OperatorNode.OperatorType.INSTANCEOF; }
+		|	 <IN> { op = OperatorNode.OperatorType.In; }
+		)
+		right = ShiftExpression() { exp = new OperatorNode(op, left , right) ;  left = exp ; }  
 	)*
 )
 	{return exp ;}
@@ -592,14 +626,20 @@ ExpressionNode RelationalExpression():
 //Equality Expression
 ExpressionNode EqualityExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right ;
+	OperatorNode.OperatorType op ;
 }
 {
 (
-	exp = RelationalExpression()  
+	left = RelationalExpression() {exp = left;}  
 	(
-		 ( "==" | "!=" | "===" | "!=="  ) 
-		 RelationalExpression()  
+		 (
+		  "=="  { op = OperatorNode.OperatorType.Equals; }
+		  | "!="  { op = OperatorNode.OperatorType.NotEquals; }
+//		  | "===" { op = OperatorNode.OperatorType.INSTANCEOF; }
+//		  | "!=="  { op = OperatorNode.OperatorType.INSTANCEOF; }
+		 )
+		 right = RelationalExpression() { exp = new OperatorNode(op, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}
@@ -609,27 +649,27 @@ ExpressionNode EqualityExpression():
 //BitwiseAND Expression
 ExpressionNode BitwiseANDExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right ;
 }
 {
 (
-	exp = EqualityExpression() 
+	left = EqualityExpression() {exp = left ;} 
 	(
-		"&" EqualityExpression()  
-	)*	
+		"&" right = EqualityExpression() { exp = new OperatorNode(OperatorNode.OperatorType.BitWiseAnd, left , right) ;  left = exp ; }
+	)*
 )
 	{return exp ; }
 }
 //BitwiseXORExpression
 ExpressionNode BitwiseXORExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right ;
 }
 {
 (
-	exp = BitwiseANDExpression() 
+	left = BitwiseANDExpression() {exp = left ;} 
 	(
-		"^" BitwiseANDExpression() 
+		"^" right = BitwiseANDExpression() { exp = new OperatorNode(OperatorNode.OperatorType.BitWiseXor, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}
@@ -637,13 +677,13 @@ ExpressionNode BitwiseXORExpression():
 //bitwiseORExpression
 ExpressionNode BitwiseORExpression() : 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right ;
 }
 {
 (
-	exp = BitwiseXORExpression() 
+	left = BitwiseXORExpression() {exp = left ;}
 	(
-		"|" BitwiseXORExpression()
+		"|" right = BitwiseXORExpression() { exp = new OperatorNode(OperatorNode.OperatorType.BitWiseOr, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}
@@ -652,13 +692,13 @@ ExpressionNode BitwiseORExpression() :
 //BINARY LOGICAL OPERATORS
 ExpressionNode LogicalANDExpression():
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,left,right;
 }
 {
 (
-	exp = BitwiseORExpression() 
+	left = BitwiseORExpression() {exp =left;} 
 	(
-		<AND> BitwiseORExpression()
+		<AND> right = BitwiseORExpression() { exp = new OperatorNode(OperatorNode.OperatorType.And, left , right) ;  left = exp ; }
 	)*
 )
 	{return exp ;}
@@ -666,13 +706,13 @@ ExpressionNode LogicalANDExpression():
 
 ExpressionNode LogicalORExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode exp,right,left;
 }
 {
 (
-	exp = LogicalANDExpression() 
+	left = LogicalANDExpression() {exp = left ; } 
 	(
-		"||" LogicalANDExpression() 
+		<OR> right = LogicalANDExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Or, left , right) ;  left = exp ; } 
 	)*
 )
 	{return exp ;}
@@ -691,22 +731,25 @@ ExpressionNode ConditionalExpression():
 }
 
 ExpressionNode AssignmentExpression(): {
-	//ExpressionNode exp = null;
-	OperatorNode exp ;
+	ExpressionNode exp = null ;
 	ExpressionNode left = null,right = null;
 	OperatorNode.OperatorType op =null;
 }
 {
 
-(LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
-
-	//TODO deal with * how !!!?
- 	left = LeftHandSideExpression() op = AssignmentOperator() )* right = ConditionalExpression()
-	{
-		//TODO deal with left side
-		exp = new OperatorNode (op,left,right) ; 
+(LOOKAHEAD(LeftHandSideExpression() AssignmentOperator() )
+	( left = LeftHandSideExpression() op = AssignmentOperator() right = AssignmentExpression() {exp = new OperatorNode (op,left,right) ;})
+	|
+	( exp = ConditionalExpression() )
+)
+	{ 
 		return exp;
 	}
+//(LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
+	//TODO deal with * how !!!? // a = b = c 
+// 	left = LeftHandSideExpression() op = AssignmentOperator() //{ exp2 = new OperatorNode(op,left,null);left = exp2 ; } 
+// 	)* 
+//	right = ConditionalExpression() 	
 }
 
 OperatorNode.OperatorType AssignmentOperator() : 
@@ -716,7 +759,12 @@ OperatorNode.OperatorType AssignmentOperator() :
 }
 {
 	 ( //TODO Complete it 
-	 "*=" | "/=" | "%=" | "+=" | "-=" | "=" { op = OperatorNode.OperatorType.Assignment ; }
+	 "*="  { op = OperatorNode.OperatorType.MultiplyBy ; }
+	 | "/="  { op = OperatorNode.OperatorType.DivideBy ; }
+	 | "%="  { op = OperatorNode.OperatorType.ModBy ; }
+	 | "+="  { op = OperatorNode.OperatorType.AddBy ; }
+	 | "-="  { op = OperatorNode.OperatorType.SubtractBy ; }
+	 | "=" { op = OperatorNode.OperatorType.Assignment ; }
 	 )
 	 {
 	 	return op ;
@@ -724,9 +772,18 @@ OperatorNode.OperatorType AssignmentOperator() :
 }
 
 // Expression Finally !!
-void Expression(): {}
+ExpressionNode Expression(): 
 {
-	AssignmentExpression() ("," AssignmentExpression())*
+//	List<ExpressionNode> exps ;
+	ExpressionNode exp ;
+}
+{
+	exp = AssignmentExpression()
+//	{exps.add(exp);} 
+//	(	"," exp = AssignmentExpression()
+//		{exps.add(exp);}
+//	)*
+	{return exp ;}
 }
 
 
@@ -739,7 +796,6 @@ void Block() : {}
 void StatementList() : {}
 {
 	(Statement())*
-
 }
 
 VariableStatement VariableStatement() : 
@@ -783,7 +839,7 @@ Pair<String, ExpressionNode> VariableDeclaration() :
 	}
 }
 
-
+/*
 void VariableDeclarationListNoIn() : {}
 {
 	VariableDeclarationNoIn() ( "," VariableDeclarationNoIn())* 
@@ -791,9 +847,14 @@ void VariableDeclarationListNoIn() : {}
 
 void VariableDeclarationNoIn() : {}
 {
-	<IDENTIFIER> (InitialiserNoIn())?
-	
+	<IDENTIFIER> (InitialiserNoIn())?	
 }
+
+void InitialiserNoIn() : {}
+{
+	"=" //AssignmentExpressionNoIn()
+}
+*/
 
 ExpressionNode Initialiser() : {
 	ExpressionNode exp = null;
@@ -803,45 +864,74 @@ ExpressionNode Initialiser() : {
 	{return exp;}
 }
 
-void InitialiserNoIn() : {}
+Statement EmptyStatement() : 
 {
-	"=" //AssignmentExpressionNoIn()
+	Statement sta ;
 }
-
-
-void EmptyStatement() : {}
 {
 	";"
+	{return new Statement() ; }
 }
 
-void ExpressionStatement() : {}
+ExpressionStatement ExpressionStatement() : 
+{
+	ExpressionStatement sta ;
+	ExpressionNode exp ;
+}
 {
 	// TODO [lookahead != {{, function}] 
-	Expression() ";"
+	exp = Expression() ";"
+	{return new ExpressionStatement(exp) ;}
 }
 
-void IfStatement() : {}
+IfStatement IfStatement() : 
 {
-	<IF> "(" Expression() ")" Statement() (LOOKAHEAD(1) <ELSE> Statement())?
+	IfStatement sta ;
+	ExpressionNode exp ;
+	Statement sta1 , sta2 =null;
+}
+{
+	<IF> "(" exp = Expression() ")" sta1 = Statement() (LOOKAHEAD(1) <ELSE> sta2 = Statement())?
+	{return new IfStatement(exp,sta1,sta2) ;}
 }
 
-void IterationStatement() : {}
+Statement IterationStatement() : 
 {
-	DoWhileStatement()
-|	WhileStatement()
-|	ForStatement()
+	Statement sta ;
+}
+{
+(	sta = DoWhileStatement()
+|	sta = WhileStatement()
+|	sta = ForStatement()
+)
+	{return sta ; }
 }
 
-void DoWhileStatement() : {}
+Statement DoWhileStatement() : 
 {
-	<DO> Statement() <WHILE> "(" Expression() ")" ";"
+	Statement sta ;
+	ExpressionNode exp ;
 }
-void WhileStatement() : {}
 {
-	<WHILE> "(" Expression() ")" Statement()
+	<DO> sta = Statement() <WHILE> "(" exp = Expression() ")" ";"
+	//{return new DoWhileStatement(sta,exp) ; }
+	{return sta ; }
+}
+WhileStatement WhileStatement() : 
+{
+	Statement sta ;
+	ExpressionNode exp ;
+}
+{
+	<WHILE> "(" exp = Expression() ")" sta = Statement()
+	{return new WhileStatement(exp , sta) ; }
 }
 
-void ForStatement() : {}
+ForStatement ForStatement() : 
+{
+	ExpressionNode exp1=null,exp2=null,exp3=null ;
+	Statement body ;
+}
 {
 	<FOR> "(" 
 	(
@@ -850,14 +940,18 @@ void ForStatement() : {}
 //	|	<TYPE> VariableDeclarationNoIn() "in" Expression() ")" Statement()
 //	|
 (LOOKAHEAD(LeftHandSideExpression() "in")
-		LeftHandSideExpression() "in" Expression() ")" Statement()
-	|	(Expression())? ";" (Expression())? ";" (Expression())? ")" Statement()
-
+		exp1 = LeftHandSideExpression() "in" exp2 = Expression() ")" body = Statement()
+//		{ return new ForInStatement(exp1,exp2,body);}
+	|	(exp1 = Expression())? ";" (exp2 = Expression())? ";" (exp3 = Expression())? ")" body = Statement()
 	)
 )
+	{return new ForStatement(exp1,exp2,exp3,body) ; }
 }
 
-void ContinueStatement() : {}
+Statement ContinueStatement() : 
+{
+	Statement sta ;
+}
 {
 	<CONTINUE>
 (	(";")
@@ -868,72 +962,133 @@ void ContinueStatement() : {}
 }
 
 // FunctionDeclaration
-void FunctionDeclaration() : {}
+Statement FunctionDeclaration() : 
 {
-	<FUNCTION> <IDENTIFIER> "(" ( FormalParameterList() )? ")" "{" FunctionBody() "}"
+	Statement sta ;
+	Token name ;
+	List<ExpressionNode> body ;
+	ArrayList<String> params = new ArrayList<String>();
+}
+{
+	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() "}"
+	//{return new FunctionStatement (name.image ,params,body) ;}
+	{return sta ;}
 }
 
-void FunctionExpression() : {}
+ExpressionNode FunctionExpression() : 
 {
-	<FUNCTION> (<IDENTIFIER>)? "(" (FormalParameterList())? ")" "{" FunctionBody() "}"
+	ExpressionNode exp = null;
+	Token name ;
+	List<Statement> body ;
+	ArrayList<String> params = new ArrayList<String>();
+}
+{
+	<FUNCTION> (name = <IDENTIFIER>)? "(" 
+	(params = FormalParameterList())? ")" 
+	"{" body = FunctionBody() "}"
+	//{exp = new FunctionNode (name.image , params , body) }
+	{	return exp ; }
 }
 
-void FormalParameterList() : {} 
+ArrayList<String> FormalParameterList() : 
 {
-	<IDENTIFIER> ("," <IDENTIFIER>)* 
+	ArrayList<String> params = new ArrayList<String>() ;
+	Token t ;
+} 
+{
+	t = <IDENTIFIER>
+	{params.add(t.image);} 
+	(	"," t = <IDENTIFIER>
+		{params.add(t.image);}
+	)* 
+	{	return params ; }
 }
 
-void FunctionBody() : {}
+List<Statement> FunctionBody() : 
 {
-	(SourceElements())?
+	List<Statement> body = new ArrayList<Statement>();
+}
+{
+	(body = SourceElements())?
+	{	return body ;	}
 }
 
-void ReturnStatement() : {} 
+List<Statement> SourceElements() : 
 {
-	<RETURN> (Expression())? ";" 
-	//[no LineTerminator here]	
+	List<Statement> elems = new ArrayList<Statement>() ;
+	Statement temp ;
+}
+{
+	(temp = SourceElement())+
+	{	elems.add(temp) ;
+		return elems ;
+	}
 }
 
-void BreakStatement() : {}
+Statement SourceElement() : 
 {
-	<BREAK> (<IDENTIFIER>)? ";"
+	Statement sta = null ;
+}
+{
+	//TODO FIXED IT
+( LOOKAHEAD (FunctionDeclaration())
+	 sta = FunctionDeclaration() 
+|	 sta = Statement()
+)
+	{return sta ;}
+}
+
+Statement ReturnStatement() : 
+{
+	Statement sta =null ;
+	ExpressionNode exp ;
+} 
+{
+	<RETURN> (exp = Expression())? ";" 
+	//[no LineTerminator here]
+	//{return new ReturnStatement(exp) ;}	
+	{return sta ;}
+}
+
+Statement BreakStatement() : 
+{
+//	BreakStatement sta ;
+	Statement sta =null;
+	Token t ;
+}
+{
+	<BREAK> (t = <IDENTIFIER>)? ";"
 	// [no LineTerminator here]
+	//{return new BreakStatement (t.image) ;}
+	{return sta ;} 
 }
-
-void Statement() : {}
+Statement Statement() : 
 {
-	Block()
-|	VariableStatement()
-|	EmptyStatement()
-|	ExpressionStatement()
-|	IfStatement()
-|	IterationStatement()
+	Statement sta = null;
+}
+{
+(	Block()
+|	sta = VariableStatement()
+|	sta = EmptyStatement()
+|	sta = ExpressionStatement()
+|	sta = IfStatement()
+|	sta = IterationStatement()
 |	ReturnStatement()
 |	BreakStatement()
 /*|	ContinueStatement()
 |	WithStatment
 */
-
-}
-
-// Program
-void Program() : {}
-{
-	(SourceElements())? // ?
-}
-
-void SourceElements() : {}
-{
-	(SourceElement())+
-}
-
-void SourceElement() : {}
-{
-	//TODO FIXED IT
-( LOOKAHEAD (FunctionDeclaration())
-	FunctionDeclaration() 
-|	Statement()
 )
+	{	return sta ;	}
+}
+// Program
+List<Statement> Program() :
+{
+	List<Statement> list = new ArrayList<Statement>();
+}
+{
+	(list = SourceElements())? // ?
+	{return list ;}
 }
 
 void start() : {}

@@ -1,6 +1,6 @@
 package parser;
 
-public class WhileStatement extends ExpressionNode {
+public class WhileStatement extends Statement {
 	ExpressionNode exprssion;
 	Statement whileStatement;
 	

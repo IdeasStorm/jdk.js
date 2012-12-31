@@ -2,7 +2,7 @@ package parser;
 
 import java.util.*;
 
-public class VariableStatement extends JavaScriptNode {
+public class VariableStatement extends Statement {
 	private HashMap<String, ExpressionNode> variables;
 	
 	public VariableStatement(HashMap<String, ExpressionNode> variables) {

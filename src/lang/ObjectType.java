@@ -83,7 +83,7 @@ public class ObjectType {
 	public static final ObjectType undefined = new Undefined();
 	// TODO add special values for null and undefined
 
-	protected HashMap<String, Reference> attributes = new HashMap<String, Reference>();
+	protected HashMap<String, ReferenceType> attributes = new HashMap<String, ReferenceType>();
 
 	public ObjectType(String[] keys, ObjectType[] values) throws Exception {
 		try {
@@ -110,7 +110,7 @@ public class ObjectType {
 		if (!attributes.containsKey(name) && !this.extensible)
 			return;
 		// TODO strict mode
-		attributes.put(name, new Reference(name, value));
+		attributes.put(name, new ReferenceType(name, value));
 	}
 
 	/**
@@ -197,7 +197,7 @@ public class ObjectType {
 	@SuppressWarnings("unchecked")
 	public ObjectType clone() {
 		ObjectType cloned = new ObjectType();
-		cloned.attributes = (HashMap<String, Reference>) attributes.clone();
+		cloned.attributes = (HashMap<String, ReferenceType>) attributes.clone();
 		return cloned;
 	}
 	
@@ -222,7 +222,7 @@ public class ObjectType {
 		try {
 			function = (FunctionType) member;
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Reference %s is not a function", methodName));
+			throw new RuntimeException(String.format("ReferenceType %s is not a function", methodName));
 		}
 		
 		//calling the function

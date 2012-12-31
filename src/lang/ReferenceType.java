@@ -1,17 +1,17 @@
 package lang;
 
-public class Reference {
+public class ReferenceType {
 	protected String name;
 	protected ObjectType value;
 	protected boolean writable;
 
-	public Reference(String name, ObjectType value, boolean writable) {
+	public ReferenceType(String name, ObjectType value, boolean writable) {
 		this.name = name;
 		this.value = value;
 		this.writable = writable;
 	}
 
-	public Reference(String name, ObjectType value) {
+	public ReferenceType(String name, ObjectType value) {
 		this(name, value, true);
 	}
 
@@ -28,9 +28,9 @@ public class Reference {
 		 * 
 		 */
 		private static final long serialVersionUID = -8633011999670559344L;
-		protected Reference property;
+		protected ReferenceType property;
 
-		public PropertyNotWritableException(Reference property) {
+		public PropertyNotWritableException(ReferenceType property) {
 			this.property = property;
 		}
 

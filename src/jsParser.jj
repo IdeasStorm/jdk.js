@@ -492,7 +492,7 @@ ExpressionNode CallExpression():
 	)*
 	{return exp ;}
 }
-d
+
 List<ExpressionNode> Arguments(): 
 {
 	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
@@ -877,11 +877,10 @@ ExpressionNode Initialiser() : {
 
 Statement EmptyStatement() : 
 {
-	Statement sta ;
 }
 {
 	";"
-	{return new Statement() ; }
+	{	return new ExpressionStatement(null);	}
 }
 
 ExpressionStatement ExpressionStatement() : 
@@ -1102,7 +1101,7 @@ Statement Statement() :
 |	WithStatment
 */
 )
-	{	return sta ;	}
+	{	return sta ;}
 }
 // Program
 List<Statement> Program() :

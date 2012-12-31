@@ -54,8 +54,7 @@ public class OperatorNode extends ExpressionNode {
 		LiteralNode right = LiteralNode.createNumberLiteral("3.5");
 		LiteralNode left = LiteralNode.createNumberLiteral("1");
 		OperatorNode op = new OperatorNode(OperatorType.Add, left, right);
-		
-		op.evaluate(p);
+		System.out.println(op.evaluate(p).toStringType().toString());
 	}
 	
 	

@@ -22,9 +22,12 @@ public class IfStatement extends Statement {
 			//TODO check this
 			return new Trilogy(Trilogy.Type.Normal, null, null);
 		} else { // if the value false
-			Context elseStatmentContext = new BlockContext(context);
-			Trilogy trilogy = elseStatement.execute(elseStatmentContext);
-			//TODO check this
+			if (elseStatement != null) {
+				Context elseStatmentContext = new BlockContext(context);
+				Trilogy trilogy = elseStatement.execute(elseStatmentContext);
+				//TODO check this
+				return new Trilogy(Trilogy.Type.Normal, null, null);
+			}
 			return new Trilogy(Trilogy.Type.Normal, null, null);
 		}
 	}

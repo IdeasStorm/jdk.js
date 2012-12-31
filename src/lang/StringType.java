@@ -45,4 +45,10 @@ public class StringType extends ObjectType {
 	public ObjectType clone() {
 		return new StringType(new java.lang.String(value));
 	}
+	
+	@Override
+	public StringType toStringType() {
+		// TODO Auto-generated method stub
+		return this;
+	}
 }

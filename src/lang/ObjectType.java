@@ -9,60 +9,6 @@ import parser.OperatorNode.OperatorType;
 public class ObjectType {
 	protected boolean extensible = true;
 
-	protected static class Property {
-		protected String name;
-		protected ObjectType value;
-		protected boolean writable;
-
-		public Property(String name, ObjectType value, boolean writable) {
-			this.name = name;
-			this.value = value;
-			this.writable = writable;
-		}
-
-		public Property(String name, ObjectType value) {
-			this(name, value, true);
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public ObjectType getValue() {
-			return value;
-		}
-
-		static class PropertyNotWritableException extends RuntimeException {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = -8633011999670559344L;
-			protected Property property;
-
-			public PropertyNotWritableException(Property property) {
-				this.property = property;
-			}
-
-			@Override
-			public String toString() {
-				// TODO Auto-generated method stub
-				return String.format("Propery %s is not accessible",
-						this.property.getName());
-			}
-		}
-
-		public ObjectType get() {
-			return value;
-		}
-
-		public void set(ObjectType value) {
-			if (writable)
-				this.value = value;
-			else
-				throw new PropertyNotWritableException(this);
-		}
-	}
-
 	public static class Undefined extends ObjectType {
 
 		protected Undefined() {
@@ -137,7 +83,7 @@ public class ObjectType {
 	public static final ObjectType undefined = new Undefined();
 	// TODO add special values for null and undefined
 
-	protected HashMap<String, Property> attributes = new HashMap<String, ObjectType.Property>();
+	protected HashMap<String, Reference> attributes = new HashMap<String, Reference>();
 
 	public ObjectType(String[] keys, ObjectType[] values) throws Exception {
 		try {
@@ -164,7 +110,7 @@ public class ObjectType {
 		if (!attributes.containsKey(name) && !this.extensible)
 			return;
 		// TODO strict mode
-		attributes.put(name, new Property(name, value));
+		attributes.put(name, new Reference(name, value));
 	}
 
 	/**
@@ -251,7 +197,7 @@ public class ObjectType {
 	@SuppressWarnings("unchecked")
 	public ObjectType clone() {
 		ObjectType cloned = new ObjectType();
-		cloned.attributes = (HashMap<String, Property>) attributes.clone();
+		cloned.attributes = (HashMap<String, Reference>) attributes.clone();
 		return cloned;
 	}
 	
@@ -276,7 +222,7 @@ public class ObjectType {
 		try {
 			function = (FunctionType) member;
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Property %s is not a function", methodName));
+			throw new RuntimeException(String.format("Reference %s is not a function", methodName));
 		}
 		
 		//calling the function

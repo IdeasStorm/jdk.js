@@ -45,15 +45,18 @@ public class OperatorNode extends ExpressionNode {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		ProgramContext p = new ProgramContext(null);
 		VariableNode left = new VariableNode("a");
 		LiteralNode right = LiteralNode.createNumberLiteral("3.5");
 		OperatorNode op = new OperatorNode(OperatorType.Add, left, right);
-		ProgramContext p = new ProgramContext(null);
+		
 		op.evaluate(p);
 	}
 	
 	
 	public Trilogy execute(Context context) {
+		left.execute(context);
+		right.execute(context);
 		value = ObjectType.operator(type,left,right);
 		return new Trilogy(null, null, null);
 	}

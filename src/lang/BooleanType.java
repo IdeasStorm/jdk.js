@@ -53,7 +53,9 @@ public class BooleanType extends ObjectType {
 		BooleanType right_bool = right.toBooleanType();
 		if (type == OperatorType.And)
 			return new BooleanType(this.value && right_bool.toBoolean());
-		else
+		else if (type == OperatorType.Or)
 			return new BooleanType(this.value || right_bool.toBoolean());
+		else
+			throw new RuntimeException("Object doesn't support such operator");
 	}
 }

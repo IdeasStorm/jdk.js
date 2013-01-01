@@ -102,11 +102,11 @@ public class ObjectType {
 		//TODO check initialization
 	}
 
-	public ObjectType getAttribute(String name) {
+	protected ObjectType getAttribute(String name) {
 		return attributes.get(name).getValue();
 	}
 
-	public void setAttribute(String name, ObjectType value) {
+	protected void setAttribute(String name, ObjectType value) {
 		if (!attributes.containsKey(name) && !this.extensible)
 			return;
 		// TODO strict mode

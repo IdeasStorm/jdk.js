@@ -59,9 +59,11 @@ public class OperatorNode extends ExpressionNode {
 	
 	
 	public Trilogy execute(Context context) {
-		left.execute(context);
-		right.execute(context);
-		value = ObjectType.operator(type,left,right);
+		// WARNING DONT dereference ON LEFT SIDE
+		if (type == OperatorType.Assignment)
+			ObjectType.operator(type,left.evaluate(context),deref(right.evaluate(context)));
+		else 
+			value = ObjectType.operator(type,deref(left.evaluate(context)),deref(right.evaluate(context)));
 		return new Trilogy(null, null, null);
 	}
 	

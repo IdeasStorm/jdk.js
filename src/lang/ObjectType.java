@@ -128,14 +128,14 @@ public class ObjectType {
 
 	@SuppressWarnings("rawtypes")
 	public static ObjectType operator(parser.OperatorNode.OperatorType type,
-			ExpressionNode left, ExpressionNode right) {
+			ObjectType left, ObjectType right) {
 		if (right == null)
-			return left.getValue().operator(type);
+			return left.operator(type);
 		else {
 			Class result_class = getResultClass(left.getClass(),
 					right.getClass());
-			ObjectType left_obj = box(result_class, left.getValue());
-			ObjectType right_obj = box(result_class, right.getValue());
+			ObjectType left_obj = box(result_class, left);
+			ObjectType right_obj = box(result_class, right);
 			return left_obj.operator(type, right_obj);
 		}
 	}

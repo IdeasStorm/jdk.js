@@ -26,7 +26,7 @@ public class ProgramContext extends Context {
 
 	@Override
 	public void _set(String name, ObjectType value) {
-		globalObject.setAttribute(name, value);
+		globalObject.setProperty(name, value);
 	}
 	
 	/**

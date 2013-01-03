@@ -1,20 +1,23 @@
 package parser;
 
-public class FunctionDeclarationExpression extends JavaScriptNode {
+import lang.FunctionType;
 
+public class FunctionDeclarationExpression extends ExpressionNode {
+	String functionName;
+	String[] args;
+	BlockStatement statements;
+	
+	public FunctionDeclarationExpression(String functionName, String[] args, 
+			BlockStatement statements) {
+		this.functionName = functionName;
+		this.args = args;
+		this.statements = statements;
+	}
+	
 	@Override
 	public Trilogy execute(Context context) {
-		// TODO Auto-generated method stub
-		return new Trilogy(null, null, null);
-
-	}
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		context._define(functionName, new FunctionType(functionName, args, statements, context));
+		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 
 }

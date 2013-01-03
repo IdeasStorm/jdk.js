@@ -4,6 +4,11 @@ import lang.ObjectType;
 
 public abstract class Context {
 	protected Context parent;
+	
+	public Context(Context parent) {
+		this.parent = parent;
+	}
+	
 	/**
 	 * @param args
 	 */

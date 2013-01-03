@@ -8,3 +8,9 @@ var a = 1;
 a=3+2*4; 
 a += 1  ;
 debug (a);
+
+function myt (a,b)
+{
+	debug (a);
+}
+

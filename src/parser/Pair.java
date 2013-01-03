@@ -1,20 +1,20 @@
 package parser;
 
-public class Pair<L, R> {
+public class Pair {
 
-	private final L left;
-	private final R right;
+	private final String left;
+	private final ExpressionNode right;
 
-	public Pair(L left, R right) {
+	public Pair(String left, ExpressionNode right) {
 		this.left = left;
 		this.right = right;
 	}
 
-	public L getLeft() {
+	public String getLeft() {
 		return left;
 	}
 
-	public R getRight() {
+	public ExpressionNode getRight() {
 		return right;
 	}
 

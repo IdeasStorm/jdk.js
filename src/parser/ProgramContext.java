@@ -5,7 +5,7 @@ import lang.ObjectType;
 public class ProgramContext extends Context {
 	protected ObjectType globalObject;
 	public ProgramContext(Context parent) {
-		this.parent = parent;
+		super(parent);
 	}
 	
 	@Override

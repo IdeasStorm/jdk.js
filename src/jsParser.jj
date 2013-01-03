@@ -749,11 +749,6 @@ ExpressionNode AssignmentExpression(): {
 	|
 	( exp = ConditionalExpression() { return exp;})
 )
-//(LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
-	//TODO deal with * how !!!? // a = b = c 
-// 	left = LeftHandSideExpression() op = AssignmentOperator() //{ exp2 = new OperatorNode(op,left,null);left = exp2 ; } 
-// 	)* 
-//	right = ConditionalExpression() 	
 }
 
 OperatorNode.OperatorType AssignmentOperator() : 

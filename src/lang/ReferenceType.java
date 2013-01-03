@@ -17,8 +17,8 @@ public class ReferenceType extends ObjectType {
 		this("", value, true);
 	}
 	
-	public static ReferenceType createConstant(String name, ObjectType value) {
-		return new ReferenceType(name, value, false);
+	public static ReferenceType createConstant(ObjectType value) {
+		return new ReferenceType("", value, false);
 	}
 
 	public ReferenceType(String name, ObjectType value) {
@@ -66,7 +66,6 @@ public class ReferenceType extends ObjectType {
 	
 	// internal object Delegation
 	
-	@Override
 	public ObjectType getProperty(String name) {
 		return value.getProperty(name);
 	}

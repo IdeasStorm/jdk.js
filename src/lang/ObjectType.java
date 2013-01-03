@@ -110,6 +110,9 @@ public class ObjectType {
 		if (!attributes.containsKey(name) && !this.extensible)
 			return;
 		// TODO strict mode
+		if (value instanceof ReferenceType)
+			value = ((ReferenceType) value).getValue();
+		// TODO make better dereferencing
 		attributes.put(name, new ReferenceType(name, value));
 	}
 

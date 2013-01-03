@@ -860,7 +860,7 @@ Pair VariableDeclaration() :
 {
 	Pair value;
 	Token s ;
-	ExpressionNode exp = null; //NOTE: NULL exp means no init => obj is undefined not null !
+	ExpressionNode exp = LiteralNode.createUndefinedLiteral(); //NOTE: NULL exp means no init => obj is undefined not null !
 }
 {
 	s = <IDENTIFIER> ( exp = Initialiser())?

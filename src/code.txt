@@ -5,11 +5,12 @@ debug (true || false);
 //var arr = [1,2,3] ; //Not execute
 //arr[1]; //Not execute
 var a = 10 , b = a;
-a = 0 ;
-debug (b);
+a = 1 +4*5;
+debug (a);
 //3=4;
 function myt (a,b)
 {
 	debug (a);
 }
 
+myt(1,2);

@@ -14,7 +14,7 @@ public class VariableStatement extends Statement {
 		// for each variable in Hash
 		for(Pair pair : variables) {
 			// Add variable to context 
-			context.defineVariable(pair.getLeft(), pair.getRight().evaluate(context));
+			context.defineVariable(pair.getLeft(), deref(pair.getRight().evaluate(context)));
 		}
 		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}

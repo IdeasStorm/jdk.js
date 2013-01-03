@@ -749,11 +749,6 @@ ExpressionNode AssignmentExpression(): {
 	|
 	( exp = ConditionalExpression() { return exp;})
 )
-//(LOOKAHEAD( LeftHandSideExpression() AssignmentOperator() )
-	//TODO deal with * how !!!? // a = b = c 
-// 	left = LeftHandSideExpression() op = AssignmentOperator() //{ exp2 = new OperatorNode(op,left,null);left = exp2 ; } 
-// 	)* 
-//	right = ConditionalExpression() 	
 }
 
 OperatorNode.OperatorType AssignmentOperator() : 
@@ -964,7 +959,7 @@ ForStatement ForStatement() :
 
 Statement ContinueStatement() : 
 {
-	Statement sta ;
+	Statement sta = null;
 }
 {
 	<CONTINUE>
@@ -973,14 +968,15 @@ Statement ContinueStatement() :
 //	[no LineTerminator here] 
 	(<IDENTIFIER> ";" )
 )
+{return sta ;}
 }
 
 // FunctionDeclaration
 Statement FunctionDeclaration() : 
 {
-	Statement sta ;
+	Statement sta =null;
 	Token name ;
-	List<ExpressionNode> body ;
+	List<Statement> body ;
 	ArrayList<String> params = new ArrayList<String>();
 }
 {
@@ -997,10 +993,10 @@ ExpressionNode FunctionExpression() :
 	ArrayList<String> params = new ArrayList<String>();
 }
 {
-	<FUNCTION> (name = <IDENTIFIER>)? "(" 
+(	<FUNCTION> (name = <IDENTIFIER>)? "(" 
 	(params = FormalParameterList())? ")" 
 	"{" body = FunctionBody() "}"
-	//{exp = new FunctionNode (name.image , params , body) }
+)	//{exp = new FunctionNode (name.image , params , body) }
 	{	return exp ; }
 }
 

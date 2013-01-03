@@ -14,9 +14,10 @@ public class Launcher {
 	 * @param args
 	 * @throws JSAPException
 	 * @throws FileNotFoundException
+	 * @throws ParseException 
 	 */
 	public static void main(String[] args) throws JSAPException,
-			FileNotFoundException {
+			FileNotFoundException, ParseException {
 		JSAP jsap = new JSAP();
 		UnflaggedOption opt2 = new UnflaggedOption("filename")
 				.setStringParser(JSAP.STRING_PARSER)

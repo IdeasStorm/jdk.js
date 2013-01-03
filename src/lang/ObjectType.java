@@ -103,7 +103,7 @@ public class ObjectType {
 	}
 
 	protected ObjectType getAttribute(String name) {
-		return attributes.get(name).getValue();
+		return attributes.get(name);
 	}
 
 	protected void setAttribute(String name, ObjectType value) {

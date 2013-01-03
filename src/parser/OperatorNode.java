@@ -60,8 +60,13 @@ public class OperatorNode extends ExpressionNode {
 	
 	public Trilogy execute(Context context) {
 		// WARNING DONT dereference ON LEFT SIDE
-		if (type == OperatorType.Assignment)
-			ObjectType.operator(type,left.evaluate(context),deref(right.evaluate(context)));
+		if (type == OperatorType.Assignment) {
+			ObjectType leftVal = left.evaluate(context);
+			if (isref(leftVal))
+				ObjectType.operator(type,leftVal,deref(right.evaluate(context)));
+			else
+				throw new RuntimeException("ReferenceError: Invalid left-hand side in assignment");
+		}
 		else 
 			value = ObjectType.operator(type,deref(left.evaluate(context)),deref(right.evaluate(context)));
 		return new Trilogy(null, null, null);

@@ -31,4 +31,8 @@ public abstract class JavaScriptNode {
 		else
 			return obj;
 	}
+	
+	protected final static boolean isref(ObjectType obj) {
+		return (obj instanceof ReferenceType);
+	}
 }

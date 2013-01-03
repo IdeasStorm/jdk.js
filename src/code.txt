@@ -7,7 +7,7 @@ debug (true || false);
 var a = 10 , b = a;
 a = 0 ;
 debug (b);
-
+//3=4;
 function myt (a,b)
 {
 	debug (a);

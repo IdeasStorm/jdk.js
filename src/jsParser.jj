@@ -810,24 +810,25 @@ LinkedList<Statement> StatementList() : {
 
 VariableStatement VariableStatement() : 
 {
-	HashMap<String, ExpressionNode> values ;
+	LinkedList<Pair> values ;
 }
 {
 	<TYPE> values = VariableDeclarationList() ";"
 	{ return new VariableStatement(values); }
 }
 
-HashMap<String, ExpressionNode> VariableDeclarationList() : 
+LinkedList<Pair> VariableDeclarationList() : 
 {
-	HashMap<String, ExpressionNode> values = new HashMap<String, ExpressionNode>();
-	Pair<String, ExpressionNode> temp ;
+	//HashMap<String, ExpressionNode> values = new HashMap<String, ExpressionNode>();
+	LinkedList<Pair>  values = new LinkedList<Pair>(); 
+	Pair temp;
 }
 {
 	temp = VariableDeclaration() {
-		values.put(temp.getLeft(),temp.getRight());
+		values.add(new Pair(temp.getLeft(),temp.getRight()));
 	}  
 	( LOOKAHEAD(1) "," temp = VariableDeclaration(){
-		values.put(temp.getLeft(), temp.getRight());
+		values.add(new Pair(temp.getLeft(), temp.getRight()));
 	})*
 	
 	{
@@ -835,16 +836,16 @@ HashMap<String, ExpressionNode> VariableDeclarationList() :
 	}	
 }
 
-Pair<String, ExpressionNode> VariableDeclaration() : 
+Pair VariableDeclaration() : 
 {
-	Pair<String, ExpressionNode> value ;
+	Pair value;
 	Token s ;
 	ExpressionNode exp = null; //NOTE: NULL exp means no init => obj is undefined not null !
 }
 {
 	s = <IDENTIFIER> ( exp = Initialiser())?
 	{
-		value = new Pair<String, ExpressionNode>(s.image,exp);
+		value = new Pair(s.image,exp);
 		return value;
 	}
 }

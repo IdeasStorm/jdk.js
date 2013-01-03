@@ -13,8 +13,6 @@ public class MemberExpression extends ExpressionNode {
 	@Override
 	public Trilogy execute(Context context) {
 		value =  expression.evaluate(context).getProperty(propertyName);
-		return null;
+		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 }
-// contant exp = 
-// ReferenceType

@@ -35,10 +35,10 @@ public class LiteralNode extends ExpressionNode {
 	}
 	
 	public static LiteralNode createNullLiteral() {
-		throw new RuntimeException("not implemented yet");
+		return new LiteralNode(ObjectType.nullRef);
 	}
 	
 	public static LiteralNode createUndefinedLiteral() {
-		throw new RuntimeException("not implemented yet");
+		return new LiteralNode(ObjectType.undefined);
 	}
 }

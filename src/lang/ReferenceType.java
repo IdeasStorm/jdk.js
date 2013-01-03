@@ -17,7 +17,7 @@ public class ReferenceType extends ObjectType {
 		this("", value, true);
 	}
 	
-	public ReferenceType createConstant(String name, ObjectType value) {
+	public static ReferenceType createConstant(String name, ObjectType value) {
 		return new ReferenceType(name, value, false);
 	}
 

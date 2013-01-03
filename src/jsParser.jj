@@ -22,7 +22,7 @@ public class compiler {
     System.out.println("End Of Parser.");  	
   }
   
-  public static void compileStream(InputStreamReader isr) {
+  public static void compileStream(InputStreamReader isr)  throws ParseException {
   	compiler parser = new compiler(isr);
     BlockStatement program = parser.start();
     program.execute(new BlockContext(null));
@@ -884,7 +884,7 @@ Statement EmptyStatement() :
 }
 {
 	";"
-	{	return new ExpressionStatement(null);	}
+	{	return null ;	}
 }
 
 ExpressionStatement ExpressionStatement() : 
@@ -1033,8 +1033,10 @@ List<Statement> SourceElements() :
 	Statement temp ;
 }
 {
-	(temp = SourceElement() { elems.add(temp); })+
-	
+	(temp = SourceElement() 
+		{	if (temp !=null)
+			 elems.add(temp); }
+	)+
 	{
 		return elems ;
 	}

@@ -1,7 +1,10 @@
 debug (true || false);
-//null; not work
-//; not work yet
-debug (1+1);
+///null;// not work
+;
+
+debug ("myt"); ; 
+;
+debug (1+2.1);
 
 
  

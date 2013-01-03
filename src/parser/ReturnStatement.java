@@ -11,7 +11,6 @@ public class ReturnStatement extends Statement {
 	
 	@Override
 	public Trilogy execute(Context context) {
-		//TODO return (enum.return, Object, empty)
 		return new Trilogy(Trilogy.Type.Return, expression.evaluate(context), null);
 	}
 

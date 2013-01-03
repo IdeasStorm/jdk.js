@@ -1,28 +1,27 @@
 package parser;
 
 public class ForStatement extends Statement {
-	ExpressionNode frExprssion;
-	ExpressionNode sdExpression; 
-	ExpressionNode thdExpression;
+	ExpressionNode firstExprssion;
+	ExpressionNode secondExpression; 
+	ExpressionNode thirdExpression;
 	Statement statement;
 	
 	public ForStatement(ExpressionNode frExprssion, ExpressionNode sdExpression, 
 			ExpressionNode thdExpression, Statement statement) {
-		this.frExprssion = frExprssion;
-		this.sdExpression = sdExpression;
-		this.thdExpression = thdExpression;
+		this.firstExprssion = frExprssion;
+		this.secondExpression = sdExpression;
+		this.thirdExpression = thdExpression;
 		this.statement = statement;
 	}
 	
 	@Override
 	public Trilogy execute(Context context) {
-		BlockContext forStatementContext = new BlockContext(context); 
-		frExprssion.execute(forStatementContext);
-		while (sdExpression.evaluate(forStatementContext).toBooleanType().toBoolean()) {
+		BlockContext forStatementContext = new BlockContext(context);
+		firstExprssion.execute(forStatementContext);
+		while (secondExpression.evaluate(forStatementContext).toBooleanType().toBoolean()) {
 			Trilogy trilogy = statement.execute(forStatementContext);
-			thdExpression.execute(forStatementContext);
+			thirdExpression.execute(forStatementContext);
 			if (trilogy.type == Trilogy.Type.Break)
-				//TODO V=stmt.value 
 				return new Trilogy(Trilogy.Type.Normal, null, null);
 		}
 		return new Trilogy(Trilogy.Type.Normal, null, null);

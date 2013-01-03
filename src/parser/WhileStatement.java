@@ -13,8 +13,9 @@ public class WhileStatement extends Statement {
 	public Trilogy execute(Context context) {
 		Context whileStatementContext = new BlockContext(context);
 		while (exprssion.evaluate(context).toBooleanType().toBoolean()) {
-			whileStatement.execute(whileStatementContext);
-			//TODO Same for loop
+			Trilogy trilogy = whileStatement.execute(whileStatementContext);
+			if (trilogy.type == Trilogy.Type.Break)
+				return new Trilogy(Trilogy.Type.Normal, null, null);
 		}
 		return new Trilogy(Trilogy.Type.Normal, null, null);		
 	}

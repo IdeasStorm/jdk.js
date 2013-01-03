@@ -17,6 +17,8 @@ public class BlockStatement extends Statement {
 			Trilogy trilogy = statement.execute(blockContext);
 			if (trilogy.type == Trilogy.Type.Break)
 				return new Trilogy(Trilogy.Type.Break, null, trilogy.getIdentifier());
+			if (trilogy.type == Trilogy.Type.Continue)
+				return new Trilogy(Trilogy.Type.Continue, null, trilogy.getIdentifier());
 		}
 		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}

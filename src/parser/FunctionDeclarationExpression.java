@@ -1,6 +1,6 @@
 package parser;
 
-public class FunctionDeclarationStatement extends JavaScriptNode {
+public class FunctionDeclarationExpression extends JavaScriptNode {
 
 	@Override
 	public Trilogy execute(Context context) {

@@ -19,17 +19,17 @@ public class IfStatement extends Statement {
 		if (exprssion.evaluate(context).toBooleanType().toBoolean()) { // if value true
 			Context ifStatementContext = new BlockContext(context);
 			Trilogy trilogy = ifStatement.execute(ifStatementContext);
-			//TODO check this
-			return new Trilogy(Trilogy.Type.Normal, null, null);
+			if (trilogy.type != Trilogy.Type.Normal)
+				return trilogy;
 		} else { // if the value false
 			if (elseStatement != null) {
 				Context elseStatmentContext = new BlockContext(context);
 				Trilogy trilogy = elseStatement.execute(elseStatmentContext);
-				//TODO check this
-				return new Trilogy(Trilogy.Type.Normal, null, null);
+				if (trilogy.type != Trilogy.Type.Normal)
+					return trilogy;
 			}
-			return new Trilogy(Trilogy.Type.Normal, null, null);
 		}
+		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 
 }

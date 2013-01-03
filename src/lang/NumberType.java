@@ -34,6 +34,10 @@ public class NumberType extends ObjectType {
 		this.value = Double.parseDouble(value);
 	}
 	
+	public NumberType(int value) {
+		this.value = value;
+	}
+
 	public double Value() {
 		return value;
 	}
@@ -70,10 +74,10 @@ public class NumberType extends ObjectType {
 			this.value = value - ((NumberType)right).value;
 			result = this;
 			break;
-			
+		
 			
 		default:
-			break;
+			throw new RuntimeException("Object doesn't support such operator");
 		}
 		return result;
 	}

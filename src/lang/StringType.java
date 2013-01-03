@@ -14,14 +14,15 @@ public class StringType extends ObjectType {
 	@Override
 	public lang.ObjectType operator(OperatorType type,
 			lang.ObjectType right) {
-		// TODO Auto-generated method stub
-		return null;
+		if (type == OperatorType.Add)
+			return new StringType(this.value.concat(right.toStringType().value));
+		else
+			throw new RuntimeException("object doesn't support such operator");
 	}
 
 	@Override
 	public lang.ObjectType operator(OperatorType type) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new RuntimeException("ReferenceError: Invalid left-hand side expression in postfix operation");
 	}
 
 	/**

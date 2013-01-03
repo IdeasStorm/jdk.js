@@ -23,7 +23,7 @@ public class FunctionType extends ObjectType {
 		// TODO Auto-generated method stub
 	}
 	
-	public ObjectType call(ObjectType obj, ObjectType...args) throws ArgumentException {
+	public ObjectType invoke(ObjectType obj, ObjectType...args) {
 		try {
 			Context functionContext = new FunctionContext(obj,new ObjectType(signature, args),c);
 			Trilogy status = body.execute(functionContext);
@@ -39,7 +39,7 @@ public class FunctionType extends ObjectType {
 		return new StringType(String.format("[%s Function]", this.name));
 	}
 	
-	class ArgumentException extends Exception {
+	class ArgumentException extends RuntimeException {
 		private static final long serialVersionUID = -3362984216014226874L;
 		protected String message;
 		public ArgumentException(String message) {

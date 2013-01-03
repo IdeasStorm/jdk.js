@@ -359,9 +359,7 @@ ExpressionNode PrimaryExpression() :{
 |	literal = Literal() {
 		exp = literal;
 	}
-|	ArrayLiteral() {
-		exp = null;
-		//TODO fill exp
+|	exp = ArrayLiteral() {
 	}
 |	ObjectLiteral() {
 		exp = null;
@@ -377,26 +375,48 @@ ExpressionNode PrimaryExpression() :{
 	}
 }
 
-void ArrayLiteral(): {}
+ArrayLiteral ArrayLiteral(): 
+{
+	List<ExpressionNode> exps,args = new ArrayList<ExpressionNode>();
+	List<LiteralNode> temp = null ;
+}
 {
 	"["
-(	( (Elision())? "]" )
+(	( (temp = Elision() { args.addAll(temp);})? "]" )
 	|
-	(	 	ElementList() 
-			 ("]"
-		| 	 "," (Elision())? "]")
+	(	 	exps = ElementList() {args.addAll(exps);} 
+			(	"]"
+			| 	 "," (temp = Elision() {args.addAll(temp);})? "]"
+			)
 	)
 )
+	{return new ArrayLiteral(args);}
 }
 
-void ElementList(): {}
+List<ExpressionNode> ElementList(): 
 {
-	(Elision())? AssignmentExpression() ( "," ElementList())*
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+	List<LiteralNode> temp = null ;
+	ExpressionNode exp = null;
+}
+{
+(	((temp=Elision() {args.addAll(temp);})? 
+	exp = AssignmentExpression() {args.add(exp);})
+	( "," exp =AssignmentExpression() {args.add(exp);}
+	)*
+)
+	{return args ; }
 }
 
-void Elision(): {}
+List<LiteralNode> Elision(): 
 {
-	(",")+
+	List<LiteralNode> args = new ArrayList<LiteralNode>() ;
+}
+{
+	(","
+	{	args.add(LiteralNode.createUndefinedLiteral());}
+	)+
+	{return args ; }
 }
 
 void ObjectLiteral(): {}
@@ -975,35 +995,33 @@ Statement ContinueStatement() :
 // FunctionDeclaration
 Statement FunctionDeclaration() : 
 {
-	Statement sta =null;
-	Token name ;
-	List<Statement> body ;
-	ArrayList<String> params = new ArrayList<String>();
+	Token name =null;
+	BlockStatement body = null ;
+	String[] params =null;
 }
 {
 	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() "}"
-	//{return new FunctionStatement (name.image ,params,body) ;}
-	{return sta ;}
+	{return new FunctionDeclarationStatement(name.image,params,body) ;}
 }
 
 ExpressionNode FunctionExpression() : 
 {
-	ExpressionNode exp = null;
-	Token name ;
-	List<Statement> body ;
-	ArrayList<String> params = new ArrayList<String>();
+	Token name = null ;
+	BlockStatement body =null;
+	String[] params = null;
 }
 {
 (	<FUNCTION> (name = <IDENTIFIER>)? "(" 
 	(params = FormalParameterList())? ")" 
 	"{" body = FunctionBody() "}"
 )	//{exp = new FunctionNode (name.image , params , body) }
-	{	return exp ; }
+	{	return new FunctionDeclarationExpression(name.image,params,body) ; }
 }
 
-ArrayList<String> FormalParameterList() : 
+String[] FormalParameterList() : 
 {
-	ArrayList<String> params = new ArrayList<String>() ;
+	List<String> params = new ArrayList();
+	String [] arr ; 
 	Token t ;
 } 
 {
@@ -1012,16 +1030,18 @@ ArrayList<String> FormalParameterList() :
 	(	"," t = <IDENTIFIER>
 		{params.add(t.image);}
 	)* 
-	{	return params ; }
+	{	arr = new String [params.size()];
+		arr = params.toArray(arr);
+		return arr; }
 }
 
-List<Statement> FunctionBody() : 
+BlockStatement FunctionBody() : 
 {
 	List<Statement> body = new ArrayList<Statement>();
 }
 {
 	(body = SourceElements())?
-	{	return body ;	}
+	{	return new BlockStatement(body) ;}
 }
 
 List<Statement> SourceElements() : 

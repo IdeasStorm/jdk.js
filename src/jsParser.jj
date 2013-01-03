@@ -18,10 +18,14 @@ import java.util.List;
 
 public class compiler {
   public static void main(String args[]) throws ParseException, FileNotFoundException  {
-    compiler parser = new compiler(new InputStreamReader(new FileInputStream("src//code.txt")));
+    compileStream(new InputStreamReader(new FileInputStream("src//code.txt")));
+    System.out.println("End Of Parser.");  	
+  }
+  
+  public static void compileStream(InputStreamReader isr) {
+  	compiler parser = new compiler(isr);
     BlockStatement program = parser.start();
     program.execute(new BlockContext(null));
-    System.out.println("End Of Parser.");  	
   }
 }
 PARSER_END(compiler)

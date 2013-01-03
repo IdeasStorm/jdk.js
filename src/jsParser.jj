@@ -359,9 +359,7 @@ ExpressionNode PrimaryExpression() :{
 |	literal = Literal() {
 		exp = literal;
 	}
-|	ArrayLiteral() {
-		exp = null;
-		//TODO fill exp
+|	exp = ArrayLiteral() {
 	}
 |	ObjectLiteral() {
 		exp = null;
@@ -377,26 +375,48 @@ ExpressionNode PrimaryExpression() :{
 	}
 }
 
-void ArrayLiteral(): {}
+ArrayLiteral ArrayLiteral(): 
+{
+	List<ExpressionNode> exps,args = new ArrayList<ExpressionNode>();
+	List<LiteralNode> temp = null ;
+}
 {
 	"["
-(	( (Elision())? "]" )
+(	( (temp = Elision() { args.addAll(temp);})? "]" )
 	|
-	(	 	ElementList() 
-			 ("]"
-		| 	 "," (Elision())? "]")
+	(	 	exps = ElementList() {args.addAll(exps);} 
+			(	"]"
+			| 	 "," (temp = Elision() {args.addAll(temp);})? "]"
+			)
 	)
 )
+	{return new ArrayLiteral(args);}
 }
 
-void ElementList(): {}
+List<ExpressionNode> ElementList(): 
 {
-	(Elision())? AssignmentExpression() ( "," ElementList())*
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+	List<LiteralNode> temp = null ;
+	ExpressionNode exp = null;
+}
+{
+(	((temp=Elision() {args.addAll(temp);})? 
+	exp = AssignmentExpression() {args.add(exp);})
+	( "," exp =AssignmentExpression() {args.add(exp);}
+	)*
+)
+	{return args ; }
 }
 
-void Elision(): {}
+List<LiteralNode> Elision(): 
 {
-	(",")+
+	List<LiteralNode> args = new ArrayList<LiteralNode>() ;
+}
+{
+	(","
+	{	args.add(LiteralNode.createUndefinedLiteral());}
+	)+
+	{return args ; }
 }
 
 void ObjectLiteral(): {}

@@ -7,8 +7,9 @@ public class FunctionContext extends Context {
 	protected ObjectType argsObj;
 	
 	public FunctionContext(ObjectType obj, ObjectType args, Context parent) {
+		super(parent);
 		this.thisObj = obj;
-		this.argsObj = args; 
+		this.argsObj = args;
 	}
 	
 	@Override

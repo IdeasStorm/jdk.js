@@ -5,5 +5,6 @@ debug (true || false);
 //10 ++ ; // Not work !!!
 //var arr = [1,2,3] ; //Not execute
 //arr[1]; //Not execute
-var a = 1, b = a; //a and b undefined
-debug (b);
+var a = 1;
+a=3;
+debug (a);

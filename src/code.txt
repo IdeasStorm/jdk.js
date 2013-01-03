@@ -4,13 +4,7 @@ debug (true || false);
 //10 ++ ; // Not work !!!
 //var arr = [1,2,3] ; //Not execute
 //arr[1]; //Not execute
-<<<<<<< HEAD
-var a = 1,b=a;
-a=3+2*4;
-debug (b);
-=======
 var a = 1;
 a=3+2*4; 
 a += 1  ;
 debug (a);
->>>>>>> origin/master

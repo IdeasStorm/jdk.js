@@ -55,6 +55,8 @@ for (i=0; ; i++) {
 	break;
 }
 
+for (;;) {debug(a);}
+
 //debug(a);
 //if (!false)
 //	a++;

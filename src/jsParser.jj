@@ -495,7 +495,7 @@ ExpressionNode NewExpression():
 ExpressionNode CallExpression(): 
 {
 	ExpressionNode exp,res = null;
-	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+	List<ExpressionNode> args ;
 	ExpressionNode temp ;
 	List <ExpressionNode> templist ;
 	Token t ;
@@ -515,7 +515,7 @@ ExpressionNode CallExpression():
 
 List<ExpressionNode> Arguments(): 
 {
-	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
+	List<ExpressionNode> args =new ArrayList<ExpressionNode>();
 }
 {
 	"(" (args = ArgumentList())? ")"
@@ -974,6 +974,7 @@ Statement FunctionDeclaration() :
 }
 {
 	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() "}"
+	
 	{return new FunctionDeclarationStatement(name.image,params,body) ;}
 }
 

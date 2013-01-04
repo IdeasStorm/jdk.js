@@ -345,7 +345,7 @@ ExpressionNode PrimaryExpression() :{
 ArrayLiteral ArrayLiteral(): 
 {
 	List<ExpressionNode> exps,args = new ArrayList<ExpressionNode>();
-	List<LiteralNode> temp = null ;
+	List<LiteralNode> temp  ;
 }
 {
 	"["
@@ -841,10 +841,11 @@ LinkedList<Pair> VariableDeclarationList() :
 }
 {
 	temp = VariableDeclaration() {
-		values.add(new Pair(temp.getLeft(),temp.getRight()));
+		values.add(temp);
 	}  
 	( LOOKAHEAD(1) "," temp = VariableDeclaration(){
-		values.add(new Pair(temp.getLeft(), temp.getRight()));
+		values.add(temp);
+		//values.add(new Pair(temp.getLeft(), temp.getRight()));
 	})*
 	
 	{

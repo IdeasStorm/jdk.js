@@ -43,6 +43,20 @@ for (a=0; a<5; a++) {
 }
 
 debug("OUT OF FOR");
+var i=0;
+while(i<10) {
+	debug("i="+i);
+	if (i == 5)
+		break;
+	i++;
+	continue;
+	debug("AFTER CONRINUE");
+}
+
+for (i=0; ; i++) {
+	debug(a);
+	break;
+}
 
 //debug(a);
 //if (!false)

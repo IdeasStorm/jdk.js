@@ -1,6 +1,4 @@
 function asd (a)
 {
-	debug("Now I am in function :P ");
+	debug("Now I am in function");
 }
-asd(1);
-debug("Now I am out function :P ");

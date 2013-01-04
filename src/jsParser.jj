@@ -386,7 +386,7 @@ List<LiteralNode> Elision():
 	{return args ; }
 }
 
-ExpressionNode ObjectLiteral(): 
+ObjectLiteral ObjectLiteral(): 
 {
 	LinkedList<Pair> list =null; 
 }
@@ -396,7 +396,7 @@ ExpressionNode ObjectLiteral():
 		|
 		list = PropertyNameAndValueList()  (",")? "}"
 	)
-	//{return new ObjectExpression(list);}
+	{return new ObjectLiteral(list);}
 	{return null;}
 }
 

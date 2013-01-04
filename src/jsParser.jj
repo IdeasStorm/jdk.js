@@ -25,7 +25,7 @@ public class compiler {
   public static void compileStream(InputStreamReader isr)  throws ParseException {
   	compiler parser = new compiler(isr);
     BlockStatement program = parser.start();
-//    program.execute(new BlockContext(null));
+    program.execute(new BlockContext(null));
   }
 }
 PARSER_END(compiler)
@@ -466,7 +466,7 @@ ExpressionNode MemberExpression():
 {
 	ExpressionNode res = null ;
 	List <ExpressionNode> args  = new ArrayList<ExpressionNode>() ;
-	ExpressionNode temp ,mem,exp ;
+	ExpressionNode temp ,mem = null,exp ;
 	Token att ;
 }
 {
@@ -475,7 +475,7 @@ ExpressionNode MemberExpression():
 |	exp = FunctionExpression() {res = exp ;} //{return new functionNode(exp)}
 )
 	( //TODO return ExpressionNode !!!
-	("[" temp = Expression() "]"{	mem = new CallArrayExpression(res,temp);
+	("[" temp = Expression() "]"{	//mem = new CallArrayExpression(res,temp);
 									res = mem ; })
 	|("." att = <IDENTIFIER> {	mem = new MemberExpression(res,att.image);
 								res = mem ; })
@@ -507,7 +507,7 @@ ExpressionNode CallExpression():
 	Token t ; 
 }
 { 
-	exp = MemberExpression() args = Arguments() {res = new FunctionCallExpression(exp,args);}
+	exp = MemberExpression() args = Arguments() //{res = new FunctionCallExpression(exp,args);}
 	//( TODO 
 //		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
 	//	|
@@ -979,19 +979,6 @@ ForStatement ForStatement() :
 	{return new ForStatement(exp1,exp2,exp3,body) ; }
 }
 
-Statement ContinueStatement() : 
-{
-	Statement sta = null;
-}
-{
-	<CONTINUE>
-(	(";")
-|
-//	[no LineTerminator here] 
-	(<IDENTIFIER> ";" )
-)
-{return sta ;}
-}
 
 // FunctionDeclaration
 Statement FunctionDeclaration() : 
@@ -1092,7 +1079,6 @@ Statement ReturnStatement() :
 
 Statement BreakStatement() : 
 {
-//	BreakStatement sta ;
 	Statement sta =null;
 	Token t ;
 }
@@ -1102,6 +1088,19 @@ Statement BreakStatement() :
 	//{return new BreakStatement (t.image) ;}
 	{return sta ;} 
 }
+
+Statement ContinueStatement() :
+{
+	Statement sta =null;
+	Token t ;
+}
+{ 
+	<CONTINUE> (t = <IDENTIFIER>)? ";"
+//[no LineTerminator here]
+	{return new ContinueStatement() ;}
+}
+
+
 Statement DebugStatement(): {
 	 ExpressionNode s;
 }
@@ -1146,10 +1145,10 @@ BlockStatement start() : {
 	List<Statement> program;
 }
 {
-	MemberExpression() ";"
+//	MemberExpression() ";"
 	{return null;}
-/*	program = Program() (<EOF>)?
+	program = Program() (<EOF>)?
 	{
 		return new BlockStatement(program);
-	}*/
+	}
 }

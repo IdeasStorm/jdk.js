@@ -76,6 +76,10 @@ public class ReferenceType extends ObjectType {
 		return value.getProperty(name);
 	}
 
+	public ObjectType invoke(ObjectType obj, ObjectType...args) {
+		return value.invoke(obj, args);
+	}
+	
 	/**
 	 * @return
 	 * @see lang.ObjectType#toStringType()

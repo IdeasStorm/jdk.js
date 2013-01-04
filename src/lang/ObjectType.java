@@ -148,6 +148,11 @@ public class ObjectType {
 		attributes.put(name,value);
 	}
 
+	
+	public ObjectType invoke(ObjectType obj, ObjectType...args) {
+		throw new RuntimeException("Object is not a function");
+	}
+	
 	/**
 	 * @param args
 	 */

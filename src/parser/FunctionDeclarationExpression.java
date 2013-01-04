@@ -16,7 +16,9 @@ public class FunctionDeclarationExpression extends ExpressionNode {
 	
 	@Override
 	public Trilogy execute(Context context) {
-		context._define(functionName, new FunctionType(functionName, args, statements, context));
+		value = new FunctionType(functionName, args, statements, context);
+		if (functionName != null)
+			context._define(functionName, value);
 		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 

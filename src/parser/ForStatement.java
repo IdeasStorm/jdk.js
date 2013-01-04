@@ -20,9 +20,9 @@ public class ForStatement extends Statement {
 		firstExprssion.execute(forStatementContext);
 		while (secondExpression.evaluate(forStatementContext).toBooleanType().toBoolean()) {
 			Trilogy trilogy = statement.execute(forStatementContext);
-			thirdExpression.execute(forStatementContext);
 			if (trilogy.type == Trilogy.Type.Break)
 				return new Trilogy(Trilogy.Type.Normal, null, null);
+			thirdExpression.execute(forStatementContext);
 		}
 		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}

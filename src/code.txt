@@ -1,5 +1,5 @@
 debug (true && false);
-///null;// not work
+debug(null);
 ;
 //10 ++ ; // Not work !!!
 //var arr = [1,2,3] ; //Not execute

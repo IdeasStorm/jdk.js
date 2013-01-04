@@ -419,33 +419,57 @@ List<LiteralNode> Elision():
 	{return args ; }
 }
 
-void ObjectLiteral(): {}
+ExpressionNode ObjectLiteral(): 
+{
+	LinkedList<Pair> list =null; 
+}
 {
 	"{" 
 	(	"}"
 		|
-		PropertyNameAndValueList()  (",")? "}"
+		list = PropertyNameAndValueList()  (",")? "}"
 	)
+	//{return new ObjectExpression(list);}
+	{return null;}
 }
 
-void PropertyNameAndValueList(): {}
+LinkedList<Pair> PropertyNameAndValueList(): 
 {
-	PropertyAssignment() (LOOKAHEAD(1)"," PropertyAssignment() )*
+		LinkedList<Pair> values = new LinkedList<Pair>();
+		Pair elem ;
+}
+{
+	elem = PropertyAssignment() {values.add(elem); }
+	(LOOKAHEAD(1)"," elem = PropertyAssignment()
+	{	values.add(elem);	}
+	)*
+	{return values ;}
 }
 
-void PropertyAssignment(): {}
+Pair PropertyAssignment(): 
 {
-	PropertyName() ":" AssignmentExpression()
-|	"get" PropertyName() "(" ")" "{" FunctionBody() "}" 
-|	"set" PropertyName() "(" <IDENTIFIER> ")" "{" FunctionBody() "}" 
-	
+	Pair elem ;
+	ExpressionNode exp ;
+	String literal ;
+}
+{
+	literal = PropertyName() ":" exp = AssignmentExpression()
+//|	<GET> PropertyName() "(" ")" "{" FunctionBody() "}" 
+//|	<SET> PropertyName() "(" <IDENTIFIER> ")" "{" FunctionBody() "}" 
+	{	elem = new Pair (literal,exp) ;
+		return elem;}
 }
 
-void PropertyName(): {}
+String PropertyName(): 
 {
-		< IDENTIFIER>
-	|	StringLiteral()
-	|	NumericLiteral()
+	String literal;
+	Token t ;
+}
+{
+		t = <IDENTIFIER>
+//	|	literal = StringLiteral()
+//	|	literal = NumericLiteral()
+	{return t.image ;}
 }
 
 // 		LEFT HAND SIDE EXPRESSION

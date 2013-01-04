@@ -462,14 +462,17 @@ Pair PropertyAssignment():
 
 String PropertyName(): 
 {
-	String literal;
+	String str = "" ;
 	Token t ;
 }
 {
-		t = <IDENTIFIER>
-//	|	literal = StringLiteral()
-//	|	literal = NumericLiteral()
-	{return t.image ;}
+	( t = <IDENTIFIER> {str = t.image;} )
+|
+	(	<DOUBLEQUOTE> (str=DoubleStringCharacters())? <DOUBLEENDQUOTE>
+	|	<SINGLEQUOTE> (str=SingleStringCharacters())? <SINGLEENDQUOTE>
+	) 
+//TODO	|	literal = NumericLiteral()
+	{return str;}
 }
 
 // 		LEFT HAND SIDE EXPRESSION
@@ -528,10 +531,11 @@ ExpressionNode CallExpression():
 	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
 	ExpressionNode temp ;
 	List <ExpressionNode> templist ;
-	Token t ; 
+	Token t ;
 }
 { 
-	exp = MemberExpression() args = Arguments() //{res = new FunctionCallExpression(exp,args);}
+//	exp = MemberExpression() args = Arguments() //{res = new FunctionCallExpression(exp,args);}
+	 t= <IDENTIFIER> args = Arguments() {res = new FunctionCallExpression(t.image,args);}
 	//( TODO 
 //		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
 	//	|
@@ -895,23 +899,6 @@ Pair VariableDeclaration() :
 	}
 }
 
-/*
-void VariableDeclarationListNoIn() : {}
-{
-	VariableDeclarationNoIn() ( "," VariableDeclarationNoIn())* 
-}
-
-void VariableDeclarationNoIn() : {}
-{
-	<IDENTIFIER> (InitialiserNoIn())?	
-}
-
-void InitialiserNoIn() : {}
-{
-	"=" //AssignmentExpressionNoIn()
-}
-*/
-
 ExpressionNode Initialiser() : {
 	ExpressionNode exp = null;
 }
@@ -986,21 +973,30 @@ ForStatement ForStatement() :
 {
 	ExpressionNode exp1=null,exp2=null,exp3=null ;
 	Statement body ;
+	LinkedList<Pair> list ;
+	Token t ; 
 }
 {
 	<FOR> "(" 
-	(
-//		(ExpressionNoIn())? ";" (Expression())? ";" (Expression())? ")" Statement()
-//		<TYPE> VariableDeclarationListNoIn() ";" (Expression())? ";" (Expression())? ")" Statement()
-//	|	<TYPE> VariableDeclarationNoIn() "in" Expression() ")" Statement()
-//	|
-(LOOKAHEAD(LeftHandSideExpression() "in")
-		exp1 = LeftHandSideExpression() "in" exp2 = Expression() ")" body = Statement()
-//		{ return new ForInStatement(exp1,exp2,body);}
-	|	(exp1 = Expression())? ";" (exp2 = Expression())? ";" (exp3 = Expression())? ")" body = Statement()
+	(LOOKAHEAD(<TYPE>)
+	(<TYPE>
+		 	( list = VariableDeclarationList() ";" (exp2 = Expression())? ";" (exp3 = Expression())? ")" body = Statement()
+//		 		{return new ForStatement(list,exp2,exp3,body) ; } 
+		 	)
+		|	(t = <IDENTIFIER> "in" exp2 = Expression() ")" body = Statement()
+	//			{return new ForStatement(t.image,exp2,body) ; } 
+			)
 	)
-)
-	{return new ForStatement(exp1,exp2,exp3,body) ; }
+	|
+//(LOOKAHEAD(LeftHandSideExpression() "in")
+	//	( exp1 = LeftHandSideExpression() "in" exp2 = Expression() ")" body = Statement()
+//			{return new ForStatement(exp1,exp2,body) ; }
+		//)
+	//|
+		( (exp1 = Expression())? ";" (exp2 = Expression())? ";" (exp3 = Expression())? ")" body = Statement()
+		{return new ForStatement(exp1,exp2,exp3,body); }
+		)
+	)
 }
 
 

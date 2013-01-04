@@ -17,6 +17,10 @@ var a = 10 , b = a;
 
 var a = 1;
 
+function myt ()
+{
+	debug("Now I am in function :P ");
+}
 debug(a);
 //a--;
 

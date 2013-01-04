@@ -44,8 +44,15 @@ public class BooleanType extends ObjectType {
 	
 	@Override
 	public ObjectType operator(OperatorType type) {
-		//TODO implement Not operator
 		throw new RuntimeException("Invalid left-hand side expression in postfix operation");
+	}
+	
+	@Override
+	public ObjectType operator(OperatorType type, boolean prefix) {
+		if (type == OperatorType.Not)
+			return new BooleanType(!value);
+		else
+			throw new RuntimeException("Invalid left-hand side expression in postfix operation");	
 	}
 	
 	@Override

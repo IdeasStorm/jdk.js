@@ -24,4 +24,15 @@ public abstract class JavaScriptNode {
 	protected final static ReferenceType ref(ObjectType obj) {
 		return new ReferenceType(obj);
 	}
+	
+	protected final static ObjectType deref(ObjectType obj) {
+		if (obj instanceof ReferenceType)
+			return ((ReferenceType) obj).getValue();
+		else
+			return obj;
+	}
+	
+	protected final static boolean isref(ObjectType obj) {
+		return (obj instanceof ReferenceType);
+	}
 }

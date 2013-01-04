@@ -6,4 +6,12 @@ debug (true || false);
 //arr[1]; //Not execute
 var a = 10 , b = a;
 //a = 0 ;
-debug (b);
+debug (b+0.11);
+debug (a*0);
+//3=4;
+function myt (a,b)
+{
+	debug (a);
+}
+
+//myt(1,2);

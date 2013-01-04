@@ -40,6 +40,16 @@ public class ObjectType {
 			// TODO Auto-generated method stub
 			return new BooleanType(false);
 		}
+		
+		@Override
+		public ObjectType getProperty(String name) {
+			throw new RuntimeException("Cannot get property of undefined");
+		}
+		
+		@Override
+		public void setProperty(String name, ObjectType value) {
+			throw new RuntimeException("Cannot set property of undefined");
+		}
 
 	}
 
@@ -77,6 +87,16 @@ public class ObjectType {
 			return new BooleanType(false);
 		}
 
+		@Override
+		public ObjectType getProperty(String name) {
+			throw new RuntimeException("Cannot get property of null");
+		}
+		
+		@Override
+		public void setProperty(String name, ObjectType value) {
+			throw new RuntimeException("Cannot set property of null");
+		}
+		
 	}
 
 	public static final ObjectType nullRef = new Null();
@@ -103,13 +123,20 @@ public class ObjectType {
 	}
 
 	protected ObjectType getAttribute(String name) {
-		return attributes.get(name);
+		ObjectType res = attributes.get(name);
+		if (res != null)
+			return res;
+		else
+			return undefined;
 	}
 
 	protected void setAttribute(String name, ObjectType value) {
 		if (!attributes.containsKey(name) && !this.extensible)
 			return;
 		// TODO strict mode
+		if (value instanceof ReferenceType)
+			value = ((ReferenceType) value).getValue();
+		// TODO make better dereferencing
 		attributes.put(name, new ReferenceType(name, value));
 	}
 
@@ -125,14 +152,14 @@ public class ObjectType {
 
 	@SuppressWarnings("rawtypes")
 	public static ObjectType operator(parser.OperatorNode.OperatorType type,
-			ExpressionNode left, ExpressionNode right) {
+			ObjectType left, ObjectType right) {
 		if (right == null)
-			return left.getValue().operator(type);
+			return left.operator(type);
 		else {
 			Class result_class = getResultClass(left.getClass(),
 					right.getClass());
-			ObjectType left_obj = box(result_class, left.getValue());
-			ObjectType right_obj = box(result_class, right.getValue());
+			ObjectType left_obj = box(result_class, left);
+			ObjectType right_obj = box(result_class, right);
 			return left_obj.operator(type, right_obj);
 		}
 	}

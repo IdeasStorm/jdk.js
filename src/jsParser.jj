@@ -469,7 +469,7 @@ ExpressionNode MemberExpression():
 |	exp = FunctionExpression() {res = exp ;} //{return new functionNode(exp)}
 )
 	( //TODO return ExpressionNode !!!
-	("[" temp = Expression() "]"{	//mem = new CallArrayExpression(res,temp);
+	("[" temp = Expression() "]"{	mem = new CallArrayExpression(res,temp);
 									res = mem ; })
 	|("." att = <IDENTIFIER> {	mem = new MemberExpression(res,att.image);
 								res = mem ; })

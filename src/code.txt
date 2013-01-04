@@ -2,3 +2,4 @@ function asd (a)
 {
 	debug("Now I am in function");
 }
+asd(1);

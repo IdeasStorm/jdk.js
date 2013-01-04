@@ -382,12 +382,12 @@ ArrayLiteral ArrayLiteral():
 }
 {
 	"["
-(	( (temp = Elision() { args.addAll(temp);})? "]" )
+(LOOKAHEAD(Elision())
+	( (temp = Elision() { args.addAll(temp);})? "]" )
 	|
-	(	 	exps = ElementList() {args.addAll(exps);} 
-			(	"]"
-			| 	 "," (temp = Elision() {args.addAll(temp);})? "]"
-			)
+	(LOOKAHEAD (ElementList() "]")
+			(exps = ElementList() {args.addAll(exps);} "]" )
+	|		(exps = ElementList() {args.addAll(exps);} (temp = Elision() {args.addAll(temp);})? "]")	 	
 	)
 )
 	{return new ArrayLiteral(args);}
@@ -402,7 +402,7 @@ List<ExpressionNode> ElementList():
 {
 (	((temp=Elision() {args.addAll(temp);})? 
 	exp = AssignmentExpression() {args.add(exp);})
-	( "," exp =AssignmentExpression() {args.add(exp);}
+	(LOOKAHEAD(2) "," exp =AssignmentExpression() {args.add(exp);}
 	)*
 )
 	{return args ; }
@@ -464,23 +464,25 @@ ExpressionNode LeftHandSideExpression() :
 
 ExpressionNode MemberExpression(): 
 {
-	ExpressionNode exp = null ;
+	ExpressionNode res = null ;
 	List <ExpressionNode> args  = new ArrayList<ExpressionNode>() ;
-	ExpressionNode temp ;
-	Token t ;
+	ExpressionNode temp ,mem = null,exp ;
+	Token att ;
 }
 {
 ((
-(	exp = PrimaryExpression()
-|	exp = FunctionExpression() // {return new functionNode(exp)}
+(	exp = PrimaryExpression() {res = exp ;}
+|	exp = FunctionExpression() {res = exp ;} //{return new functionNode(exp)}
 )
 	( //TODO return ExpressionNode !!!
-	("[" temp = Expression() "]" {args.add(temp);} ) // {return CallArrayNode(args);}
-	|("." t = <IDENTIFIER> {args.add(new VariableNode(t.image));} ) // {return CallPropNode(args);} 
+	("[" temp = Expression() "]"{	//mem = new CallArrayExpression(res,temp);
+									res = mem ; })
+	|("." att = <IDENTIFIER> {	mem = new MemberExpression(res,att.image);
+								res = mem ; })
 	)*
 )
 |	( "new" exp = MemberExpression() args = Arguments() )// {return NewFunction(exp,args);}
-) {return exp ;}
+) {return res ;}
 }
 
 ExpressionNode NewExpression(): 
@@ -498,23 +500,22 @@ ExpressionNode NewExpression():
 
 ExpressionNode CallExpression(): 
 {
-	ExpressionNode exp = null;
+	ExpressionNode exp,res = null;
 	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
 	ExpressionNode temp ;
 	List <ExpressionNode> templist ;
 	Token t ; 
 }
 { 
-//	(MemberExpression() Arguments() (Arguments() | "[" Expression() "]" | "." <IDENTIFIER> )*)?
-	exp = MemberExpression() args = Arguments()
-	(
-		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
-		|
-		( "[" temp = Expression() "]" {args.add(temp); }) //return new CallArrayNode(exp,args) ;} )
-		|
-		( "." t = <IDENTIFIER> {args.add(new VariableNode(t.image)); }) //return new CallPropNode(exp,args) ;} )
-	)*
-	{return exp ;}
+	exp = MemberExpression() args = Arguments() //{res = new FunctionCallExpression(exp,args);}
+	//( TODO 
+//		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
+	//	|
+	//	( "[" temp = Expression() "]" {args.add(temp); }) //return new ArrayCallExpression(res,args) ;} )
+	//	|
+	//	( "." t = <IDENTIFIER> {args.add(new VariableNode(t.image)); }) //return new CallPropNode(exp,args) ;} )
+	//)*
+	{return res ;}
 }
 
 List<ExpressionNode> Arguments(): 
@@ -978,19 +979,6 @@ ForStatement ForStatement() :
 	{return new ForStatement(exp1,exp2,exp3,body) ; }
 }
 
-Statement ContinueStatement() : 
-{
-	Statement sta = null;
-}
-{
-	<CONTINUE>
-(	(";")
-|
-//	[no LineTerminator here] 
-	(<IDENTIFIER> ";" )
-)
-{return sta ;}
-}
 
 // FunctionDeclaration
 Statement FunctionDeclaration() : 
@@ -1004,7 +992,7 @@ Statement FunctionDeclaration() :
 	{return new FunctionDeclarationStatement(name.image,params,body) ;}
 }
 
-ExpressionNode FunctionExpression() : 
+FunctionDeclarationExpression FunctionExpression() : 
 {
 	Token name = null ;
 	BlockStatement body =null;
@@ -1015,7 +1003,7 @@ ExpressionNode FunctionExpression() :
 (	<FUNCTION> (name = <IDENTIFIER>)? "(" 
 	(params = FormalParameterList())? ")" 
 	"{" body = FunctionBody() "}"
-)	//{exp = new FunctionNode (name.image , params , body) }
+)
 	{	
 		if (name != null)
 			funcName = name.image;
@@ -1080,18 +1068,20 @@ Statement SourceElement() :
 Statement ReturnStatement() : 
 {
 	Statement sta =null ;
-	ExpressionNode exp ;
+	ExpressionNode exp =null;
 } 
 {
 	<RETURN> (exp = Expression())? ";" 
-	//[no LineTerminator here]
-	//{return new ReturnStatement(exp) ;}	
-	{return sta ;}
+	//[no LineTerminator here]	
+	{	if (exp != null)
+			return new ReturnStatement(exp);
+		else
+			return new ReturnStatement();
+	}
 }
 
 Statement BreakStatement() : 
 {
-//	BreakStatement sta ;
 	Statement sta =null;
 	Token t ;
 }
@@ -1101,6 +1091,19 @@ Statement BreakStatement() :
 	//{return new BreakStatement (t.image) ;}
 	{return sta ;} 
 }
+
+Statement ContinueStatement() :
+{
+	Statement sta =null;
+	Token t ;
+}
+{ 
+	<CONTINUE> (t = <IDENTIFIER>)? ";"
+//[no LineTerminator here]
+	{return new ContinueStatement() ;}
+}
+
+
 Statement DebugStatement(): {
 	 ExpressionNode s;
 }
@@ -1122,12 +1125,11 @@ Statement Statement() :
 |	sta = ExpressionStatement()
 |	sta = IfStatement()
 |	sta = IterationStatement()
-|	ReturnStatement()
-|	BreakStatement()
+|	sta = ReturnStatement()
+|	sta = BreakStatement()
 |	sta = DebugStatement()
-/*|	ContinueStatement()
-|	WithStatment
-*/
+|	sta = ContinueStatement()
+//|	WithStatment
 )
 	{	return sta ;}
 }
@@ -1137,7 +1139,7 @@ List<Statement> Program() :
 	List<Statement> list = null;
 }
 {
-	(list = SourceElements())? // ?
+	(list = SourceElements())? 
 	{return list ;}
 }
 

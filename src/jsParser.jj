@@ -1068,13 +1068,16 @@ Statement SourceElement() :
 Statement ReturnStatement() : 
 {
 	Statement sta =null ;
-	ExpressionNode exp ;
+	ExpressionNode exp =null;
 } 
 {
 	<RETURN> (exp = Expression())? ";" 
-	//[no LineTerminator here]
-	//{return new ReturnStatement(exp) ;}	
-	{return sta ;}
+	//[no LineTerminator here]	
+	{	if (exp != null)
+			return new ReturnStatement(exp);
+		else
+			return new ReturnStatement();
+	}
 }
 
 Statement BreakStatement() : 
@@ -1122,10 +1125,10 @@ Statement Statement() :
 |	sta = ExpressionStatement()
 |	sta = IfStatement()
 |	sta = IterationStatement()
-|	ReturnStatement()
-|	BreakStatement()
+|	sta = ReturnStatement()
+|	sta = BreakStatement()
 |	sta = DebugStatement()
-//|	ContinueStatement()
+|	sta = ContinueStatement()
 //|	WithStatment
 )
 	{	return sta ;}

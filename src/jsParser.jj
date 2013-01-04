@@ -1089,7 +1089,7 @@ Statement BreakStatement() :
 	<BREAK> (t = <IDENTIFIER>)? ";"
 	// [no LineTerminator here]
 	//{return new BreakStatement (t.image) ;}
-	{return sta ;} 
+	{ sta = new BreakStatement(); return sta ; } 
 }
 
 Statement ContinueStatement() :

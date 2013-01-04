@@ -44,7 +44,8 @@ public class BooleanType extends ObjectType {
 	
 	@Override
 	public ObjectType operator(OperatorType type) {
-		throw new RuntimeException("Invalid left-hand side expression in postfix operation");
+		//throw new RuntimeException("Invalid left-hand side expression in postfix operation");
+		return operator(type, true);
 	}
 	
 	@Override

@@ -15,6 +15,7 @@ function myt ()
 {
 	debug("Now I am in function :P ");
 }
+
 //debug(a);
 //a--;
 
@@ -55,10 +56,11 @@ for (i=0; ; i++) {
 	break;
 }
 
-for (;;) {debug(a);}
+//for (;;) {debug(a);}
 
 //debug(a);
 //if (!false)
 //	a++;
 //debug(a);
 //debug("OUT OF FOR");
+myt();

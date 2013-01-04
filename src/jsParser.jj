@@ -1099,7 +1099,7 @@ Statement BreakStatement() :
 	<BREAK> (t = <IDENTIFIER>)? ";"
 	// [no LineTerminator here]
 	//{return new BreakStatement (t.image) ;}
-	{return sta ;} 
+	{ sta = new BreakStatement(); return sta ; } 
 }
 Statement DebugStatement(): {
 	 ExpressionNode s;
@@ -1123,7 +1123,7 @@ Statement Statement() :
 |	sta = IfStatement()
 |	sta = IterationStatement()
 |	ReturnStatement()
-|	BreakStatement()
+|	sta = BreakStatement()
 |	sta = DebugStatement()
 /*|	ContinueStatement()
 |	WithStatment

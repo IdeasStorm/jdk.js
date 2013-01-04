@@ -23,3 +23,10 @@ debug(++a);
 a++;
 debug(a++);
 
+for (a=0; true; a++) {
+	debug(a);
+	debug("BREAKED");
+	break;
+}
+
+debug("OUT OF FOR");

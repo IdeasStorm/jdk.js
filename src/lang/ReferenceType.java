@@ -6,6 +6,7 @@ public class ReferenceType extends ObjectType {
 	protected String name;
 	protected ObjectType value;
 	protected boolean writable;
+	protected ObjectType parent;
 
 	public ReferenceType(String name, ObjectType value, boolean writable) {
 		this.name = name;
@@ -23,6 +24,11 @@ public class ReferenceType extends ObjectType {
 
 	public ReferenceType(String name, ObjectType value) {
 		this(name, value, true);
+	}
+	
+	public ReferenceType(String name, ObjectType value,ObjectType parent) {
+		this(name, value, true);
+		this.parent = parent;
 	}
 
 	public String getName() {
@@ -96,6 +102,8 @@ public class ReferenceType extends ObjectType {
 		if (type == OperatorType.Assignment) {
 			if (writable) {
 				value = right;
+				if (parent != null)
+					parent.setAttribute(name, this);
 				return right;
 			}else {
 				throw new RuntimeException("ReferenceError: Invalid left-hand side in assignment");

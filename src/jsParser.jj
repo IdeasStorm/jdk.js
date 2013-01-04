@@ -940,6 +940,7 @@ ForStatement ForStatement() :
 	ExpressionNode exp1=null,exp2=null,exp3=null ;
 	Statement body ;
 	LinkedList<Pair> list ;
+	VariableExpression varExp ;
 	Token t ; 
 }
 { //TODO
@@ -947,7 +948,8 @@ ForStatement ForStatement() :
 	(LOOKAHEAD(<TYPE>)
 	(<TYPE>
 		 	( list = VariableDeclarationList() ";" (exp2 = Expression())? ";" (exp3 = Expression())? ")" body = Statement()
-//		 		{return new ForStatement(list,exp2,exp3,body) ; } 
+		 		{	varExp = new VariableExpression(list);
+		 			return new ForStatement(varExp,exp2,exp3,body) ; } 
 		 	)
 		|	(t = <IDENTIFIER> "in" exp2 = Expression() ")" body = Statement()
 	//			{return new ForStatement(t.image,exp2,body) ; } 

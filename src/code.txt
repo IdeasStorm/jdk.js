@@ -24,16 +24,22 @@ debug(a);
 a++;
 debug(a++);
 
-for (a=0; true; a++) {
-	debug(a);
-	debug("BREAKED");
-	break;
+a = 0;
+debug(a);
+var i=2;
+debug("i= " +i);
+for (a=0; a<10; a++) {
+	i=0;
+	for (i=0; i<2; i++)
+		debug("in for for " + a);
 }
 
-for (a=0; true; a++) {
+for (a=0; a<5; a++) {
 	debug(a);
+	if (a == 3)
+		break;
 	continue;
-	debug("BREAKED");
+	debug("AFTER CONRINUE");
 }
 
 debug("OUT OF FOR");
@@ -42,3 +48,4 @@ debug("OUT OF FOR");
 //if (!false)
 //	a++;
 //debug(a);
+//debug("OUT OF FOR");

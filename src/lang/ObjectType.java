@@ -305,4 +305,8 @@ public class ObjectType {
 	public ObjectType _toString(StringType s) {
 		return toStringType();
 	}
+
+	public boolean isUndefined() {
+		return (this == undefined);
+	}
 }

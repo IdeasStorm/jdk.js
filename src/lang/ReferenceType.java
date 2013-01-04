@@ -166,4 +166,10 @@ public class ReferenceType extends ObjectType {
 	public String toString() {
 		return value.toString();
 	}
+	
+	@Override
+	public boolean isUndefined() {
+		// TODO Auto-generated method stub
+		return value.isUndefined();
+	}
 }

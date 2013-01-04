@@ -164,7 +164,7 @@ public class ObjectType {
 		if (right == null)
 			return left.operator(type);
 		else if (left == null)
-			return right.operator(type, true);
+			return right.operator(type);
 		else {
 			Class result_class = getResultClass(left.getClass(),
 					right.getClass());

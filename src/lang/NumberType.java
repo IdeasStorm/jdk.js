@@ -74,8 +74,21 @@ public class NumberType extends ObjectType {
 			this.value = value - ((NumberType)right).value;
 			result = this;
 			break;
-		
-			
+		case Equals:
+			result = new BooleanType((value == ((NumberType)right).value));
+			break;
+		case Greater:
+			result = new BooleanType((value > ((NumberType)right).value));
+			break;
+		case GreaterOrEqual:
+			result = new BooleanType((value >= ((NumberType)right).value));
+			break;
+		case Less:
+			result = new BooleanType((value < ((NumberType)right).value));
+			break;
+		case LessOrEqual:
+			result = new BooleanType((value <= ((NumberType)right).value));
+			break;
 		default:
 			throw new RuntimeException("Object doesn't support such operator");
 		}

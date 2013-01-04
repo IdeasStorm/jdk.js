@@ -2,6 +2,9 @@ package parser;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.NumberType;
+
 import lang.BooleanType;
 import lang.ObjectType;
 
@@ -71,17 +74,6 @@ public class OperatorNode extends ExpressionNode {
 		System.out.println(op.evaluate(p).toStringType().toString());
 	}
 	
-	
-	private void postPreIncDec(ExpressionNode left, ExpressionNode right, Context context) {
-		if ((type == OperatorType.PostIncrement) ||(type == OperatorType.PreIncrement))
-			value = ObjectType.operator(OperatorType.Add, left.evaluate(context), 
-					LiteralNode.createNumberLiteral("1").evaluate(context));
-		else
-			value = ObjectType.operator(OperatorType.Subtract, left.evaluate(context), 
-					LiteralNode.createNumberLiteral("1").evaluate(context));
-		ObjectType.operator(OperatorType.Assignment, left.evaluate(context), value);
-	}
-	
 	public Trilogy execute(Context context) {
 		// WARNING DONT dereference ON LEFT SIDE
 		if (type == OperatorType.Assignment) {
@@ -95,14 +87,10 @@ public class OperatorNode extends ExpressionNode {
 			value = leftVal;
 		}
 		else if (left == null) {
-			if (numberRightHandSet.contains(type)) // ++i and --i
-				postPreIncDec(right, left, context);
-			if (type == OperatorType.Not) // !false
-				value = ObjectType.operator(type, null, right.evaluate(context));
+			value = ObjectType.operator(type, null, right.evaluate(context));
 		}
 		else if (right == null) {
-			if (numberLeftHandSet.contains(type)) // i++ and i--
-				postPreIncDec(left, right, context);
+			value = ObjectType.operator(type, left.evaluate(context), null);
 		}
 		else
 			value = ObjectType.operator(type,deref(left.evaluate(context)),deref(right.evaluate(context)));

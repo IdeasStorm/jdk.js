@@ -26,6 +26,28 @@ public class ArrayType extends ObjectType {
 		return new StringType(value.toString());
 	}
 	
+	
+	@Override
+	public ObjectType getProperty(ObjectType name) {
+		if (name instanceof NumberType) {
+			return _get((NumberType) name);
+		}
+		else {
+			return super.getProperty(name.toStringType().toString());
+		}
+	}
+	
+	@Override
+	public void setProperty(ObjectType name, ObjectType value) {
+		if (name instanceof NumberType) {
+			_set((NumberType) name,value);
+		}
+		else {
+			super.setProperty(name, value);
+		}
+	}
+	
+
 	// host methods
 	
 	public ObjectType _push(ObjectType obj) {
@@ -50,6 +72,21 @@ public class ArrayType extends ObjectType {
 		return new NumberType(value.size());
 	}
 	
+	public ObjectType _get(NumberType i) {
+		int index = 0 ,ii = i.toInt();
+		if (ii < 0 || ii >= value.size())
+			throw new IndexOutOfBoundsException();
+		for (ObjectType v : value) {
+			if (index == ii)
+				return v;
+		}
+		return undefined;
+	}
+	
+	private void _set(NumberType name, ObjectType value) {
+		// TODO Auto-generated method stub
+	}
+	
 	public ObjectType _foreach(ObjectType obj) {
 		FunctionType function;
 		if (obj instanceof FunctionType)
@@ -61,5 +98,6 @@ public class ArrayType extends ObjectType {
 		}
 		return undefined;
 	}
+	
 	
 }

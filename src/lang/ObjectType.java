@@ -127,7 +127,7 @@ public class ObjectType {
 		if (res != null)
 			return res;
 		else
-			return undefined;
+			return new ReferenceType(name,undefined);
 	}
 
 	protected void setAttribute(String name, ObjectType value) {
@@ -138,6 +138,14 @@ public class ObjectType {
 			value = ((ReferenceType) value).getValue();
 		// TODO make better dereferencing
 		attributes.put(name, new ReferenceType(name, value));
+	}
+	
+	protected void setAttribute(String name, ReferenceType value) {
+		if (!attributes.containsKey(name) && !this.extensible)
+			return;
+		// TODO strict mode
+		// TODO make better dereferencing
+		attributes.put(name,value);
 	}
 
 	/**
@@ -155,6 +163,8 @@ public class ObjectType {
 			ObjectType left, ObjectType right) {
 		if (right == null)
 			return left.operator(type);
+		else if (left == null)
+			return right.operator(type, true);
 		else {
 			Class result_class = getResultClass(left.getClass(),
 					right.getClass());
@@ -213,12 +223,15 @@ public class ObjectType {
 	}
 
 	public ObjectType getProperty(java.lang.String name) {
-		try {
-			return getAttribute(name);
-		} catch (Exception e) {
-			return undefined;
-		}
-		
+		return getAttribute(name);		
+	}
+	
+	public void setProperty(ObjectType name, ObjectType value) {
+		setAttribute(name.toStringType().toString(), value);
+	}
+	
+	public ObjectType getProperty(ObjectType name) {
+		return getAttribute(name.toStringType().toString());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -291,5 +304,9 @@ public class ObjectType {
 	
 	public ObjectType _toString(StringType s) {
 		return toStringType();
+	}
+
+	public boolean isUndefined() {
+		return (this == undefined);
 	}
 }

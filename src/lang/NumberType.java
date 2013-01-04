@@ -133,5 +133,9 @@ public class NumberType extends ObjectType {
 		NumberType a = new NumberType(2.0);
 		System.out.println(a.toStringType().toString());
 	}
+
+	public int toInt() {
+		return (int) value;
+	}
 	
 }

@@ -1,4 +1,13 @@
-function asd (a)
+function add1 (a, b)
 {
-	debug("Now I am in function");
-}
+	debug(a+b);
+};
+
+add1(1, 2);
+
+var add = function (a, b)
+{
+	debug(a+b);
+};
+
+add(1, 2);

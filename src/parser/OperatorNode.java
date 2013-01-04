@@ -10,12 +10,12 @@ public class OperatorNode extends ExpressionNode {
 	protected ExpressionNode right;
 	protected OperatorType type;
 	
-	protected Set<OperatorType> leftHandSet = new HashSet<OperatorType>() {{
+	protected Set<OperatorType> numberLeftHandSet = new HashSet<OperatorType>() {{
 	    add(OperatorType.PostDecrement);
 	    add(OperatorType.PostIncrement);
 	}};
 	
-	protected Set<OperatorType> rightHandSet = new HashSet<OperatorType>() {{
+	protected Set<OperatorType> numberRightHandSet = new HashSet<OperatorType>() {{
 	    add(OperatorType.PreDecrement);
 	    add(OperatorType.PreIncrement);
 	}};
@@ -94,11 +94,15 @@ public class OperatorNode extends ExpressionNode {
 				throw new RuntimeException("ReferenceError: Invalid left-hand side in assignment");
 			value = leftVal;
 		}
-		else if (leftHandSet.contains(type)) { // i++ and i--
-			postPreIncDec(left, right, context);
+		else if (left == null) {
+			if (numberRightHandSet.contains(type)) // ++i and --i
+				postPreIncDec(right, left, context);
+			if (type == OperatorType.Not) // !false
+				value = ObjectType.operator(type, null, right.evaluate(context));
 		}
-		else if (rightHandSet.contains(type)) {
-			postPreIncDec(right, left, context);
+		else if (right == null) {
+			if (numberLeftHandSet.contains(type)) // i++ and i--
+				postPreIncDec(left, right, context);
 		}
 		else
 			value = ObjectType.operator(type,deref(left.evaluate(context)),deref(right.evaluate(context)));

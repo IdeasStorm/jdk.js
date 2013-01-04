@@ -155,6 +155,8 @@ public class ObjectType {
 			ObjectType left, ObjectType right) {
 		if (right == null)
 			return left.operator(type);
+		else if (left == null)
+			return right.operator(type, true);
 		else {
 			Class result_class = getResultClass(left.getClass(),
 					right.getClass());

@@ -92,6 +92,7 @@ public class OperatorNode extends ExpressionNode {
 				BooleanType.operator(type, null, right.evaluate(context));
 			else
 				throw new RuntimeException("ReferenceError: Invalid left-hand side in assignment");
+			value = leftVal;
 		}
 		else if (leftHandSet.contains(type)) { // i++ and i--
 			postPreIncDec(left, right, context);

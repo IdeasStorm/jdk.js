@@ -27,7 +27,7 @@ public abstract class Context {
 	
 	public final void setVariable(String name, ObjectType value) {
 		ObjectType ref = _get(name); 
-		if ( ref == ObjectType.undefined)
+		if (ref.isUndefined())
 			parent.setVariable(name, value);
 		else
 			_set(name, value);
@@ -35,7 +35,7 @@ public abstract class Context {
 	
 	public final ObjectType getVariable(String name) {
 		ObjectType ref = _get(name);
-		if (ref != ObjectType.undefined)
+		if (!ref.isUndefined())
 			return ref;
 		else if (parent != null)
 			return parent.getVariable(name);
@@ -46,7 +46,7 @@ public abstract class Context {
 	
 	public final ObjectType getThisValue() {
 		ObjectType ref = _getThis();
-		if (ref != ObjectType.undefined)
+		if (!ref.isUndefined())
 			return ref;
 		else if (parent != null)
 			return parent.getThisValue();

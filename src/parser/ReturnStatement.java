@@ -5,6 +5,9 @@ import lang.ObjectType;
 public class ReturnStatement extends Statement {
 	ExpressionNode expression;
 
+	public ReturnStatement() {
+	}
+	
 	public ReturnStatement(ExpressionNode expression) {
 		this.expression = expression;
 	}

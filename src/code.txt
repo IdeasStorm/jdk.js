@@ -1,17 +1,1 @@
-debug (true || false);
-///null;// not work
-;
-//10 ++ ; // Not work !!!
-//var arr = [1,2,3] ; //Not execute
-//arr[1]; //Not execute
-var a = 10 , b = a;
-//a = 0 ;
-debug (b+0.11);
-debug (a*0);
-//3=4;
-function myt (a,b)
-{
-	debug (a);
-}
-
-//myt(1,2);
+obj.att.i ;

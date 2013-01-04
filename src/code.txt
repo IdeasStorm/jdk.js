@@ -4,13 +4,6 @@ debug (true || false);
 //10 ++ ; // Not work !!!
 //var arr = [1,2,3] ; //Not execute
 //arr[1]; //Not execute
-var a = 1;
-a=3+2*4; 
-a += 1  ;
-debug (a);
-
-function myt (a,b)
-{
-	debug (a);
-}
-
+var a = 10 , b = a;
+//a = 0 ;
+debug (b);

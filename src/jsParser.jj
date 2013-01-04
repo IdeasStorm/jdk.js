@@ -1009,13 +1009,18 @@ ExpressionNode FunctionExpression() :
 	Token name = null ;
 	BlockStatement body =null;
 	String[] params = null;
+	String funcName = "";
 }
 {
 (	<FUNCTION> (name = <IDENTIFIER>)? "(" 
 	(params = FormalParameterList())? ")" 
 	"{" body = FunctionBody() "}"
 )	//{exp = new FunctionNode (name.image , params , body) }
-	{	return new FunctionDeclarationExpression(name.image,params,body) ; }
+	{	
+		if (name != null)
+			funcName = name.image;
+		return new FunctionDeclarationExpression(funcName,params,body) ; 
+	}
 }
 
 String[] FormalParameterList() : 

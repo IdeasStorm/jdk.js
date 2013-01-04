@@ -17,12 +17,25 @@ public class ForStatement extends Statement {
 	@Override
 	public Trilogy execute(Context context) {
 		BlockContext forStatementContext = new BlockContext(context);
-		firstExprssion.execute(forStatementContext);
-		while (secondExpression.evaluate(forStatementContext).toBooleanType().toBoolean()) {
-			Trilogy trilogy = statement.execute(forStatementContext);
-			if (trilogy.type == Trilogy.Type.Break)
-				return new Trilogy(Trilogy.Type.Normal, null, null);
-			thirdExpression.execute(forStatementContext);
+		if (firstExprssion != null)
+			firstExprssion.execute(forStatementContext);
+		if (secondExpression != null) {
+			while (secondExpression.evaluate(forStatementContext).toBooleanType().toBoolean()) {
+				Trilogy trilogy = statement.execute(forStatementContext);
+				if (trilogy.type == Trilogy.Type.Break)
+					return new Trilogy(Trilogy.Type.Normal, null, null);
+				if (thirdExpression != null)
+					thirdExpression.execute(forStatementContext);
+			}
+		}
+		else {
+			while (true) {
+				Trilogy trilogy = statement.execute(forStatementContext);
+				if (trilogy.type == Trilogy.Type.Break)
+					return new Trilogy(Trilogy.Type.Normal, null, null);
+				if (thirdExpression != null)
+					thirdExpression.execute(forStatementContext);
+			}
 		}
 		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}

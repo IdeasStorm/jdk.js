@@ -107,21 +107,12 @@ TOKEN : /* KEYWORDS */
 |	< DEBUG: "debug">
 }
 
-
 TOKEN : /* VARIABLE */
 {
-/*
-	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
-|	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
-|	< DIGIT: ["0" - "9"]>
-*/
-
 	< NUMBER: (["0" - "9"])+ | ( (["0" - "9"])* ("." (["0" - "9"])+) )>
 |	< DIGIT: ["0" - "9"]>
 |	< #CHARACTER: ["a"-"z", "A"-"Z","_","$"]>
 |	< IDENTIFIER:  ( <CHARACTER> )  (( <DIGIT> ) | <CHARACTER>)* >
-
-
 }
 
 <COMMENT> SKIP :
@@ -146,7 +137,6 @@ TOKEN : /* VARIABLE */
   <SINGLEENDQUOTE:"'"> : DEFAULT
 | <SINGLECHAR:~[]>
 }
-
 
 <ESC_STATE> TOKEN:
 {
@@ -180,6 +170,7 @@ void doubleString_getChar(StringBuilder builder):
     }
   }
 }
+
 void singleString_getChar(StringBuilder builder):
 {
   Token t;
@@ -202,13 +193,12 @@ LiteralNode Literal(): {
 |	literal = BooleanLiteral()
 |	literal = NumericLiteral()
 |	literal = StringLiteral()
-// | RegularExpressionLiteral() TODO in future 
+// | RegularExpressionLiteral() 
 
 )
-
 {return literal;}
-
 }
+
 LiteralNode NullLiteral(): {}
 {
 	<NULL>
@@ -233,77 +223,61 @@ LiteralNode BooleanLiteral():
 
 LiteralNode NumericLiteral(): 
 {
-	LiteralNode num ;
+	Token num ;
 }
 {	
-	num = DecimalLiteral()
-	{
-		//TODO Get the real Number Literal
-		//return LiteralNode.createNumberLiteral("0.0");
-		return num ;
-	}	
+	num = <NUMBER>
+	{ return LiteralNode.createNumberLiteral(num.image);}
 }
 
+/* Not Use Now
 LiteralNode DecimalLiteral(): 
 {
-	LiteralNode num ;
+	Token num ;
 }
 {
-	(	num = DecimalIntegerLiteral() 
-//TODO		(	"." (DecimalDigits())? (ExponentPart())?
-//	|	(ExponentPart())?	
-//		)
-	)
-//	|	("." DecimalDigits() (ExponentPart())?)
-	{return num ;}
-}
-
-
+		(	"." (DecimalDigits())? (ExponentPart())?
+	|	(ExponentPart())?	
+		)
+	|	("." DecimalDigits() (ExponentPart())?)
+} 
 LiteralNode DecimalIntegerLiteral(): 
 {
 	Token num ;
 }
 {
-//	"0" TODO 
-//|
-//	NonZeroDigit() (DecimalDigits())?
-	num = <NUMBER>
-	{ return LiteralNode.createNumberLiteral(num.image);}
+	"0"  
+|
+	NonZeroDigit() (DecimalDigits())?
 }
 
-void DecimalDigit(): {}
+void NonZeroDigit(): {}
 {
-//	"0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 	<DIGIT>
 }
+void ExponentPart(): {}
+{
+	("e" | "E") SignedInteger()
+}
+void SignedInteger(): {}
+{
+		DecimalDigits()
+	| 	"+" DecimalDigits()
+	|	"-" DecimalDigits()
+}
+void DecimalDigit(): {}
+{
+	<DIGIT>
+}
+*/
 
 LiteralNode DecimalDigits(): 
 {
 	Token num ; 
 }
 {
-//	(DecimalDigit())+
 		num = <NUMBER>
 		{ return LiteralNode.createNumberLiteral(num.image);}
-}
-
-void NonZeroDigit(): {}
-{
-//	"1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
-	<DIGIT>
-}
-
-void ExponentPart(): {}
-{
-	("e" | "E") SignedInteger()
-}
-
-
-void SignedInteger(): {}
-{
-		DecimalDigits()
-	| 	"+" DecimalDigits()
-	|	"-" DecimalDigits()
 }
 
 LiteralNode StringLiteral(): 
@@ -341,7 +315,6 @@ String SingleStringCharacters() :
 }
 //		END LITERALS
 
-
 // BEGIN PRIMARY EXPRESSION
 ExpressionNode PrimaryExpression() :{
 	ExpressionNode exp = null;
@@ -361,18 +334,12 @@ ExpressionNode PrimaryExpression() :{
 	}
 |	exp = ArrayLiteral() {
 	}
-|	ObjectLiteral() {
-		exp = null;
-		//TODO fill exp
+|	exp = ObjectLiteral() {
 	}
 |	"(" exp = Expression() ")" {
-		//TODO fill exp
 	}
-
 )
-	{
-		return exp;
-	}
+	{return exp;}
 }
 
 ArrayLiteral ArrayLiteral(): 
@@ -454,6 +421,7 @@ Pair PropertyAssignment():
 }
 {
 	literal = PropertyName() ":" exp = AssignmentExpression()
+//TODO	
 //|	<GET> PropertyName() "(" ")" "{" FunctionBody() "}" 
 //|	<SET> PropertyName() "(" <IDENTIFIER> ")" "{" FunctionBody() "}" 
 	{	elem = new Pair (literal,exp) ;
@@ -463,25 +431,24 @@ Pair PropertyAssignment():
 String PropertyName(): 
 {
 	String str = "" ;
-	Token t ;
+	Token num ,t;
 }
 {
 	( t = <IDENTIFIER> {str = t.image;} )
 |
 	(	<DOUBLEQUOTE> (str=DoubleStringCharacters())? <DOUBLEENDQUOTE>
 	|	<SINGLEQUOTE> (str=SingleStringCharacters())? <SINGLEENDQUOTE>
-	) 
-//TODO	|	literal = NumericLiteral()
+	)
+|	(num = <NUMBER> {str = num.image;} )
 	{return str;}
 }
 
-// 		LEFT HAND SIDE EXPRESSION
+// LEFT HAND SIDE EXPRESSION
 ExpressionNode LeftHandSideExpression() :
 {
 	ExpressionNode exp = null ;
 }
 {
-	//MemberExpression() (Arguments())?
 (LOOKAHEAD (CallExpression()) 
 		exp = CallExpression()
 |		exp = NewExpression()
@@ -533,10 +500,10 @@ ExpressionNode CallExpression():
 	List <ExpressionNode> templist ;
 	Token t ;
 }
-{ 
-//	exp = MemberExpression() args = Arguments() //{res = new FunctionCallExpression(exp,args);}
-	 t= <IDENTIFIER> args = Arguments() {res = new FunctionCallExpression(t.image,args);}
-	//( TODO 
+{ //TODO
+	exp = MemberExpression() args = Arguments() //{res = new FunctionCallExpression(exp,args);}
+	 //t= <IDENTIFIER> args = Arguments() {res = new FunctionCallExpression(t.image,args);}
+	//(
 //		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
 	//	|
 	//	( "[" temp = Expression() "]" {args.add(temp); }) //return new ArrayCallExpression(res,args) ;} )
@@ -614,8 +581,8 @@ ExpressionNode MultiplicativeExpression():
 	( left = UnaryExpression() {exp = left ;}) 
 	(
 		( "*" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Multiply,left , right) ;  left = exp ; }) 
-	|	(  "/" UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Division,left , right) ;  left = exp ; } )
-	|	( "%" UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Mod,left , right) ;  left = exp ; } ) 
+	|	(  "/" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Division,left , right) ;  left = exp ; } )
+	|	( "%" right = UnaryExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Mod,left , right) ;  left = exp ; } ) 
 	)*
 )
 	{return exp ;}
@@ -637,7 +604,7 @@ ExpressionNode AdditiveExpression():
 	{return exp ;}
 }
 
-//Shift Expression
+//TODO Shift Expression
 ExpressionNode ShiftExpression(): 
 {
 	ExpressionNode exp = null ; 
@@ -661,9 +628,8 @@ ExpressionNode RelationalExpression():
 	OperatorNode.OperatorType op ; 
 }
 {
-//	ShiftExpression() ("<" ShiftExpression() | ">" ShiftExpression() | "<=" ShiftExpression() | ">=" ShiftExpression() | <INSTANCEOF> ShiftExpression() | <IN> ShiftExpression()  )*
 (
-	( left = ShiftExpression() {exp = left ;}) 
+	( left = ShiftExpression() {exp = left ;})
 	(
 		(
 			 "<" { op = OperatorNode.OperatorType.Less; }    
@@ -701,7 +667,6 @@ ExpressionNode EqualityExpression():
 	{return exp ;}
 }
 
-//BINARY BITWISE OPERATORS
 //BitwiseAND Expression
 ExpressionNode BitwiseANDExpression(): 
 {
@@ -716,6 +681,7 @@ ExpressionNode BitwiseANDExpression():
 )
 	{return exp ; }
 }
+
 //BitwiseXORExpression
 ExpressionNode BitwiseXORExpression(): 
 {
@@ -730,6 +696,7 @@ ExpressionNode BitwiseXORExpression():
 )
 	{return exp ;}
 }
+
 //bitwiseORExpression
 ExpressionNode BitwiseORExpression() : 
 {
@@ -806,7 +773,7 @@ OperatorNode.OperatorType AssignmentOperator() :
 	op = OperatorNode.OperatorType.Add ;
 }
 {
-	 ( //TODO Complete it 
+	 (
 	 "*="  { op = OperatorNode.OperatorType.MultiplyBy ; }
 	 | "/="  { op = OperatorNode.OperatorType.DivideBy ; }
 	 | "%="  { op = OperatorNode.OperatorType.ModBy ; }
@@ -822,10 +789,10 @@ OperatorNode.OperatorType AssignmentOperator() :
 // Expression Finally !!
 ExpressionNode Expression(): 
 {
-//	List<ExpressionNode> exps ;
+	List<ExpressionNode> exps ;
 	ExpressionNode exp ;
 }
-{
+{ //TODO return list of expression
 	exp = AssignmentExpression()
 //	{exps.add(exp);} 
 //	(	"," exp = AssignmentExpression()
@@ -907,11 +874,8 @@ ExpressionNode Initialiser() : {
 	{return exp;}
 }
 
-Statement EmptyStatement() : 
-{
-}
-{
-	";"
+Statement EmptyStatement() : {}
+{	";"
 	{	return null ;	}
 }
 
@@ -949,6 +913,7 @@ Statement IterationStatement() :
 	{return sta ; }
 }
 
+//TODO
 Statement DoWhileStatement() : 
 {
 	Statement sta ;
@@ -959,6 +924,7 @@ Statement DoWhileStatement() :
 	//{return new DoWhileStatement(sta,exp) ; }
 	{return sta ; }
 }
+
 WhileStatement WhileStatement() : 
 {
 	Statement sta ;
@@ -976,7 +942,7 @@ ForStatement ForStatement() :
 	LinkedList<Pair> list ;
 	Token t ; 
 }
-{
+{ //TODO
 	<FOR> "(" 
 	(LOOKAHEAD(<TYPE>)
 	(<TYPE>
@@ -998,7 +964,6 @@ ForStatement ForStatement() :
 		)
 	)
 }
-
 
 // FunctionDeclaration
 Statement FunctionDeclaration() : 
@@ -1077,7 +1042,6 @@ Statement SourceElement() :
 	Statement sta = null ;
 }
 {
-	//TODO FIXED IT
 ( LOOKAHEAD (FunctionDeclaration())
 	 sta = FunctionDeclaration() 
 |	 sta = Statement()
@@ -1092,7 +1056,7 @@ Statement ReturnStatement() :
 } 
 {
 	<RETURN> (exp = Expression())? ";" 
-	//[no LineTerminator here]	
+	//[no LineTerminator here]
 	{	if (exp != null)
 			return new ReturnStatement(exp);
 		else
@@ -1123,7 +1087,6 @@ Statement ContinueStatement() :
 	{return new ContinueStatement() ;}
 }
 
-
 Statement DebugStatement(): {
 	 ExpressionNode s;
 }
@@ -1139,10 +1102,12 @@ Statement Statement() :
 	Statement sta = null;
 }
 {
-(	sta = Block()
+(	(LOOKAHEAD(Block())	
+		sta = Block()
+	|	sta = ExpressionStatement()
+	)
 |	sta = VariableStatement()
 |	sta = EmptyStatement()
-|	sta = ExpressionStatement()
 |	sta = IfStatement()
 |	sta = IterationStatement()
 |	sta = ReturnStatement()

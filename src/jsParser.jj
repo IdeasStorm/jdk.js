@@ -1148,8 +1148,6 @@ BlockStatement start() : {
 	List<Statement> program;
 }
 {
-//	MemberExpression() ";"
-	{return null;}
 	program = Program() (<EOF>)?
 	{
 		return new BlockStatement(program);

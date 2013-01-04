@@ -1,1 +1,24 @@
-obj.att.i ;
+debug (true && false);
+///null;// not work
+;
+//10 ++ ; // Not work !!!
+//var arr = [1,2,3] ; //Not execute
+//arr[1]; //Not execute
+var a = 10 , b = a;
+//a = 1 +4*5;
+//debug (a);
+//3=4;
+function myt (a,b)
+{
+	debug (a);
+}
+
+//myt(1,2);
+
+var a = 1;
+debug(a);
+//a--;
+debug(a);
+//if (!false)
+//	a++;
+//debug(a);

@@ -66,6 +66,7 @@ public class OperatorNode extends ExpressionNode {
 				ObjectType.operator(type,leftVal,deref(right.evaluate(context)));
 			else
 				throw new RuntimeException("ReferenceError: Invalid left-hand side in assignment");
+			value = leftVal;
 		}
 		else 
 			value = ObjectType.operator(type,deref(left.evaluate(context)),deref(right.evaluate(context)));

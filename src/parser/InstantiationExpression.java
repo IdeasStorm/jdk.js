@@ -20,7 +20,8 @@ public class InstantiationExpression extends ExpressionNode {
 		ObjectType[] objectArgs = new ObjectType[args.size()];
 		for (int i=0; i<args.size(); i++)
 			objectArgs[i] = args.get(i).evaluate(context);
-		value = expression.evaluate(context).invoke(temp, objectArgs);
+		expression.evaluate(context).invoke(temp, objectArgs);
+		value = temp;
 		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 

@@ -25,7 +25,7 @@ public class compiler {
   public static void compileStream(InputStreamReader isr)  throws ParseException {
   	compiler parser = new compiler(isr);
     BlockStatement program = parser.start();
-    StatementStatus status = program.execute(new BlockContext(null));
+    StatementStatus status = program.execute(new ProgramContext(null));
     if (status.getType() != StatementStatus.Type.Normal)
     	throw new RuntimeException("SytaxError "+ status.getType() + " statement");
   }
@@ -494,7 +494,7 @@ ExpressionNode NewExpression():
 (LOOKAHEAD (MemberExpression())
 	(	exp = MemberExpression() )
 |	(	<NEW> exp = MemberExpression() 
-		{exp = new InstantiationExpression(exp , null);} 
+		{exp = new InstantiationExpression(exp , new ArrayList<ExpressionNode>());} 
 	)
 )
 {return exp ;}
@@ -503,7 +503,7 @@ ExpressionNode NewExpression():
 ExpressionNode CallExpression(): 
 {
 	ExpressionNode exp,res=null,mem = null;
-	List<ExpressionNode> args ;
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
 	ExpressionNode temp ;
 	List <ExpressionNode> templist ;
 	Token att ;
@@ -995,9 +995,10 @@ Statement FunctionDeclaration() :
 	List<String> params = new ArrayList<String>();
 }
 {
-	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() "}"
-	
-	{return new FunctionDeclarationStatement(name.image,params,body) ;}
+(	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() 
+	("}" {return new FunctionDeclarationStatement(name.image,params,body) ;})?
+)
+	{throw new RuntimeException("missing }");} //status.getType()	
 }
 
 FunctionDeclarationExpression FunctionExpression() : 
@@ -1081,7 +1082,7 @@ Statement ReturnStatement() :
 		else
 			return new ReturnStatement();
 	}
-	)? 
+	)?
 	{throw new RuntimeException("missing ;");} //status.getType()
 	//[no LineTerminator here]
 
@@ -1093,10 +1094,13 @@ Statement BreakStatement() :
 	Token t ;
 }
 {
-	<BREAK> (t = <IDENTIFIER>)? ";"
+(	<BREAK> (LOOKAHEAD(1) t = <IDENTIFIER>)? 
+	( LOOKAHEAD(1) ";" { sta = new BreakStatement(); return sta ; } )?
+)
+	{throw new RuntimeException("missing ; in continue statement");} //status.getType()
 	// [no LineTerminator here]
 	//{return new BreakStatement (t.image) ;}
-	{ sta = new BreakStatement(); return sta ; } 
+	 
 }
 
 Statement ContinueStatement() :
@@ -1105,19 +1109,21 @@ Statement ContinueStatement() :
 	Token t ;
 }
 { 
-	<CONTINUE> (t = <IDENTIFIER>)? ";"
+(	<CONTINUE> (LOOKAHEAD(1) t = <IDENTIFIER>)? 
+	( LOOKAHEAD(1) ";" 	{return new ContinueStatement() ;} )?
+)
+	{throw new RuntimeException("missing ; in continue statement");} //status.getType()
 //[no LineTerminator here]
-	{return new ContinueStatement() ;}
 }
 
 Statement DebugStatement(): {
 	 ExpressionNode s = null;
 }
 {
-	<DEBUG> "(" (s = Expression())? ")" ";"
-	{
-		return new DebugStatement(s);
-	}
+(	<DEBUG> "(" (LOOKAHEAD(1)  s = Expression())? ")" 
+	(LOOKAHEAD(1) ";" 	{return new DebugStatement(s);} )?
+	{throw new RuntimeException("missing ; in debug statement");} //status.getType()
+)
 }
 
 Statement Statement() : 

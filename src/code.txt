@@ -1,3 +1,4 @@
+
 function Student(id,name,mark) {
 	this.id=id;
 	this.name=name;
@@ -40,11 +41,16 @@ function avg (arr,size){
 
 //main program
 var stu =[] , size = 4;
-stu[0] = new Student(0,0,100);
-stu[1] = new Student(1,1,77);
-stu[2] = new Student(2,1,90);
-stu[3] = new Student(3,1,44);
+stu[0] = new Student(0,"yaman",100);
+stu[1] = new Student(1,"kenan",77);
+stu[2] = new Student(2,"jobory",90);
+stu[3] = new Student(3,"syrwan",44);
 
 Sort(stu,size);
 Print(stu,size);
 debug ("avg= "+avg(stu,size));
+
+//console.write("enter your name :");
+//var q = console.read();
+//console.write("welcome : " + q );
+

@@ -1,2 +1,5 @@
-var a = {i:0 , s:10};
+var a;
+a = {i:0 , s:10};
+a.s=4;
+
 debug(a.s);

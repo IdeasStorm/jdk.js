@@ -127,7 +127,7 @@ public class ObjectType {
 		if (res != null)
 			return res;
 		else
-			return new ReferenceType(name,undefined);
+			return new ReferenceType(name, undefined, this);
 	}
 
 	protected void setAttribute(String name, ObjectType value) {

@@ -1,10 +1,8 @@
-var a ; 
-a = {i:0 , s:10};
-debug(a.s);
-
-
-var arr = [1,2,3];
-
-debug(arr[1]);
-
-var a = {};
+var a ;
+a = 3;
+var i = 0;
+for (i=0;i<10;i++) {
+	for (a =0; a < 3; a++) {
+		debug(a);
+	}	
+}

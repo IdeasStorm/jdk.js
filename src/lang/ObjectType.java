@@ -106,7 +106,7 @@ public class ObjectType {
 
 	protected HashMap<String, ReferenceType> attributes = new HashMap<String, ReferenceType>();
 
-	public ObjectType(String[] keys, ObjectType[] values) throws Exception {
+	public ObjectType(String[] keys, ObjectType[] values) {
 		try {
 			for (int i = 0; i < keys.length; i++) {
 				if (i < values.length)
@@ -115,7 +115,7 @@ public class ObjectType {
 					setAttribute(keys[i], ObjectType.undefined);
 			}	
 		} catch (Exception e) {
-			throw new Exception("incompatible keys/values");
+			throw new RuntimeException("incompatible keys/values");
 		}
 	}
 	

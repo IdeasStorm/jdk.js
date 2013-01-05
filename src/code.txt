@@ -3,7 +3,6 @@ function Student(id,name,mark) {
 	this.id=id;
 	this.name=name;
 	this.mark=mark;
-	return this ;
 }
 
 // Sort students list by marks 
@@ -50,8 +49,8 @@ Sort(stu,size);
 Print(stu,size);
 debug ("avg= "+avg(stu,size));
 
-console.write("enter your name :");
-var q = console.read();
-console.write("welcome : " + q );
+//console.write("enter your name :");
+//var q = console.read();
+//console.write("welcome : " + q );
 
 

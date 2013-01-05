@@ -21,14 +21,14 @@ public class FunctionCallExpression extends ExpressionNode {
 		for(ExpressionNode exp : args)
 			objectArgs.add(exp.evaluate(context));
 		ReferenceType ref = (ReferenceType) function.evaluate(context);
-		ObjectType returnedObject = new ObjectType();
 		ObjectType func = ref.getValue();
+
 
 		ObjectType[] funcArgs = new ObjectType[objectArgs.size()];
 		for(int i=0; i<objectArgs.size(); i++)
 			funcArgs[i] = ((ObjectType)objectArgs.get(i));
 		
-		returnedObject = ref.getParent().callMethod(ref.getName(), funcArgs);
-		return new StatementStatus(StatementStatus.Type.Return, returnedObject, null);
+		value = ref.getParent().callMethod(ref.getName(), funcArgs);
+		return new StatementStatus(StatementStatus.Type.Return, null, null);
 	}
 }

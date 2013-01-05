@@ -259,7 +259,6 @@ public class ObjectType {
 	 * @return the return value of the execution
 	 */
 	public ObjectType callMethod(String methodName, ObjectType... args) {
-		FunctionType function;
 		// getting the member
 		ObjectType member = getProperty(methodName);
 		//check if exists
@@ -267,15 +266,8 @@ public class ObjectType {
 			//call hosted one instead if not exist
 			return callHostedMethod("_", methodName, args);
 		
-		// trying to cast the property to function
-		try {
-			function = (FunctionType) member;
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("ReferenceType %s is not a function", methodName));
-		}
-		
 		//calling the function
-		return function.invoke(this, args);
+		return member.invoke(this, args);
 	}
 	
 	/**

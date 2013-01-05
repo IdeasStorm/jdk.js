@@ -1,3 +1,14 @@
-a = 10 ;
-debug ();
 
+//var arr=[];
+
+//arr[0] = 1;
+
+//debug (arr[0]); //10
+//debug (arr); //[]
+var a = {v:10};
+a.add = function (a, b) {
+	return a+b + this.v;
+};
+
+var b = a.add(1, 2);
+debug(b);

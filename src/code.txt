@@ -1,14 +1,50 @@
-function arr(a, b, c) {
-	return [a, b, c];
+function Student(id,name,mark) {
+	this.id=id;
+	this.name=name;
+	this.mark=mark;
+	return this ;
 }
 
-var a = arr(1, 2, 3);
-debug(a); 
-a[3] = 4;
-a.push(5);
-debug(a);
+// Sort students list by marks 
+function Sort(arr,length){
+	for(var i=0;i<length-1;i++)
+		for(var j=i+1;j<length;j++){
+			if(arr[i].mark < arr[j].mark)
+			{
+				s=arr[i];
+				arr[i]=arr[j];
+				arr[j]=s;
+			}
+		}
+}
 
-ac = {};
-ac.b = 1;
+// Print students list
+function Print(arr,length){
+	debug("Student List:");
+	for (var i=0;i<size;i++)
+	{
+		debug("id: "+arr[i].id+", name: "+arr[i].name+", mark: "+arr[i].mark);
+	}
+}
 
-debug(ac.b);
+//Calculate avg 
+function avg (arr,size){
+	var sum = 0 ;
+	for (var i=0;i<size;i++)
+	{
+		sum += arr[i].mark ;
+	}
+	return sum / size ;
+}
+
+
+//main program
+var stu =[] , size = 4;
+stu[0] = new Student(0,0,100);
+stu[1] = new Student(1,1,77);
+stu[2] = new Student(2,1,90);
+stu[3] = new Student(3,1,44);
+
+Sort(stu,size);
+Print(stu,size);
+debug ("avg= "+avg(stu,size));

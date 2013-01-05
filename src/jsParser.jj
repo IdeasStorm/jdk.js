@@ -900,8 +900,14 @@ ExpressionStatement ExpressionStatement() :
 }
 {
 	// TODO [lookahead != {{, function}] 
-	exp = Expression() ";"
-	{return new ExpressionStatement(exp) ;}
+//(LOOKAHEAD (Expression() ";")	
+(	exp = Expression() (";" {return new ExpressionStatement(exp) ;} )? 
+		{throw new RuntimeException("missing ;");} //status.getType()	
+)
+//|
+//(	exp = Expression() 
+	//	{throw new RuntimeException("missing ;");} //status.getType()  
+//))
 }
 
 IfStatement IfStatement() : 
@@ -1069,13 +1075,16 @@ Statement ReturnStatement() :
 	ExpressionNode exp =null;
 } 
 {
-	<RETURN> (exp = Expression())? ";" 
-	//[no LineTerminator here]
+	<RETURN> (exp = Expression())? (";"
 	{	if (exp != null)
 			return new ReturnStatement(exp);
 		else
 			return new ReturnStatement();
 	}
+	)? 
+	{throw new RuntimeException("missing ;");} //status.getType()
+	//[no LineTerminator here]
+
 }
 
 Statement BreakStatement() : 

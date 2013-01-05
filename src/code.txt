@@ -1,4 +1,23 @@
 var arr = [] ;
 arr[0] =10 ;
 
+debug(arr[0]);
 debug(arr);
+
+var a = b = 2;
+a++;
+debug(b);
+
+//function add() {
+//	debug(1);
+//}
+
+//add();
+//var a = new add(1, 2);
+
+//debug(a.name);
+
+var arr =[1, 2, 3];
+
+debug(arr);
+

@@ -8,6 +8,7 @@ public class StringType extends ObjectType {
 	
 	
 	public StringType(java.lang.String string) {
+		this.extensible = false;
 		this.value = string;
 	}
 
@@ -51,5 +52,10 @@ public class StringType extends ObjectType {
 	public StringType toStringType() {
 		// TODO Auto-generated method stub
 		return this;
+	}
+	
+	@Override
+	public boolean isPrimitive() {
+		return true;
 	}
 }

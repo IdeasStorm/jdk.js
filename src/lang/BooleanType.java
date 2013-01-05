@@ -66,4 +66,9 @@ public class BooleanType extends ObjectType {
 		else
 			throw new RuntimeException("Object doesn't support such operator");
 	}
+	
+	@Override
+	public boolean isPrimitive() {
+		return true;
+	}
 }

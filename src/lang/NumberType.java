@@ -77,6 +77,9 @@ public class NumberType extends ObjectType {
 		case Equals:
 			result = new BooleanType((value == ((NumberType)right).value));
 			break;
+		case NotEquals:
+			result = new BooleanType((value != ((NumberType)right).value));
+			break;
 		case Greater:
 			result = new BooleanType((value > ((NumberType)right).value));
 			break;
@@ -152,6 +155,11 @@ public class NumberType extends ObjectType {
 
 	public int toInt() {
 		return (int) value;
+	}
+	
+	@Override
+	public boolean isPrimitive() {
+		return true;
 	}
 	
 }

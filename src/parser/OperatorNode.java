@@ -78,13 +78,18 @@ public class OperatorNode extends ExpressionNode {
 		// WARNING DONT dereference ON LEFT SIDE
 		if (type == OperatorType.Assignment) {
 			ObjectType leftVal = left.evaluate(context);
+			ObjectType rightVal = right.evaluate(context);
 			if (isref(leftVal))
-				ObjectType.operator(type,leftVal,deref(right.evaluate(context)));
+				ObjectType.operator(type,leftVal,deref(rightVal));
 			else if ((left == null) && (right != null))
-				BooleanType.operator(type, null, right.evaluate(context));
+				BooleanType.operator(type, null, deref(rightVal));
 			else
 				throw new RuntimeException("ReferenceError: Invalid left-hand side in assignment");
-			value = leftVal;
+			// TODO check when to clone and when to not
+			if (rightVal.isPrimitive())
+				value = rightVal.clone();
+			else
+				value = rightVal;
 		}
 		else if (left == null) {
 			value = ObjectType.operator(type, null, deref(right.evaluate(context)));

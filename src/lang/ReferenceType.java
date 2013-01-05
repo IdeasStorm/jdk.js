@@ -12,6 +12,7 @@ public class ReferenceType extends ObjectType {
 		this.name = name;
 		this.value = value;
 		this.writable = writable;
+		this.extensible = false;
 	}
 	
 	public ReferenceType(ObjectType value) {
@@ -175,5 +176,10 @@ public class ReferenceType extends ObjectType {
 	public boolean isUndefined() {
 		// TODO Auto-generated method stub
 		return value.isUndefined();
+	}
+	
+	@Override
+	public boolean isPrimitive() {
+		return value.isPrimitive();
 	}
 }

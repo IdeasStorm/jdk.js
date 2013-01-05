@@ -1,17 +1,56 @@
 
-function Apple(a) {
-this.a = a;
+function Student(id,name,mark) {
+	this.id=id;
+	this.name=name;
+	this.mark=mark;
+	return this ;
 }
 
-aa = new Apple(1);
+// Sort students list by marks 
+function Sort(arr,length){
+	for(var i=0;i<length-1;i++)
+		for(var j=i+1;j<length;j++){
+			if(arr[i].mark < arr[j].mark)
+			{
+				s=arr[i];
+				arr[i]=arr[j];
+				arr[j]=s;
+			}
+		}
+}
 
-console.write("enter your name :");
-var q = console.read();
-console.write("welcome : " + q );
-debug(aa.a);
+// Print students list
+function Print(arr,length){
+	debug("Student List:");
+	for (var i=0;i<size;i++)
+	{
+		debug("id: "+arr[i].id+", name: "+arr[i].name+", mark: "+arr[i].mark);
+	}
+}
 
-if ("abcd" <= "abcde" && "abcd" != "abcd")
-	debug("true");
-else
-	debug("false");
+//Calculate avg 
+function avg (arr,size){
+	var sum = 0 ;
+	for (var i=0;i<size;i++)
+	{
+		sum += arr[i].mark ;
+	}
+	return sum / size ;
+}
+
+
+//main program
+var stu =[] , size = 4;
+stu[0] = new Student(0,"yaman",100);
+stu[1] = new Student(1,"kenan",77);
+stu[2] = new Student(2,"jobory",90);
+stu[3] = new Student(3,"syrwan",44);
+
+Sort(stu,size);
+Print(stu,size);
+debug ("avg= "+avg(stu,size));
+
+//console.write("enter your name :");
+//var q = console.read();
+//console.write("welcome : " + q );
 

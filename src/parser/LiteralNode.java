@@ -1,5 +1,6 @@
 package parser;
 
+import parser.StatementStatus.Type;
 import lang.*;
 
 public class LiteralNode extends ExpressionNode {
@@ -11,7 +12,7 @@ public class LiteralNode extends ExpressionNode {
 	@Override
 	public StatementStatus execute(Context context) {
 		// nothing to do
-		return new StatementStatus(null, null, null);
+		return new StatementStatus(Type.Normal, null, null);
 	}
 
 	@Override

@@ -99,7 +99,7 @@ public class OperatorNode extends ExpressionNode {
 		}
 		else
 			value = ObjectType.operator(type,deref(left.evaluate(context)),deref(right.evaluate(context)));
-		return new StatementStatus(null, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 	
 

@@ -10,7 +10,7 @@ public abstract class ExpressionNode extends JavaScriptNode {
 	
 	public ObjectType evaluate(Context context) {
 		StatementStatus status = this.execute(context);
-		if (status.getType() == StatementStatus.Type.Normal)
+		if (status.getType() != StatementStatus.Type.Normal)
 			throw new RuntimeException("SytaxError "+ status.getType() + " statement");
 		return value;
 	}

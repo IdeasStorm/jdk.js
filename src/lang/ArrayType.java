@@ -51,13 +51,18 @@ public class ArrayType extends ObjectType {
 	
 	@Override
 	public void setProperty(ObjectType name, ObjectType value) {
-		if (name instanceof NumberType) {
-			_set((NumberType) name,value);
-			updateLength(((NumberType) name).toInt());
+		if (name.toNumber() != NumberType.NaN) {
+			_set(name.toNumber(),value);
+			updateLength(name.toNumber().toInt());
 		}
 		else {
 			super.setProperty(name, value);
 		}
+	}
+	
+	@Override
+	public void setProperty(String name, ObjectType value) {
+		setProperty(new StringType(name), value);
 	}
 	
 	protected void updateLength(int index) {

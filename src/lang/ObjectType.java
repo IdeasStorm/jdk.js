@@ -141,7 +141,7 @@ public class ObjectType {
 		if (value instanceof ReferenceType)
 			value = ((ReferenceType) value).getValue();
 		// TODO make better dereferencing
-		attributes.put(name, new ReferenceType(name, value));
+		attributes.put(name, new ReferenceType(name, value, this));
 	}
 	
 	protected void setAttribute(String name, ReferenceType value) {
@@ -317,5 +317,9 @@ public class ObjectType {
 
 	public boolean isUndefined() {
 		return (this == undefined);
+	}
+	
+	public NumberType toNumber() {
+		return NumberType.NaN;
 	}
 }

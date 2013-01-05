@@ -71,4 +71,12 @@ public class BooleanType extends ObjectType {
 	public boolean isPrimitive() {
 		return true;
 	}
+	
+	@Override
+	public NumberType toNumber() {
+		if (value)
+			return new NumberType(1);
+		else
+			return new NumberType(0);
+	}
 }

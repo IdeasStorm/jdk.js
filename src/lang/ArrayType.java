@@ -1,17 +1,24 @@
 package lang;
 
 import java.util.ArrayDeque;
+import java.util.Map.Entry;
 
 public class ArrayType extends ObjectType {
-	protected ArrayDeque<ObjectType> value;
+	protected int length;
 	
 	public ArrayType(ArrayDeque<ObjectType> value) {
-		this.value = value;
+		this.length = 0;
+		for (ObjectType i : value) {
+			_push(i);
+		}
+		
 	}
 	
 	@Override
 	public ObjectType clone() {
-		return new ArrayType((ArrayDeque<ObjectType>)value.clone());
+		ArrayType cloned = (ArrayType) super.clone();
+		cloned.length = this.length;
+		return super.clone();
 	}
 	
 	/**
@@ -23,68 +30,60 @@ public class ArrayType extends ObjectType {
 	
 	@Override
 	public StringType toStringType() {
-		return new StringType(value.toString());
+		throw new RuntimeException("not implemented yet");
 	}
 	
-	
-	@Override
-	public ObjectType getProperty(ObjectType name) {
-		if (name instanceof NumberType) {
-			return _get((NumberType) name);
-		}
-		else {
-			return super.getProperty(name.toStringType().toString());
-		}
-	}
 	
 	@Override
 	public void setProperty(ObjectType name, ObjectType value) {
 		if (name instanceof NumberType) {
 			_set((NumberType) name,value);
+			updateLength(((NumberType) name).toInt());
 		}
 		else {
 			super.setProperty(name, value);
 		}
 	}
 	
-
+	protected void updateLength(int index) {
+		if (index > length-1)
+			length = index + 1;
+	}
 	// host methods
 	
 	public ObjectType _push(ObjectType obj) {
-		value.push(obj);
-		return new NumberType(value.size());
+		setProperty(Double.toString(length), obj);
+		length++;
+		return new NumberType(length);
 	}
 	
 	public ObjectType _pop() {
-		return value.pop();
+		ObjectType res = getProperty(Double.toString(length-1));
+		if (!res.isUndefined())
+			this.attributes.remove(Double.toString(length-1));
+		length--;
+		return res;
 	}
 	
 	public ObjectType _length() {
-		return new NumberType(value.size());
+		return new NumberType(length);
 	}
 	
 	public ObjectType _shift() {
-		return value.poll();
+		//TODO implement shift
+		throw new RuntimeException("not implemented yet");
 	}
 	
 	public ObjectType _unshift(ObjectType obj) {
-		value.addFirst(obj);
-		return new NumberType(value.size());
+		//TODO implement unshift
+		throw new RuntimeException("not implemented yet");
 	}
 	
-	public ObjectType _get(NumberType i) {
-		int index = 0 ,ii = i.toInt();
-		if (ii < 0 || ii >= value.size())
-			throw new IndexOutOfBoundsException();
-		for (ObjectType v : value) {
-			if (index == ii)
-				return v;
-		}
-		return undefined;
-	}
 	
-	private void _set(NumberType name, ObjectType value) {
-		// TODO Auto-generated method stub
+	private void _set(NumberType indexObj, ObjectType value) {
+		int index = indexObj.toInt();
+		updateLength(index);
+		super.setProperty(indexObj.toStringType(), value);
 	}
 	
 	public ObjectType _foreach(ObjectType obj) {
@@ -93,8 +92,9 @@ public class ArrayType extends ObjectType {
 			function = (FunctionType) obj;
 		else
 			throw new RuntimeException("Object is not callable");
-		for (ObjectType i : value) {
-			function.invoke(undefined, i);
+		for (Entry<String, ReferenceType> e : attributes.entrySet()) {
+			// passing by value
+			function.invoke(undefined, new StringType(e.getKey()),e.getValue().getValue());
 		}
 		return undefined;
 	}

@@ -77,6 +77,9 @@ public class NumberType extends ObjectType {
 		case Equals:
 			result = new BooleanType((value == ((NumberType)right).value));
 			break;
+		case NotEquals:
+			result = new BooleanType((value != ((NumberType)right).value));
+			break;
 		case Greater:
 			result = new BooleanType((value > ((NumberType)right).value));
 			break;

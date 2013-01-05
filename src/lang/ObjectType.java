@@ -149,7 +149,10 @@ public class ObjectType {
 			return;
 		// TODO strict mode
 		// TODO make better dereferencing
-		attributes.put(name,value);
+		
+		//TODO check this rewrite by MhdAljobory
+		setProperty(name, value);
+		//attributes.put(name,value);
 	}
 
 	

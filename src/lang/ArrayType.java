@@ -73,7 +73,8 @@ public class ArrayType extends ObjectType {
 	
 	public ObjectType _push(ObjectType obj) {
 		setProperty(Integer.toString(length), obj);
-		length++;
+		//TODO check this "DELETE BY MhdAljobory
+		//length++;
 		return new NumberType(length);
 	}
 	

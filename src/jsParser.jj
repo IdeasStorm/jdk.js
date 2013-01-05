@@ -25,7 +25,7 @@ public class compiler {
   public static void compileStream(InputStreamReader isr)  throws ParseException {
   	compiler parser = new compiler(isr);
     BlockStatement program = parser.start();
-    StatementStatus status = program.execute(new BlockContext(null));
+    StatementStatus status = program.execute(new ProgramContext(null));
     if (status.getType() != StatementStatus.Type.Normal)
     	throw new RuntimeException("SytaxError "+ status.getType() + " statement");
   }

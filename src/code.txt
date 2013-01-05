@@ -4,4 +4,7 @@ this.a = a;
 
 aa = new Apple(1);
 
+console.write("enter your name :");
+var q = console.read();
+console.write("welcome : " + q );
 debug(aa.a);

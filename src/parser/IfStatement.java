@@ -14,22 +14,22 @@ public class IfStatement extends Statement {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		// Get the boolean value of expression
 		if (exprssion.evaluate(context).toBooleanType().toBoolean()) { // if value true
 			Context ifStatementContext = new BlockContext(context);
-			Trilogy trilogy = ifStatement.execute(ifStatementContext);
-			if (trilogy.type != Trilogy.Type.Normal)
-				return trilogy;
+			StatementStatus statementStatus = ifStatement.execute(ifStatementContext);
+			if (statementStatus.type != StatementStatus.Type.Normal)
+				return statementStatus;
 		} else { // if the value false
 			if (elseStatement != null) {
 				Context elseStatmentContext = new BlockContext(context);
-				Trilogy trilogy = elseStatement.execute(elseStatmentContext);
-				if (trilogy.type != Trilogy.Type.Normal)
-					return trilogy;
+				StatementStatus statementStatus = elseStatement.execute(elseStatmentContext);
+				if (statementStatus.type != StatementStatus.Type.Normal)
+					return statementStatus;
 			}
 		}
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 }

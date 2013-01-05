@@ -11,8 +11,8 @@ public class MemberExpression extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		value =  expression.evaluate(context).getProperty(propertyName);
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 }

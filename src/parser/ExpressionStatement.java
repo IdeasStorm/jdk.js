@@ -8,7 +8,7 @@ public class ExpressionStatement extends Statement {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		return expression.execute(context);
 	}
 	

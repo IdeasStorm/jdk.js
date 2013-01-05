@@ -13,12 +13,12 @@ public class VariableNode extends ExpressionNode {
 	
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		if (!isThisKeyWord)
 			value = context.getVariable(name);
 		else
 			value = context.getThisValue();
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 	/**

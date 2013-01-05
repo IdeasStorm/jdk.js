@@ -3,7 +3,7 @@ package lang;
 import parser.BlockStatement;
 import parser.Context;
 import parser.FunctionContext;
-import parser.Trilogy;
+import parser.StatementStatus;
  
 public class FunctionType extends ObjectType {
 	protected String[] signature;
@@ -26,7 +26,7 @@ public class FunctionType extends ObjectType {
 	public ObjectType invoke(ObjectType obj, ObjectType...args) {
 		try {
 			Context functionContext = new FunctionContext(obj,new ObjectType(signature, args),c);
-			Trilogy status = body.execute(functionContext);
+			StatementStatus status = body.execute(functionContext);
 			return status.getValue();			
 		} catch (Exception e) {
 			throw new ArgumentException("wrong number of arguments");

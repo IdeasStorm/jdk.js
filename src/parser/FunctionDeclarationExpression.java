@@ -1,13 +1,15 @@
 package parser;
 
+import java.util.List;
+
 import lang.FunctionType;
 
 public class FunctionDeclarationExpression extends ExpressionNode {
 	String functionName;
-	String[] args;
+	List<String> args;
 	BlockStatement statements;
 	
-	public FunctionDeclarationExpression(String functionName, String[] args, 
+	public FunctionDeclarationExpression(String functionName, List<String> args, 
 			BlockStatement statements) {
 		this.functionName = functionName;
 		this.args = args;
@@ -15,11 +17,14 @@ public class FunctionDeclarationExpression extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
-		value = new FunctionType(functionName, args, statements, context);
+	public StatementStatus execute(Context context) {
+		String[] stringArgs = new String[args.size()];
+		for(int i=0; i<args.size(); i++)
+			stringArgs[i] = args.get(i);
+		value = new FunctionType(functionName, stringArgs, statements, context);
 		if (functionName != null)
 			context._define(functionName, value);
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 }

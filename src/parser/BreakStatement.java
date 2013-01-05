@@ -5,7 +5,7 @@ public class BreakStatement extends Statement {
 	public BreakStatement() {}
 
 	@Override
-	public Trilogy execute(Context context) {
-		return new Trilogy(Trilogy.Type.Break, null, null);
+	public StatementStatus execute(Context context) {
+		return new StatementStatus(StatementStatus.Type.Break, null, null);
 	}
 }

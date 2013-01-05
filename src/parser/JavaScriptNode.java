@@ -15,7 +15,7 @@ public abstract class JavaScriptNode {
 	}
 	
 	
-	public abstract Trilogy execute(Context context);
+	public abstract StatementStatus execute(Context context);
 	
 	protected final static ReferenceType cons(ObjectType obj) {
 		return ReferenceType.createConstant(obj);

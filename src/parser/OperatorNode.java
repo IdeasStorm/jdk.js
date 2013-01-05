@@ -74,13 +74,13 @@ public class OperatorNode extends ExpressionNode {
 		System.out.println(op.evaluate(p).toStringType().toString());
 	}
 	
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		// WARNING DONT dereference ON LEFT SIDE
 		if (type == OperatorType.Assignment) {
 			ObjectType leftVal = left.evaluate(context);
 			if (isref(leftVal))
 				//TODO check clone problems
-				ObjectType.operator(type,leftVal,deref(right.evaluate(context)).clone());
+				ObjectType.operator(type,leftVal,deref(right.evaluate(context)));
 			else if ((left == null) && (right != null))
 				BooleanType.operator(type, null, right.evaluate(context));
 			else
@@ -95,7 +95,7 @@ public class OperatorNode extends ExpressionNode {
 		}
 		else
 			value = ObjectType.operator(type,deref(left.evaluate(context)),deref(right.evaluate(context)));
-		return new Trilogy(null, null, null);
+		return new StatementStatus(null, null, null);
 	}
 	
 

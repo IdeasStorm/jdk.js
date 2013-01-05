@@ -1,8 +1,18 @@
-var a ;
-a = 3;
-var i = 0;
-for (i=0;i<10;i++) {
-	for (a =0; a < 3; a++) {
-		debug(a);
-	}	
+
+for (var i=0; i<10; i++) {
+	for (var j=0; j<3; j++)
+		debug(j);
 }
+
+a = b = 2;
+a++;
+debug(b);  // 3! Error
+
+function add(a, b) {
+	this.name = a+b;
+}
+
+var a = new add(1, 2);
+
+debug(a.name);
+

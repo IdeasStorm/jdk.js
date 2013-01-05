@@ -11,6 +11,7 @@ public class FunctionContext extends Context {
 		super(parent);
 		this.thisObj = new ReferenceType(obj);
 		this.argsObj = args;
+		this.parent = parent; 
 	}
 	
 	@Override

@@ -40,7 +40,7 @@ public abstract class Context {
 		else if (parent != null)
 			return parent.getVariable(name);
 		else
-			return ObjectType.undefined;
+			return ref;
 		//TODO strict mode
 	}
 	

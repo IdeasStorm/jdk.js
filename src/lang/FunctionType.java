@@ -27,6 +27,8 @@ public class FunctionType extends ObjectType {
 		try {
 			Context functionContext = new FunctionContext(obj,new ObjectType(signature, args),c);
 			StatementStatus status = body.execute(functionContext);
+			if(status.getType() != parser.StatementStatus.Type.Normal && status.getType() != parser.StatementStatus.Type.Return)
+				throw new RuntimeException("SytaxError "+ status.getType() + " statement");
 			return status.getValue();			
 		} catch (Exception e) {
 			throw new ArgumentException("wrong number of arguments");

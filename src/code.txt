@@ -12,3 +12,4 @@ a.add = function (a, b) {
 
 var b = a.add(1, 2);
 debug(b);
+

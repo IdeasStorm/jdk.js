@@ -15,13 +15,13 @@ public class InstantiationExpression extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		ObjectType temp = new ObjectType();
 		ObjectType[] objectArgs = new ObjectType[args.size()];
 		for (int i=0; i<args.size(); i++)
 			objectArgs[i] = args.get(i).evaluate(context);
 		value = expression.evaluate(context).invoke(temp, objectArgs);
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 }

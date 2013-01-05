@@ -5,8 +5,8 @@ public class ContinueStatement extends Statement {
 	public ContinueStatement() {}
 	
 	@Override
-	public Trilogy execute(Context context) {
-		return new Trilogy(Trilogy.Type.Continue, null, null);
+	public StatementStatus execute(Context context) {
+		return new StatementStatus(StatementStatus.Type.Continue, null, null);
 	}
 
 }

@@ -13,9 +13,9 @@ public class SwitchStatement extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {		
+	public StatementStatus execute(Context context) {		
 		//TODO made one block
-		return new Trilogy(null, null, null);
+		return new StatementStatus(null, null, null);
 	}
 
 }

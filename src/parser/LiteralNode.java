@@ -9,9 +9,9 @@ public class LiteralNode extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		// nothing to do
-		return new Trilogy(null, null, null);
+		return new StatementStatus(null, null, null);
 	}
 
 	/**

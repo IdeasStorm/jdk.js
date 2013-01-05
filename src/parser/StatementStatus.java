@@ -2,7 +2,7 @@ package parser;
 
 import lang.ObjectType;
 
-public class Trilogy {
+public class StatementStatus {
 
 	public enum Type {
 		Normal,
@@ -16,7 +16,7 @@ public class Trilogy {
 	protected ObjectType value;
 	protected VariableNode identifier;
 	
-	public Trilogy(Type type, ObjectType value, VariableNode identifier) {
+	public StatementStatus(Type type, ObjectType value, VariableNode identifier) {
 		this.type = type;
 		this.value = value;
 		this.identifier = identifier;

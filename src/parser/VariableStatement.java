@@ -13,7 +13,7 @@ public class VariableStatement extends Statement {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		// for each variable in Hash
 		for(Pair pair : variables) {
 			// Add variable to context
@@ -21,7 +21,7 @@ public class VariableStatement extends Statement {
 			//TODO add to left object properties from right one
 			//context.getVariable(pair.getLeft()).setProperty(pair.getRight().evaluate(context));
 		}
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 	
 

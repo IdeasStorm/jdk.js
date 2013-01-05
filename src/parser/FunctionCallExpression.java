@@ -16,7 +16,7 @@ public class FunctionCallExpression extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		List<ObjectType> objectArgs = new LinkedList<ObjectType>();
 		for(ExpressionNode exp : args)
 			objectArgs.add(exp.evaluate(context));
@@ -31,6 +31,6 @@ public class FunctionCallExpression extends ExpressionNode {
 		if (func instanceof FunctionType)
 			returnedObject = ((FunctionType) func)
 			.invoke(ObjectType.undefined, funcArgs);
-		return new Trilogy(Trilogy.Type.Return, returnedObject, null);
+		return new StatementStatus(StatementStatus.Type.Return, returnedObject, null);
 	}
 }

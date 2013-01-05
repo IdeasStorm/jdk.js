@@ -15,11 +15,11 @@ public class FunctionDeclarationExpression extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		value = new FunctionType(functionName, args, statements, context);
 		if (functionName != null)
 			context._define(functionName, value);
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 }

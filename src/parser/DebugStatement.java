@@ -7,9 +7,9 @@ public class DebugStatement extends Statement {
 		this.exp = e;
 	}
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		System.out.println(exp.evaluate(context).toStringType().toString());
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 }

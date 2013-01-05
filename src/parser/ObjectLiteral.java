@@ -11,14 +11,14 @@ public class ObjectLiteral extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		ObjectType obj = new ObjectType();
 		if (hash != null) {
 			for(Pair pair : hash)
 				obj.setProperty(pair.getLeft(), pair.getRight().evaluate(context));
 		}
 		value = obj;
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 }

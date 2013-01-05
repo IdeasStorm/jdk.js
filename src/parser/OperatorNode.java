@@ -79,7 +79,6 @@ public class OperatorNode extends ExpressionNode {
 		if (type == OperatorType.Assignment) {
 			ObjectType leftVal = left.evaluate(context);
 			if (isref(leftVal))
-				//TODO check clone problems
 				ObjectType.operator(type,leftVal,deref(right.evaluate(context)));
 			else if ((left == null) && (right != null))
 				BooleanType.operator(type, null, right.evaluate(context));

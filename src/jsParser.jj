@@ -979,7 +979,7 @@ Statement FunctionDeclaration() :
 {
 	Token name =null;
 	BlockStatement body = null ;
-	List<String> params =null;
+	List<String> params = new ArrayList<String>();
 }
 {
 	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() "}"
@@ -991,7 +991,7 @@ FunctionDeclarationExpression FunctionExpression() :
 {
 	Token name = null ;
 	BlockStatement body =null;
-	List<String> params = null;
+	List<String> params = new ArrayList<String>();
 	String funcName = "";
 }
 {

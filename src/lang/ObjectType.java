@@ -323,4 +323,8 @@ public class ObjectType {
 	public NumberType toNumber() {
 		return NumberType.NaN;
 	}
+	
+	public ObjectType _toNumber() {
+		return toNumber();
+	}
 }

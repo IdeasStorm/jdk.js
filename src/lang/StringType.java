@@ -58,4 +58,9 @@ public class StringType extends ObjectType {
 	public boolean isPrimitive() {
 		return true;
 	}
+	
+	@Override
+	public NumberType toNumber() {
+		return new NumberType(this);
+	}
 }

@@ -20,16 +20,15 @@ public class FunctionCallExpression extends ExpressionNode {
 		List<ObjectType> objectArgs = new LinkedList<ObjectType>();
 		for(ExpressionNode exp : args)
 			objectArgs.add(exp.evaluate(context));
-		ObjectType ref = function.evaluate(context);
-		ObjectType func = ((ReferenceType) ref).getValue();
+		ReferenceType ref = (ReferenceType) function.evaluate(context);
+		ObjectType func = ref.getValue();
+
 
 		ObjectType[] funcArgs = new ObjectType[objectArgs.size()];
 		for(int i=0; i<objectArgs.size(); i++)
 			funcArgs[i] = ((ObjectType)objectArgs.get(i));
 		
-		if (func instanceof FunctionType)
-			value = ((FunctionType) func)
-			.invoke(ObjectType.undefined, funcArgs);
-		return new StatementStatus(StatementStatus.Type.Normal, null, null);
+		value = ref.getParent().callMethod(ref.getName(), funcArgs);
+		return new StatementStatus(StatementStatus.Type.Return, null, null);
 	}
 }

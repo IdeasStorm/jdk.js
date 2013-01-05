@@ -5,10 +5,11 @@
 
 //debug (arr[0]); //10
 //debug (arr); //[]
+var a = {v:10};
+a.add = function (a, b) {
+	return a+b + this.v;
+};
 
-function add(a, b) {
-	//break;
-	return a+b;	
-}
+var b = a.add(1, 2);
+debug(b);
 
-debug(add(1, 2));

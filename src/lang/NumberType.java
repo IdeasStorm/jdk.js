@@ -162,4 +162,8 @@ public class NumberType extends ObjectType {
 		return true;
 	}
 	
+	@Override
+	public NumberType toNumber() {
+		return this;
+	}
 }

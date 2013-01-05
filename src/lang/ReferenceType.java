@@ -6,7 +6,11 @@ public class ReferenceType extends ObjectType {
 	protected String name;
 	protected ObjectType value;
 	protected boolean writable;
-	protected ObjectType parent;
+	protected ObjectType parent = undefined;
+
+	public ObjectType getParent() {
+		return parent;
+	}
 
 	public ReferenceType(String name, ObjectType value, boolean writable) {
 		this.name = name;
@@ -181,5 +185,10 @@ public class ReferenceType extends ObjectType {
 	@Override
 	public boolean isPrimitive() {
 		return value.isPrimitive();
+	}
+	
+	@Override
+	public NumberType toNumber() {
+		return value.toNumber();
 	}
 }

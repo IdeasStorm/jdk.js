@@ -1,7 +1,13 @@
-function arr() {
-	return [1, 2, 3];
+function arr(a, b, c) {
+	return [a, b, c];
 }
 
-var a =[1, 2, 3];
+var a = arr(1, 2, 3);
+debug(a); 
 a[3] = 4;
 debug(a);
+
+ac = {};
+ac.b = 1;
+
+debug(ac.b);

@@ -1,10 +1,8 @@
 package parser;
 
-import java.util.ArrayDeque;
-import java.util.List;
 
+import java.util.List;
 import lang.ArrayType;
-import lang.ObjectType;
 
 public class ArrayLiteral extends ExpressionNode {
 	List<ExpressionNode> expressions;

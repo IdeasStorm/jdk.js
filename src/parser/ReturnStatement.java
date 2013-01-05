@@ -13,8 +13,8 @@ public class ReturnStatement extends Statement {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
-		return new Trilogy(Trilogy.Type.Return, expression.evaluate(context), null);
+	public StatementStatus execute(Context context) {
+		return new StatementStatus(StatementStatus.Type.Return, expression.evaluate(context), null);
 	}
 
 }

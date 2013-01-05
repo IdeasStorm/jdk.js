@@ -12,9 +12,9 @@ public class CallArrayExpression extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		value = deref(name.evaluate(context)).getProperty(index.evaluate(context));
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 }

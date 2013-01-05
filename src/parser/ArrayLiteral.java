@@ -12,7 +12,7 @@ public class ArrayLiteral extends ExpressionNode {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		ArrayType objects = new ArrayType();
 		for(ExpressionNode exp : expressions)
 			objects._push(exp.evaluate(context));

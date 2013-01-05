@@ -15,8 +15,8 @@ public class FunctionDeclarationStatement extends Statement {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		context._define(functionName, new FunctionType(functionName, args, statements, context));
-		return new Trilogy(Trilogy.Type.Normal, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 }

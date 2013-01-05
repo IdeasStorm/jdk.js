@@ -10,14 +10,14 @@ public class WhileStatement extends Statement {
 	}
 	
 	@Override
-	public Trilogy execute(Context context) {
+	public StatementStatus execute(Context context) {
 		Context whileStatementContext = new BlockContext(context);
 		while (exprssion.evaluate(context).toBooleanType().toBoolean()) {
-			Trilogy trilogy = whileStatement.execute(whileStatementContext);
-			if (trilogy.type == Trilogy.Type.Break)
-				return new Trilogy(Trilogy.Type.Normal, null, null);
+			StatementStatus statementStatus = whileStatement.execute(whileStatementContext);
+			if (statementStatus.type == StatementStatus.Type.Break)
+				return new StatementStatus(StatementStatus.Type.Normal, null, null);
 		}
-		return new Trilogy(Trilogy.Type.Normal, null, null);		
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);		
 	}
 
 }

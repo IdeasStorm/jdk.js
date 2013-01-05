@@ -1,17 +1,6 @@
+var a = function add(a) {
+	debug("as" + a);
+} ;
 
-var a;
-a = {i:0 , s:10};
-debug(a.s);
-
-
-var arr = [1,2,3];
-
-debug(arr[1]);
-
-//var a = {};
-
-function Apple() {
-	debug("in func");  
-}
-
-Apple();
+var arr  = [1,2,3] ;
+debug (arr);

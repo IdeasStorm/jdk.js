@@ -10,6 +10,7 @@ public class FunctionContext extends Context {
 		super(parent);
 		this.thisObj = obj;
 		this.argsObj = args;
+		this.parent = parent; 
 	}
 	
 	@Override

@@ -504,7 +504,7 @@ ExpressionNode CallExpression():
 	List <ExpressionNode> templist ;
 	Token att ;
 }
-{ //TODO
+{
 	exp = MemberExpression() args = Arguments() {res = new FunctionCallExpression(exp,args);}
 	(
 //		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
@@ -982,7 +982,7 @@ Statement FunctionDeclaration() :
 {
 	Token name =null;
 	BlockStatement body = null ;
-	List<String> params =null;
+	List<String> params = new ArrayList<String>();
 }
 {
 	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() "}"
@@ -994,7 +994,7 @@ FunctionDeclarationExpression FunctionExpression() :
 {
 	Token name = null ;
 	BlockStatement body =null;
-	List<String> params = null;
+	List<String> params = new ArrayList<String>();
 	String funcName = "";
 }
 {

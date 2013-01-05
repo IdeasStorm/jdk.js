@@ -17,7 +17,7 @@ public class ArrayLiteral extends ExpressionNode {
 		for(ExpressionNode exp : expressions)
 			objects._push(exp.evaluate(context));
 		value = objects;
-		return null;
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 
 }

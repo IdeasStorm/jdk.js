@@ -31,6 +31,10 @@ public class ProgramObject extends ObjectType {
 		return undefined;
 	}
 	
+	public ObjectType _log(ObjectType obj) {
+		return _writeln(obj);
+	}
+	
 	public ObjectType _read() {
 		ObjectType res;
 		Scanner scanIn = new Scanner(System.in);

@@ -1,6 +1,9 @@
 package parser;
 
 import java.util.List;
+
+import com.sun.xml.internal.ws.policy.sourcemodel.ModelNode.Type;
+
 import lang.ObjectType;
 
 public class ObjectLiteral extends ExpressionNode {
@@ -15,7 +18,8 @@ public class ObjectLiteral extends ExpressionNode {
 		ObjectType obj = new ObjectType();
 		for(Pair pair : hash)
 			obj.setProperty(pair.getLeft(), pair.getRight().evaluate(context));
-		return null;
+		value = obj;
+		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 
 }

@@ -22,6 +22,11 @@ public class ProgramObject extends ObjectType {
 	}
 	
 	public ObjectType _write(ObjectType obj) {
+		System.out.print(obj.toStringType().toString());
+		return undefined;
+	}
+	
+	public ObjectType _writeln(ObjectType obj) {
 		System.out.println(obj.toStringType().toString());
 		return undefined;
 	}
@@ -33,6 +38,5 @@ public class ProgramObject extends ObjectType {
 		scanIn.close();
 		return res;
 	}
-	
 	
 }

@@ -434,12 +434,13 @@ String PropertyName():
 	Token num ,t;
 }
 {
-	( t = <IDENTIFIER> {str = t.image;} )
+(	( t = <IDENTIFIER> {str = t.image;} )
 |
 	(	<DOUBLEQUOTE> (str=DoubleStringCharacters())? <DOUBLEENDQUOTE>
 	|	<SINGLEQUOTE> (str=SingleStringCharacters())? <SINGLEENDQUOTE>
 	)
 |	(num = <NUMBER> {str = num.image;} )
+)
 	{return str;}
 }
 
@@ -857,7 +858,7 @@ Pair VariableDeclaration() :
 {
 	Pair value;
 	Token s ;
-	ExpressionNode exp = LiteralNode.createUndefinedLiteral(); //NOTE: NULL exp means no init => obj is undefined not null !
+	ExpressionNode exp = LiteralNode.createUndefinedLiteral();
 }
 {
 	s = <IDENTIFIER> ( exp = Initialiser())?

@@ -495,22 +495,27 @@ ExpressionNode NewExpression():
 
 ExpressionNode CallExpression(): 
 {
-	ExpressionNode exp,res = null;
+	ExpressionNode exp,res=null,mem = null;
 	List<ExpressionNode> args ;
 	ExpressionNode temp ;
 	List <ExpressionNode> templist ;
-	Token t ;
+	Token att ;
 }
 { //TODO
 	exp = MemberExpression() args = Arguments() {res = new FunctionCallExpression(exp,args);}
-	 //t= <IDENTIFIER> args = Arguments() {res = new FunctionCallExpression(t.image,args);}
-	//(
+	(
 //		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
 	//	|
-	//	( "[" temp = Expression() "]" {args.add(temp); }) //return new ArrayCallExpression(res,args) ;} )
-	//	|
-	//	( "." t = <IDENTIFIER> {args.add(new VariableNode(t.image)); }) //return new CallPropNode(exp,args) ;} )
-	//)*
+		( "[" temp = Expression() "]" {args.add(temp); }
+			{	mem = new CallArrayExpression(res,temp);
+				res = mem ; }
+		)
+		|
+		( "." att = <IDENTIFIER>
+			{	mem = new MemberExpression(res,att.image);
+				res = mem ; }
+		)
+	)*
 	{return res ;}
 }
 

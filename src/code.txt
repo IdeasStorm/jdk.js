@@ -7,12 +7,3 @@ for (var i=0; i<10; i++) {
 a = b = 2;
 a++;
 debug(b);  // 3! Error
-
-function add(a, b) {
-	this.name = a+b;
-}
-
-var a = new add(1, 2);
-
-debug(a.name);
-

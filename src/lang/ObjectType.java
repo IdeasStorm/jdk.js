@@ -122,6 +122,10 @@ public class ObjectType {
 		//TODO check initialization
 	}
 
+	public boolean isPrimitive() {
+		return false;
+	}
+	
 	protected ObjectType getAttribute(String name) {
 		ObjectType res = attributes.get(name);
 		if (res != null)

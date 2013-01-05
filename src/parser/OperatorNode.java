@@ -87,10 +87,10 @@ public class OperatorNode extends ExpressionNode {
 			value = leftVal;
 		}
 		else if (left == null) {
-			value = ObjectType.operator(type, null, right.evaluate(context));
+			value = ObjectType.operator(type, null, deref(right.evaluate(context)));
 		}
 		else if (right == null) {
-			value = ObjectType.operator(type, left.evaluate(context), null);
+			value = ObjectType.operator(type, deref(left.evaluate(context)), null);
 		}
 		else
 			value = ObjectType.operator(type,deref(left.evaluate(context)),deref(right.evaluate(context)));

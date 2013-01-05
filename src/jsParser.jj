@@ -802,15 +802,15 @@ OperatorNode.OperatorType AssignmentOperator() :
 // Expression Finally !!
 ExpressionNode Expression(): 
 {
-	List<ExpressionNode> exps ;
-	ExpressionNode exp ;
+	List<ExpressionNode> exps = new ArrayList<ExpressionNode>();
+	ExpressionNode exp =null;
 }
 { //TODO return list of expression
 	exp = AssignmentExpression()
-//	{exps.add(exp);} 
-//	(	"," exp = AssignmentExpression()
-//		{exps.add(exp);}
-//	)*
+	{exps.add(exp);} 
+	(	"," exp = AssignmentExpression()
+		{exps.add(exp);}
+	)*
 	{return exp ;}
 }
 

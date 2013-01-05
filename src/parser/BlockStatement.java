@@ -16,9 +16,11 @@ public class BlockStatement extends Statement {
 		for(Statement statement : statements) {
 			StatementStatus statementStatus = statement.execute(blockContext);
 			if (statementStatus.type == StatementStatus.Type.Break)
-				return new StatementStatus(StatementStatus.Type.Break, null, statementStatus.getIdentifier());
+				return statementStatus;
 			if (statementStatus.type == StatementStatus.Type.Continue)
-				return new StatementStatus(StatementStatus.Type.Continue, null, statementStatus.getIdentifier());
+				return statementStatus;
+			if (statementStatus.type == StatementStatus.Type.Return)
+				return statementStatus;
 		}
 		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}

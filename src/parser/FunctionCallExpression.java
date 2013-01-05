@@ -21,7 +21,6 @@ public class FunctionCallExpression extends ExpressionNode {
 		for(ExpressionNode exp : args)
 			objectArgs.add(exp.evaluate(context));
 		ObjectType ref = function.evaluate(context);
-		ObjectType returnedObject = new ObjectType();
 		ObjectType func = ((ReferenceType) ref).getValue();
 
 		ObjectType[] funcArgs = new ObjectType[objectArgs.size()];
@@ -29,8 +28,8 @@ public class FunctionCallExpression extends ExpressionNode {
 			funcArgs[i] = ((ObjectType)objectArgs.get(i));
 		
 		if (func instanceof FunctionType)
-			returnedObject = ((FunctionType) func)
+			value = ((FunctionType) func)
 			.invoke(ObjectType.undefined, funcArgs);
-		return new StatementStatus(StatementStatus.Type.Return, returnedObject, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 }

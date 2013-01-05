@@ -992,7 +992,7 @@ void SwitchStatement() : {}
 {
 	(<SWITCH> "(" Expression() ")")
 	(	("{" (CaseClauses())? "}")
-	|	("{" (CaseClauses())? DefaultClause() (CaseClauses())? "}")
+//	|	("{" (CaseClauses())? DefaultClause() (CaseClauses())? "}")
 	)	
 }
 
@@ -1003,12 +1003,12 @@ void CaseClauses() : {}
 
 void CaseClause() : {}
 {
-	<CASE> Expression() ":" (StatementList())?
+	<CASE> Expression() ":" //(StatementList())?
 }
  
 void DefaultClause() : {}
 {
-	<_DEFAULT> ":" (StatementList())?
+	<_DEFAULT> ":" //(StatementList())?
 }
 
 

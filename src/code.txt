@@ -8,28 +8,28 @@ function Student(id,name,mark) {
 // Sort students list by marks 
 function Sort(arr,length){
 	for(var i=0;i<length-1;i++)
-		for(var j=i+1;j<length;j++){
+		for(var j=i+1;j<length;j++)
 			if(arr[i].mark < arr[j].mark)
 			{
 				s=arr[i];
 				arr[i]=arr[j];
 				arr[j]=s;
 			}
-		}
 }
 
 // read students list
 function readStudent(arr,length){
+	var num,mark,name ;
 	debug("Enter Student List:");
 	for (var i=0;i<length;i++)
 	{
-//		arr[i] = new Student(0,"a",0);
-		arr[i].id = i ;
-		debug("Student id: "+i);
+		num = i + 1 ;
+		debug("Student id: "+ num);
 		debug("Enter Student name:");
-		arr[i].name = console.read();
+		name = console.read();
 		debug("Enter Student marke:");
-		arr[i].mark = console.read();
+		mark = console.read();
+		arr[i] = new Student(num,name,mark);
 	}
 }
 
@@ -52,31 +52,13 @@ function avg (arr,size){
 	return sum / size ;
 }
 
-
 //main program
 var stu =[] , size = 0;
 console.write("enter number of students :");
-size = console.read();
-stu[0] = new Student(0,"yaman",100);
-stu[0].id = 1;
-debug("Enter Student name:");
-//size = console.read();
-stu[0].id = size ;
-debug(stu[0].id);
-
-//readStudent(stu,size);
-//debug(stu);
-//stu[0] = new Student(0,"yaman",100);
-//stu[1] = new Student(1,"kenan",77);
-//stu[2] = new Student(2,"jobory",90);
-//stu[3] = new Student(3,"syrwan",44);
-
-//Sort(stu,size);
-//Print(stu,size);
-//debug ("avg= "+avg(stu,size));
-
-//console.write("enter your name :");
-//var q = console.read();
-//console.write("welcome : " + q );
+size  = console.read();
+readStudent(stu,size);
+Sort(stu,size);
+Print(stu,size);
+//console.write ("avg= "+avg(stu,size));
 
 

@@ -1,6 +1,7 @@
 package parser;
 
 import lang.ObjectType;
+import lang.ReferenceType;
 
 public class FunctionContext extends Context {
 	protected ObjectType thisObj;
@@ -8,7 +9,7 @@ public class FunctionContext extends Context {
 	
 	public FunctionContext(ObjectType obj, ObjectType args, Context parent) {
 		super(parent);
-		this.thisObj = obj;
+		this.thisObj = new ReferenceType(obj);
 		this.argsObj = args;
 	}
 	

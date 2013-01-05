@@ -14,6 +14,10 @@ public class ArrayType extends ObjectType {
 		
 	}
 	
+	public ArrayType() {
+		length = 0;	
+	}
+
 	@Override
 	public ObjectType clone() {
 		ArrayType cloned = (ArrayType) super.clone();
@@ -30,7 +34,18 @@ public class ArrayType extends ObjectType {
 	
 	@Override
 	public StringType toStringType() {
-		throw new RuntimeException("not implemented yet");
+		StringBuffer s = new StringBuffer();
+		s.append("[");
+		for (int i = 0; i < length ; i++) {
+			// TODO optimize loop
+			if (i != 0)
+				s.append(",");
+			ObjectType item = getProperty(Double.toString(i));
+			if (!item.isUndefined())
+				s.append(item.toStringType().toString());
+		}
+		s.append("]");
+		return new StringType(s.toString());
 	}
 	
 	

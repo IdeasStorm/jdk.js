@@ -19,13 +19,15 @@ import java.util.List;
 public class compiler {
   public static void main(String args[]) throws ParseException, FileNotFoundException  {
     compileStream(new InputStreamReader(new FileInputStream("src//code.txt")));
-    System.out.println("End Of Parser.");  	
+    System.out.println("End Of Parser.");
   }
   
   public static void compileStream(InputStreamReader isr)  throws ParseException {
   	compiler parser = new compiler(isr);
     BlockStatement program = parser.start();
-    program.execute(new BlockContext(null));
+    StatementStatus status = program.execute(new BlockContext(null));
+    if (status.getType() != StatementStatus.Type.Normal)
+    	throw new RuntimeException("SytaxError "+ status.getType() + " statement");
   }
 }
 PARSER_END(compiler)

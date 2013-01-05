@@ -1,18 +1,17 @@
 
-for (var i=0; i<10; i++) {
-	for (var j=0; j<3; j++)
-		debug(j);
-}
-
-a = b = 2;
+var a = b = 2;
 a++;
-debug(b);  // 3! Error
+debug(b);
 
-function add(a, b) {
-	this.name = a+b;
-}
+//function add() {
+//	debug(1);
+//}
 
-var a = new add(1, 2);
+//add();
+//var a = new add(1, 2);
 
-debug(a.name);
+//debug(a.name);
 
+var arr =[1, 2, 3];
+
+debug(arr);

@@ -8,7 +8,8 @@ public class DebugStatement extends Statement {
 	}
 	@Override
 	public StatementStatus execute(Context context) {
-		System.out.println(exp.evaluate(context).toStringType().toString());
+		if (exp !=null)
+			System.out.println(exp.evaluate(context).toStringType().toString());
 		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 

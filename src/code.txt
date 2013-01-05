@@ -50,7 +50,8 @@ Sort(stu,size);
 Print(stu,size);
 debug ("avg= "+avg(stu,size));
 
-//console.write("enter your name :");
-//var q = console.read();
-//console.write("welcome : " + q );
+console.write("enter your name :");
+var q = console.read();
+console.write("welcome : " + q );
+
 

@@ -609,7 +609,7 @@ ExpressionNode AdditiveExpression():
 {
 (
 	( left =MultiplicativeExpression() {exp = left ; })  
-	(
+	(LOOKAHEAD(1)
 		( "+" right = MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Add, left , right) ;  left = exp ; }  ) 
 	| 	( "-" right = MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Subtract ,left , right) ;  left = exp ; }  ) 
 	)*
@@ -643,7 +643,7 @@ ExpressionNode RelationalExpression():
 {
 (
 	( left = ShiftExpression() {exp = left ;})
-	(
+	(LOOKAHEAD(1)
 		(
 			 "<" { op = OperatorNode.OperatorType.Less; }    
 		|	 ">"  { op = OperatorNode.OperatorType.Greater; }
@@ -667,7 +667,7 @@ ExpressionNode EqualityExpression():
 {
 (
 	left = RelationalExpression() {exp = left;}  
-	(
+	(LOOKAHEAD(1)
 		 (
 		  "=="  { op = OperatorNode.OperatorType.Equals; }
 		  | "!="  { op = OperatorNode.OperatorType.NotEquals; }
@@ -688,7 +688,7 @@ ExpressionNode BitwiseANDExpression():
 {
 (
 	left = EqualityExpression() {exp = left ;} 
-	(
+	(LOOKAHEAD(1)
 		"&" right = EqualityExpression() { exp = new OperatorNode(OperatorNode.OperatorType.BitWiseAnd, left , right) ;  left = exp ; }
 	)*
 )
@@ -703,7 +703,7 @@ ExpressionNode BitwiseXORExpression():
 {
 (
 	left = BitwiseANDExpression() {exp = left ;} 
-	(
+	(LOOKAHEAD(1)
 		"^" right = BitwiseANDExpression() { exp = new OperatorNode(OperatorNode.OperatorType.BitWiseXor, left , right) ;  left = exp ; }
 	)*
 )
@@ -718,7 +718,7 @@ ExpressionNode BitwiseORExpression() :
 {
 (
 	left = BitwiseXORExpression() {exp = left ;}
-	(
+	(LOOKAHEAD(1)
 		"|" right = BitwiseXORExpression() { exp = new OperatorNode(OperatorNode.OperatorType.BitWiseOr, left , right) ;  left = exp ; }
 	)*
 )
@@ -733,7 +733,7 @@ ExpressionNode LogicalANDExpression():
 {
 (
 	left = BitwiseORExpression() {exp =left;} 
-	(
+	(LOOKAHEAD(1)
 		<AND> right = BitwiseORExpression() { exp = new OperatorNode(OperatorNode.OperatorType.And, left , right) ;  left = exp ; }
 	)*
 )
@@ -747,7 +747,7 @@ ExpressionNode LogicalORExpression():
 {
 (
 	left = LogicalANDExpression() {exp = left ; } 
-	(
+	(LOOKAHEAD(1)
 		<OR> right = LogicalANDExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Or, left , right) ;  left = exp ; } 
 	)*
 )
@@ -761,7 +761,7 @@ ExpressionNode ConditionalExpression():
 }
 {
 (	//TODO deal with ? : !!?
-	exp = LogicalORExpression() ("?" AssignmentExpression() ":" AssignmentExpression() )?
+	exp = LogicalORExpression() (LOOKAHEAD(1)"?" AssignmentExpression() ":" AssignmentExpression() )?
 )
 	{return exp ;}
 }
@@ -808,10 +808,10 @@ ExpressionNode Expression():
 { //TODO return list of expression
 	exp = AssignmentExpression()
 	{exps.add(exp);} 
-	(	"," exp = AssignmentExpression()
+	(LOOKAHEAD(1)	"," exp = AssignmentExpression()
 		{exps.add(exp);}
 	)*
-	{return exp ;}
+	{return new ExpressionsList(exps) ;}
 }
 
 
@@ -875,7 +875,7 @@ Pair VariableDeclaration() :
 	ExpressionNode exp = LiteralNode.createUndefinedLiteral();
 }
 {
-	s = <IDENTIFIER> ( exp = Initialiser())?
+	s = <IDENTIFIER> (LOOKAHEAD(1) exp = Initialiser())?
 	{
 		value = new Pair(s.image,exp);
 		return value;

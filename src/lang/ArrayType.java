@@ -67,7 +67,7 @@ public class ArrayType extends ObjectType {
 	// host methods
 	
 	public ObjectType _push(ObjectType obj) {
-		setProperty(Double.toString(length), obj);
+		setProperty(Integer.toString(length), obj);
 		length++;
 		return new NumberType(length);
 	}

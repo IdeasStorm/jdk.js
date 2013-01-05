@@ -1,3 +1,10 @@
+
 var a ; 
 a = {i:0 , s:10};
 debug(a.s);
+
+
+var arr = [1,2,3];
+
+debug(arr[1]);
+

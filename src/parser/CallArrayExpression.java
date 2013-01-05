@@ -1,5 +1,7 @@
 package parser;
 
+import lang.ArrayType;
+
 public class CallArrayExpression extends ExpressionNode {
 	ExpressionNode name;
 	ExpressionNode index;
@@ -11,7 +13,7 @@ public class CallArrayExpression extends ExpressionNode {
 	
 	@Override
 	public Trilogy execute(Context context) {
-		value = name.evaluate(context).getProperty(index.evaluate(context));
+		value = deref(name.evaluate(context)).getProperty(index.evaluate(context));
 		return new Trilogy(Trilogy.Type.Normal, null, null);
 	}
 

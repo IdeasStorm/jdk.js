@@ -1100,10 +1100,10 @@ Statement ContinueStatement() :
 }
 
 Statement DebugStatement(): {
-	 ExpressionNode s;
+	 ExpressionNode s = null;
 }
 {
-	<DEBUG> s = Expression() ";"
+	<DEBUG> "(" (s = Expression())? ")" ";"
 	{
 		return new DebugStatement(s);
 	}

@@ -1,3 +1,4 @@
+
 function Apple(a) {
 this.a = a;
 }
@@ -5,3 +6,9 @@ this.a = a;
 aa = new Apple(1);
 
 debug(aa.a);
+
+if ("abcd" <= "abcde" && "abcd" != "abcd")
+	debug("true");
+else
+	debug("false");
+

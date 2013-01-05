@@ -979,7 +979,7 @@ Statement FunctionDeclaration() :
 {
 	Token name =null;
 	BlockStatement body = null ;
-	String[] params =null;
+	List<String> params =null;
 }
 {
 	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() "}"
@@ -991,7 +991,7 @@ FunctionDeclarationExpression FunctionExpression() :
 {
 	Token name = null ;
 	BlockStatement body =null;
-	String[] params = null;
+	List<String> params = null;
 	String funcName = "";
 }
 {
@@ -1006,10 +1006,9 @@ FunctionDeclarationExpression FunctionExpression() :
 	}
 }
 
-String[] FormalParameterList() : 
+List<String> FormalParameterList() : 
 {
 	List<String> params = new ArrayList();
-	String [] arr ; 
 	Token t ;
 } 
 {
@@ -1018,9 +1017,7 @@ String[] FormalParameterList() :
 	(	"," t = <IDENTIFIER>
 		{params.add(t.image);}
 	)* 
-	{	arr = new String [params.size()];
-		arr = params.toArray(arr);
-		return arr; }
+	{ return params; }
 }
 
 BlockStatement FunctionBody() : 

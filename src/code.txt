@@ -1,5 +1,10 @@
-var a;
+var a ; 
 a = {i:0 , s:10};
-a.s=4;
-
 debug(a.s);
+
+
+var arr = [1,2,3];
+
+debug(arr[1]);
+
+var a = {};

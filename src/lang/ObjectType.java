@@ -4,6 +4,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import parser.ExpressionNode;
+import parser.OperatorNode;
 import parser.OperatorNode.OperatorType;
 
 public class ObjectType {
@@ -178,11 +179,15 @@ public class ObjectType {
 		else if (left == null)
 			return right.operator(type);
 		else {
-			Class result_class = getResultClass(left.getClass(),
-					right.getClass());
-			ObjectType left_obj = box(result_class, left);
-			ObjectType right_obj = box(result_class, right);
-			return left_obj.operator(type, right_obj);
+			if (type != OperatorType.Assignment) {
+				Class result_class = getResultClass(left.getClass(),
+						right.getClass());
+				ObjectType left_obj = box(result_class, left);
+				ObjectType right_obj = box(result_class, right);
+				return left_obj.operator(type, right_obj);
+			}
+			else
+				return left.operator(type, right);
 		}
 	}
 

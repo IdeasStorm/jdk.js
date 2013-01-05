@@ -15,10 +15,51 @@ public class StringType extends ObjectType {
 	@Override
 	public lang.ObjectType operator(OperatorType type,
 			lang.ObjectType right) {
-		if (type == OperatorType.Add)
-			return new StringType(this.value.concat(right.toStringType().value));
-		else
+		ObjectType result = new ObjectType();
+		switch (type) {
+		case Add:
+			result = new StringType(this.value.concat(right.toStringType().value));
+			break;
+		case Equals:
+			if (this.value.compareTo(right.toStringType().value) == 0)
+				result = new BooleanType(true);
+			else
+				result = new BooleanType(false);
+			break;
+		case NotEquals:
+			if (this.value.compareTo(right.toStringType().value) != 0)
+				result = new BooleanType(true);
+			else
+				result = new BooleanType(false);
+			break;
+		case Greater:
+			if (this.value.compareTo(right.toStringType().value) > 0)
+				result = new BooleanType(true);
+			else
+				result = new BooleanType(false);
+			break;
+		case GreaterOrEqual:
+			if (this.value.compareTo(right.toStringType().value) >= 0)
+				result = new BooleanType(true);
+			else
+				result = new BooleanType(false);
+			break;
+		case Less:
+			if (this.value.compareTo(right.toStringType().value) < 0)
+				result = new BooleanType(true);
+			else
+				result = new BooleanType(false);
+			break;
+		case LessOrEqual:
+			if (this.value.compareTo(right.toStringType().value) <= 0)
+				result = new BooleanType(true);
+			else
+				result = new BooleanType(false);
+			break;
+		default:
 			throw new RuntimeException("object doesn't support such operator");
+		}
+		return result;
 	}
 
 	@Override

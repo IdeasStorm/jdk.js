@@ -39,8 +39,8 @@ public class ArrayType extends ObjectType {
 		for (int i = 0; i < length ; i++) {
 			// TODO optimize loop
 			if (i != 0)
-				s.append(",");
-			ObjectType item = getProperty(Double.toString(i));
+				s.append(", ");
+			ObjectType item = getProperty(Integer.toString(i));
 			if (!item.isUndefined())
 				s.append(item.toStringType().toString());
 		}

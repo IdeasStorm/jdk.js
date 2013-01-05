@@ -2,12 +2,16 @@ package parser;
 
 import java.util.List;
 
+import parser.OperatorNode.OperatorType;
+
 public class SwitchStatement extends ExpressionNode {
+	ExpressionNode firstExp;
 	List<ExpressionNode> expressions;
 	List<Statement> statements;
 	
-	public SwitchStatement(List<ExpressionNode> expressions, 
+	public SwitchStatement(ExpressionNode firstExp, List<ExpressionNode> expressions, 
 			List<Statement> statements) {
+		this.firstExp = firstExp;
 		this.expressions = expressions;
 		this.statements = statements;
 	}
@@ -19,7 +23,9 @@ public class SwitchStatement extends ExpressionNode {
 		boolean entered = false;
 		int caseNumber=0;
 		for(ExpressionNode exp : expressions) { 
-			if (exp.evaluate(context).toBooleanType().toBoolean()) {
+			if (exp.evaluate(context).toBooleanType()
+					.operator(OperatorType.Equals, firstExp.evaluate(context))
+					.toBooleanType().toBoolean()) {
 				entered = true;
 				break;
 			}

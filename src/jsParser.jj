@@ -494,7 +494,7 @@ ExpressionNode NewExpression():
 (LOOKAHEAD (MemberExpression())
 	(	exp = MemberExpression() )
 |	(	<NEW> exp = MemberExpression() 
-		{exp = new InstantiationExpression(exp , null);} 
+		{exp = new InstantiationExpression(exp , new ArrayList<ExpressionNode>());} 
 	)
 )
 {return exp ;}
@@ -503,7 +503,7 @@ ExpressionNode NewExpression():
 ExpressionNode CallExpression(): 
 {
 	ExpressionNode exp,res=null,mem = null;
-	List<ExpressionNode> args ;
+	List<ExpressionNode> args = new ArrayList<ExpressionNode>();
 	ExpressionNode temp ;
 	List <ExpressionNode> templist ;
 	Token att ;

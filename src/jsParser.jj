@@ -842,8 +842,10 @@ VariableStatement VariableStatement() :
 	LinkedList<Pair> values ;
 }
 {
-	<TYPE> values = VariableDeclarationList() ";"
-	{ return new VariableStatement(values); }
+	<TYPE> values = VariableDeclarationList() 
+	(LOOKAHEAD(1) ";" { return new VariableStatement(values); }
+	)?
+	{throw new RuntimeException("missing ; in Variable Statement");} //status.getType()
 }
 
 LinkedList<Pair> VariableDeclarationList() : 
@@ -899,15 +901,12 @@ ExpressionStatement ExpressionStatement() :
 	ExpressionNode exp ;
 }
 {
-	// TODO [lookahead != {{, function}] 
-//(LOOKAHEAD (Expression() ";")	
-(	exp = Expression() (";" {return new ExpressionStatement(exp) ;} )? 
-		{throw new RuntimeException("missing ;");} //status.getType()	
+	// TODO [lookahead != {{, function}] 	
+(	exp = Expression() 
+	(LOOKAHEAD(1) ";" {return new ExpressionStatement(exp) ;} 
+	)? 
+		{throw new RuntimeException("missing ; in expression statement");} //status.getType()	
 )
-//|
-//(	exp = Expression() 
-	//	{throw new RuntimeException("missing ;");} //status.getType()  
-//))
 }
 
 IfStatement IfStatement() : 
@@ -996,7 +995,7 @@ Statement FunctionDeclaration() :
 }
 {
 (	<FUNCTION> name = <IDENTIFIER> "(" ( params = FormalParameterList() )? ")" "{" body = FunctionBody() 
-	("}" {return new FunctionDeclarationStatement(name.image,params,body) ;})?
+	(LOOKAHEAD(1) "}" {return new FunctionDeclarationStatement(name.image,params,body) ;})?
 )
 	{throw new RuntimeException("missing }");} //status.getType()	
 }
@@ -1076,16 +1075,15 @@ Statement ReturnStatement() :
 	ExpressionNode exp =null;
 } 
 {
-	<RETURN> (exp = Expression())? (";"
+	<RETURN> (LOOKAHEAD(1)exp = Expression())? (LOOKAHEAD(1) ";"
 	{	if (exp != null)
 			return new ReturnStatement(exp);
 		else
 			return new ReturnStatement();
 	}
 	)?
-	{throw new RuntimeException("missing ;");} //status.getType()
+	{throw new RuntimeException("missing ; in return statement");} //status.getType()
 	//[no LineTerminator here]
-
 }
 
 Statement BreakStatement() : 
@@ -1097,7 +1095,7 @@ Statement BreakStatement() :
 (	<BREAK> (LOOKAHEAD(1) t = <IDENTIFIER>)? 
 	( LOOKAHEAD(1) ";" { sta = new BreakStatement(); return sta ; } )?
 )
-	{throw new RuntimeException("missing ; in continue statement");} //status.getType()
+	{throw new RuntimeException("missing ; in breake statement");} //status.getType()
 	// [no LineTerminator here]
 	//{return new BreakStatement (t.image) ;}
 	 
@@ -1120,7 +1118,7 @@ Statement DebugStatement(): {
 	 ExpressionNode s = null;
 }
 {
-(	<DEBUG> "(" (LOOKAHEAD(1)  s = Expression())? ")" 
+(	<DEBUG> "(" (LOOKAHEAD(1) s = Expression())? ")" 
 	(LOOKAHEAD(1) ";" 	{return new DebugStatement(s);} )?
 	{throw new RuntimeException("missing ; in debug statement");} //status.getType()
 )

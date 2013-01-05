@@ -39,7 +39,6 @@ public class ProgramObject extends ObjectType {
 		ObjectType res;
 		Scanner scanIn = new Scanner(System.in);
 		res = new StringType(scanIn.nextLine());
-		scanIn.close();
 		return res;
 	}
 	

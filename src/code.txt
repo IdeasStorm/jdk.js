@@ -1,6 +1,4 @@
-var a = function add(a) {
-	debug("as" + a);
-} ;
+var arr = [] ;
+arr[0] =10 ;
 
-var arr  = [1,2,3] ;
-debug (arr);
+debug(arr);

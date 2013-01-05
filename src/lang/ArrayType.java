@@ -73,9 +73,9 @@ public class ArrayType extends ObjectType {
 	}
 	
 	public ObjectType _pop() {
-		ObjectType res = getProperty(Double.toString(length-1));
+		ObjectType res = getProperty(Integer.toString(length-1));
 		if (!res.isUndefined())
-			this.attributes.remove(Double.toString(length-1));
+			this.attributes.remove(Integer.toString(length-1));
 		length--;
 		return res;
 	}

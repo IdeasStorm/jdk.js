@@ -344,16 +344,17 @@ ExpressionNode PrimaryExpression() :{
 
 ArrayLiteral ArrayLiteral(): 
 {
-	List<ExpressionNode> exps,args = new ArrayList<ExpressionNode>();
+	List<ExpressionNode> exps = null,args = new ArrayList<ExpressionNode>();
 	List<LiteralNode> temp  ;
 }
 {
 	"["
 (LOOKAHEAD(Elision())
-	( (temp = Elision() { args.addAll(temp);})? "]" )
+	(	(temp = Elision() { args.addAll(temp);})? "]" )
+	|	"]"
 	|
 	(LOOKAHEAD (ElementList() "]")
-			(exps = ElementList() {args.addAll(exps);} "]" )
+			( exps = ElementList() {args.addAll(exps);} "]" )
 	|		(exps = ElementList() {args.addAll(exps);} (temp = Elision() {args.addAll(temp);})? "]")	 	
 	)
 )
@@ -367,8 +368,9 @@ List<ExpressionNode> ElementList():
 	ExpressionNode exp = null;
 }
 {
-(	((temp=Elision() {args.addAll(temp);})? 
-	exp = AssignmentExpression() {args.add(exp);})
+(	(	(temp=Elision() {args.addAll(temp);} )? 
+			exp = AssignmentExpression() {args.add(exp);}
+	)
 	(LOOKAHEAD(2) "," exp =AssignmentExpression() {args.add(exp);}
 	)*
 )

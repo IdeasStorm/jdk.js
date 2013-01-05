@@ -986,6 +986,32 @@ ForStatement ForStatement() :
 	)
 }
 
+
+//Switch Statement
+void SwitchStatement() : {}
+{
+	(<SWITCH> "(" Expression() ")")
+	(	("{" (CaseClauses())? "}")
+	|	("{" (CaseClauses())? DefaultClause() (CaseClauses())? "}")
+	)	
+}
+
+void CaseClauses() : {}
+{
+	(CaseClause())+
+}
+
+void CaseClause() : {}
+{
+	<CASE> Expression() ":" (StatementList())?
+}
+ 
+void DefaultClause() : {}
+{
+	<_DEFAULT> ":" (StatementList())?
+}
+
+
 // FunctionDeclaration
 Statement FunctionDeclaration() : 
 {

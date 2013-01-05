@@ -18,6 +18,21 @@ function Sort(arr,length){
 		}
 }
 
+// read students list
+function readStudent(arr,length){
+	debug("Enter Student List:");
+	for (var i=0;i<length;i++)
+	{
+//		arr[i] = new Student(0,"a",0);
+		arr[i].id = i ;
+		debug("Student id: "+i);
+		debug("Enter Student name:");
+		arr[i].name = console.read();
+		debug("Enter Student marke:");
+		arr[i].mark = console.read();
+	}
+}
+
 // Print students list
 function Print(arr,length){
 	debug("Student List:");
@@ -39,15 +54,26 @@ function avg (arr,size){
 
 
 //main program
-var stu =[] , size = 4;
+var stu =[] , size = 0;
+console.write("enter number of students :");
+size = console.read();
 stu[0] = new Student(0,"yaman",100);
-stu[1] = new Student(1,"kenan",77);
-stu[2] = new Student(2,"jobory",90);
-stu[3] = new Student(3,"syrwan",44);
+stu[0].id = 1;
+debug("Enter Student name:");
+//size = console.read();
+stu[0].id = size ;
+debug(stu[0].id);
 
-Sort(stu,size);
-Print(stu,size);
-debug ("avg= "+avg(stu,size));
+//readStudent(stu,size);
+//debug(stu);
+//stu[0] = new Student(0,"yaman",100);
+//stu[1] = new Student(1,"kenan",77);
+//stu[2] = new Student(2,"jobory",90);
+//stu[3] = new Student(3,"syrwan",44);
+
+//Sort(stu,size);
+//Print(stu,size);
+//debug ("avg= "+avg(stu,size));
 
 //console.write("enter your name :");
 //var q = console.read();

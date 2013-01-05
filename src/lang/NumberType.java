@@ -129,7 +129,10 @@ public class NumberType extends ObjectType {
 	
 	@Override
 	public StringType toStringType() {
-		return new StringType(String.format("%f", value));
+		if ( (int) value == value)
+			return new StringType(Integer.toString((int) this.value));
+		else
+			return new StringType(Double.toString(this.value));
 	}
 	
 	@Override

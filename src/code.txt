@@ -7,8 +7,8 @@
 //debug (arr); //[]
 
 function add(a, b) {
-	return a+b;
+	//break;
+	return a+b;	
 }
 
-var b = add(1, 2);
-debug(b);
+debug(add(1, 2));

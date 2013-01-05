@@ -29,6 +29,6 @@ public class FunctionCallExpression extends ExpressionNode {
 			funcArgs[i] = ((ObjectType)objectArgs.get(i));
 		
 		value = ref.getParent().callMethod(ref.getName(), funcArgs);
-		return new StatementStatus(StatementStatus.Type.Return, null, null);
+		return new StatementStatus(StatementStatus.Type.Normal, null, null);
 	}
 }

@@ -476,7 +476,9 @@ ExpressionNode MemberExpression():
 								res = mem ; })
 	)*
 )
-|	( <NEW> exp = MemberExpression() args = Arguments() ) {res = InstantiationExpression(exp , args);}
+|	( <NEW> exp = MemberExpression() args = Arguments() 
+//		{res = InstantiationExpression(exp , args);}
+	)
 ) {return res ;}
 }
 
@@ -488,7 +490,7 @@ ExpressionNode NewExpression():
 (LOOKAHEAD (MemberExpression())
 	(	exp = MemberExpression() )
 |	(	<NEW> exp = MemberExpression() 
-		{exp = InstantiationExpression(exp , null);} 
+//		{exp = InstantiationExpression(exp , null);} 
 	)
 )
 {return exp ;}

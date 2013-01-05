@@ -1,20 +1,16 @@
-
-var a;
-a = {i:0 , s:10};
-debug(a.s);
-
-
-var arr = [1,2,3];
-
-debug(arr[1]);
-
-//var a = {};
-
-function Apple() {
-  this.name = "name";
+for (var i=0; i<10; i++) {
+	for (var j=0; j<3; j++)
+		debug(j);
 }
-var a = new Apple();
 
-//var f = new function(a, b) {
-//	debug(a);
-//};
+a = b = 2;
+a++;
+debug(b);  // 3! Error
+
+function add(a, b) {
+	this.name = a+b;
+}
+
+var a = new add(1, 2);
+
+debug(a.name);

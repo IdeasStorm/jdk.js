@@ -1,13 +1,7 @@
-function arr(a, b, c) {
-	return [a, b, c];
+function Apple(a) {
+this.a = a;
 }
 
-var a = arr(1, 2, 3);
-debug(a); 
-a[3] = 4;
-debug(a);
+aa = new Apple(1);
 
-ac = {};
-ac.b = 1;
-
-debug(ac.b);
+debug(aa.a);

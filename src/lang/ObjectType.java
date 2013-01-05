@@ -270,7 +270,7 @@ public class ObjectType {
 		// getting the member
 		ObjectType member = getProperty(methodName);
 		//check if exists
-		if (member == undefined)
+		if (member.isUndefined())
 			//call hosted one instead if not exist
 			return callHostedMethod("_", methodName, args);
 		
@@ -306,7 +306,8 @@ public class ObjectType {
 		Class[] classes = new Class[objects.length];
 		
 		for (int i = 0; i < classes.length; i++) {
-			classes[i] = objects[i].getClass();
+			//classes[i] = objects[i].getClass();
+			classes[i] = ObjectType.class;
 		}
 		return classes;
 	}

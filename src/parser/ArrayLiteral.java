@@ -15,10 +15,10 @@ public class ArrayLiteral extends ExpressionNode {
 	
 	@Override
 	public Trilogy execute(Context context) {
-		ArrayDeque<ObjectType> objects = new ArrayDeque<ObjectType>();
+		ArrayType objects = new ArrayType();
 		for(ExpressionNode exp : expressions)
-			objects.push(exp.evaluate(context));
-		value = new ArrayType(objects);
+			objects._push(exp.evaluate(context));
+		value = objects;
 		return null;
 	}
 

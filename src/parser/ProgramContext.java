@@ -1,11 +1,13 @@
 package parser;
 
 import lang.ObjectType;
+import lang.ProgramObject;
 
 public class ProgramContext extends Context {
 	protected ObjectType globalObject;
 	public ProgramContext(Context parent) {
 		super(parent);
+		globalObject = new ProgramObject();
 	}
 	
 	@Override

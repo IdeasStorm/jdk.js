@@ -157,4 +157,9 @@ public class NumberType extends ObjectType {
 		return (int) value;
 	}
 	
+	@Override
+	public boolean isPrimitive() {
+		return true;
+	}
+	
 }

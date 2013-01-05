@@ -1,3 +1,4 @@
+
 for (var i=0; i<10; i++) {
 	for (var j=0; j<3; j++)
 		debug(j);
@@ -14,3 +15,4 @@ function add(a, b) {
 var a = new add(1, 2);
 
 debug(a.name);
+

@@ -14,6 +14,14 @@ public class LiteralNode extends ExpressionNode {
 		return new StatementStatus(null, null, null);
 	}
 
+	@Override
+	public ObjectType evaluate(Context context) {
+		ObjectType res = super.evaluate(context);
+		if (!res.isUndefined())
+			return res.clone();
+		else
+			return res; 
+	}
 	/**
 	 * @param args
 	 */

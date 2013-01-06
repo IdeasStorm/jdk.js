@@ -993,30 +993,25 @@ ForStatement ForStatement() :
 //Switch Statement
 SwitchStatement SwitchStatement() : 
 {
-	ExpressionNode exp=null ,temp=null ;
+	ExpressionNode exp=null ,temp1=null ;
 	List<ExpressionNode> exps =new ArrayList<ExpressionNode>();
 	List<Statement>stas=new ArrayList<Statement>(),temp2 ;
-	
+	SwitchStatement Clauses , defaultClause ;
 }
 {
 (	(<SWITCH> "(" exp = Expression() ")")
-	(	("{" 
-			(
-			<CASE> ( temp = Expression() {exps.add(temp);} | <_DEFAULT> ) ":" (temp2 = StatementList() )
-			{ stas.add(new BlockStatement(temp2));}
-			)* 
-		"}")
-//	|	("{" (CaseClauses())? DefaultClause() (CaseClauses())? "}")
+	(	"{" 
+			(	<CASE> temp1 = Expression() {exps.add(temp1);} 
+				":" 
+				(temp2 = StatementList() { stas.add(new BlockStatement(temp2));})
+			)*
+			(	<_DEFAULT> ":" (temp2 = StatementList())
+				{exps.add(LiteralNode.createBooleanLiteral("true")); stas.add(new BlockStatement(temp2));}
+			)
+		"}"
 	)
 ) {return new SwitchStatement(exp,exps,stas);}
 }
-
- 
-void DefaultClause() : {}
-{
-	<_DEFAULT> ":" //(StatementList())?
-}
-
 
 // FunctionDeclaration
 Statement FunctionDeclaration() : 

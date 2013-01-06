@@ -38,7 +38,7 @@ function Print(arr,length){
 	console.writeln("Student List:");
 	for (var i=0;i<size;i++)
 	{
-		console.writeln("id: "+arr[i].id+", name: "+arr[i].name+", mark: "+arr[i].mark);
+		console.writeln("id: "+arr[i].id+",\nname: "+arr[i].name+",\tmark: "+arr[i].mark);
 	}
 }
 
@@ -59,7 +59,7 @@ size = console.read().toNumber();
 readStudent(stu,size);
 Sort(stu,size);
 Print(stu,size);
-console.write ("avg= "+avg(stu,size));
+console.writeln ("avg= "+avg(stu,size));
 
 var w = createWindow();
 w.setTitle("hello");
@@ -74,3 +74,4 @@ b.onClick(function(e) {
 t = createTextField();
 w.add(t);
 w.add(b);
+

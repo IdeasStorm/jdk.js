@@ -102,6 +102,11 @@ public class StringType extends ObjectType {
 	
 	@Override
 	public NumberType toNumber() {
-		return new NumberType(this);
+		try {
+			return new NumberType(this);
+		} catch (Exception e) {
+			return NumberType.NaN;
+		}
+		
 	}
 }

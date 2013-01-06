@@ -28,7 +28,7 @@ public class FunctionType extends ObjectType {
 		Context functionContext = new FunctionContext(obj,new ObjectType(signature, args),c);
 		status = body.execute(functionContext);
 		if(status.getType() != parser.StatementStatus.Type.Normal && status.getType() != parser.StatementStatus.Type.Return)
-			throw new RuntimeException("SytaxError "+ status.getType() + " statement");
+			throw new RuntimeException("SyntaxError "+ status.getType() + " statement");
 		return status.getValue();			
 			
 	}

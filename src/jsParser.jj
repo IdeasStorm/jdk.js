@@ -511,8 +511,11 @@ ExpressionNode CallExpression():
 {
 	exp = MemberExpression() args = Arguments() {res = new FunctionCallExpression(exp,args);}
 	(
-//		( templist = Arguments() {args.addAll(templist); }) //	return new CallFunctionNode(exp,args) ;} )
-	//	|
+		( templist = Arguments()
+			{	mem = new FunctionCallExpression(res,templist) ;
+				res = mem ; }
+		)
+		|
 		( "[" temp = Expression() "]" {args.add(temp); }
 			{	mem = new CallArrayExpression(res,temp);
 				res = mem ; }
@@ -903,9 +906,9 @@ ExpressionStatement ExpressionStatement() :
 {
 	// TODO [lookahead != {{, function}] 	
 (	exp = Expression() 
-	(LOOKAHEAD(1) ";" {return new ExpressionStatement(exp) ;} 
-	)? 
-		{throw new RuntimeException("missing ; in expression statement");} //status.getType()	
+	( ";" {return new ExpressionStatement(exp) ;} 
+	)?
+	//	{throw new RuntimeException("missing ; in expression statement");} //status.getType()	
 )
 }
 

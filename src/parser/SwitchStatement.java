@@ -4,7 +4,7 @@ import java.util.List;
 
 import parser.OperatorNode.OperatorType;
 
-public class SwitchStatement extends ExpressionNode {
+public class SwitchStatement extends Statement {
 	ExpressionNode firstExp;
 	List<ExpressionNode> expressions;
 	List<Statement> statements;

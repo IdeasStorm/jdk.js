@@ -473,7 +473,7 @@ ExpressionNode MemberExpression():
 (	exp = PrimaryExpression() {res = exp ;}
 |	exp = FunctionExpression() {res = exp ;} //{return new functionNode(exp)}
 )
-	( //TODO return ExpressionNode !!!
+	(
 	("[" temp = Expression() "]"{	mem = new CallArrayExpression(res,temp);
 									res = mem ; })
 	|("." att = <IDENTIFIER> {	mem = new MemberExpression(res,att.image);
@@ -612,7 +612,7 @@ ExpressionNode AdditiveExpression():
 {
 (
 	( left =MultiplicativeExpression() {exp = left ; })  
-	(LOOKAHEAD(1)
+	(
 		( "+" right = MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Add, left , right) ;  left = exp ; }  ) 
 	| 	( "-" right = MultiplicativeExpression() { exp = new OperatorNode(OperatorNode.OperatorType.Subtract ,left , right) ;  left = exp ; }  ) 
 	)*
@@ -628,11 +628,11 @@ ExpressionNode ShiftExpression():
 {
 (
 	exp = AdditiveExpression() 
-	(
+/*	(
 	">>" AdditiveExpression() 
 	| "<<" AdditiveExpression() 
 	| ">>>" AdditiveExpression()
-	)*
+	)**/
 )
 	{return exp ;}
 }
@@ -906,7 +906,7 @@ ExpressionStatement ExpressionStatement() :
 {
 	// TODO [lookahead != {{, function}] 	
 (	exp = Expression() 
-	( ";" {return new ExpressionStatement(exp) ;} 
+	( LOOKAHEAD(1) ";" {return new ExpressionStatement(exp) ;} 
 	)?
 	//	{throw new RuntimeException("missing ; in expression statement");} //status.getType()	
 )
@@ -991,23 +991,28 @@ ForStatement ForStatement() :
 
 
 //Switch Statement
-void SwitchStatement() : {}
+SwitchStatement SwitchStatement() : 
 {
-	(<SWITCH> "(" Expression() ")")
-	(	("{" (CaseClauses())? "}")
+	ExpressionNode exp=null ,temp;
+	List<ExpressionNode> exps =new ArrayList<ExpressionNode>();
+	
+	List<Statement>stas=new ArrayList<Statement>(),temp2 ;
+	
+}
+{
+(	(<SWITCH> "(" exp = Expression() ")")
+	(	("{" 
+			(
+			<CASE> temp = Expression() ":" (temp2 = StatementList() )
+			{exps.add(temp); stas.add(new BlockStatement(temp2));}
+			)* 
+		"}")
+		
 //	|	("{" (CaseClauses())? DefaultClause() (CaseClauses())? "}")
-	)	
+	)
+) {return new SwitchStatement(exp,exps,stas);}
 }
 
-void CaseClauses() : {}
-{
-	(CaseClause())+
-}
-
-void CaseClause() : {}
-{
-	<CASE> Expression() ":" //(StatementList())?
-}
  
 void DefaultClause() : {}
 {
@@ -1169,6 +1174,7 @@ Statement Statement() :
 |	sta = EmptyStatement()
 |	sta = IfStatement()
 |	sta = IterationStatement()
+|	sta = SwitchStatement()
 |	sta = ReturnStatement()
 |	sta = BreakStatement()
 |	sta = DebugStatement()

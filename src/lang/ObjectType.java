@@ -327,4 +327,11 @@ public class ObjectType {
 	public ObjectType _toNumber() {
 		return toNumber();
 	}
+	
+	protected final static ObjectType deref(ObjectType obj) {
+		if (obj instanceof ReferenceType)
+			return ((ReferenceType) obj).getValue();
+		else
+			return obj;
+	}
 }

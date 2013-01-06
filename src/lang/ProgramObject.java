@@ -1,4 +1,6 @@
 package lang;
+import gui.Window;
+
 import java.util.Scanner;
 
 public class ProgramObject extends ObjectType {
@@ -40,6 +42,22 @@ public class ProgramObject extends ObjectType {
 		Scanner scanIn = new Scanner(System.in);
 		res = new StringType(scanIn.nextLine());
 		return res;
+	}
+	
+	public ObjectType _createWindow() {
+		return new Window();
+	}
+	
+	public ObjectType _createButton(ObjectType text) {
+		return new Window.Button(text.toStringType().toString());
+	}
+	
+	public ObjectType _createTextField(ObjectType text) {
+		return new Window.TextField(text.toStringType().toString());
+	}
+	
+	public ObjectType _createTextField() {
+		return new Window.TextField("");
 	}
 	
 }

@@ -21,7 +21,7 @@ public class Launcher {
 		JSAP jsap = new JSAP();
 		UnflaggedOption opt2 = new UnflaggedOption("filename")
 				.setStringParser(JSAP.STRING_PARSER)
-				.setDefault("src//data.txt")
+				.setDefault("src//code.txt")
 				.setRequired(false);
 		
 		jsap.registerParameter(opt2);
@@ -34,7 +34,12 @@ public class Launcher {
 
 		JSAPResult config = jsap.parse(args);
 		String fileName = config.getString("filename");
-		compiler.compileStream(new InputStreamReader(new FileInputStream(
-				fileName)));
+		try {
+			compiler.compileStream(new InputStreamReader(new FileInputStream(
+					fileName)));
+		} catch (Exception e) {
+			System.err.println(e.toString());
+		}
+		
 	}
 }
